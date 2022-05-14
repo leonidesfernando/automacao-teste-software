@@ -62,7 +62,7 @@
                 </elementProp>
                 <elementProp name="valor" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                  <stringProp name="Argument.value">10</stringProp>
+                  <stringProp name="Argument.value">${valor_lancamento}</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                   <boolProp name="HTTPArgument.use_equals">true</boolProp>
                   <stringProp name="Argument.name">valor</stringProp>
@@ -80,6 +80,13 @@
                   <stringProp name="Argument.metadata">=</stringProp>
                   <boolProp name="HTTPArgument.use_equals">true</boolProp>
                   <stringProp name="Argument.name">tipoLancamento</stringProp>
+                </elementProp>
+                <elementProp name="categoria" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.value">ALIMENTACAO</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                  <stringProp name="Argument.name">categoria</stringProp>
                 </elementProp>
               </collectionProp>
             </elementProp>
@@ -111,7 +118,7 @@
         </hashTree>
         <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Edição Controller" enabled="true"/>
         <hashTree>
-          <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="Countador para ID" enabled="true">
+          <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="Contador para ID" enabled="true">
             <stringProp name="CounterConfig.start">1</stringProp>
             <stringProp name="CounterConfig.end">999999999</stringProp>
             <stringProp name="CounterConfig.incr">1</stringProp>
@@ -132,9 +139,9 @@
           <RandomVariableConfig guiclass="TestBeanGUI" testclass="RandomVariableConfig" testname="Random Variable Dia" enabled="true">
             <stringProp name="variableName">dia</stringProp>
             <stringProp name="outputFormat"></stringProp>
-            <stringProp name="minimumValue">1</stringProp>
-            <stringProp name="maximumValue">30</stringProp>
-            <stringProp name="randomSeed"></stringProp>
+            <stringProp name="minimumValue">SALARIO</stringProp>
+            <stringProp name="maximumValue">ALIMENTACAO</stringProp>
+            <stringProp name="randomSeed">SALARIO,INVESTIMENTO,ALIMENTACAO</stringProp>
             <boolProp name="perThread">true</boolProp>
           </RandomVariableConfig>
           <hashTree/>
@@ -170,7 +177,7 @@
                   </elementProp>
                   <elementProp name="dataLancamento" elementType="HTTPArgument">
                     <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                    <stringProp name="Argument.value">${dia}/06/2018</stringProp>
+                    <stringProp name="Argument.value">${dia}/08/2018</stringProp>
                     <stringProp name="Argument.metadata">=</stringProp>
                     <boolProp name="HTTPArgument.use_equals">true</boolProp>
                     <stringProp name="Argument.name">dataLancamento</stringProp>
@@ -232,7 +239,7 @@
                   </elementProp>
                   <elementProp name="dataLancamento" elementType="HTTPArgument">
                     <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                    <stringProp name="Argument.value">${dia}/06/2018</stringProp>
+                    <stringProp name="Argument.value">${dia}/08/2018</stringProp>
                     <stringProp name="Argument.metadata">=</stringProp>
                     <boolProp name="HTTPArgument.use_equals">true</boolProp>
                     <stringProp name="Argument.name">dataLancamento</stringProp>
@@ -243,6 +250,13 @@
                     <stringProp name="Argument.metadata">=</stringProp>
                     <boolProp name="HTTPArgument.use_equals">true</boolProp>
                     <stringProp name="Argument.name">tipoLancamento</stringProp>
+                  </elementProp>
+                  <elementProp name="categoria" elementType="HTTPArgument">
+                    <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                    <stringProp name="Argument.value">SALARIO</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                    <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                    <stringProp name="Argument.name">categoria</stringProp>
                   </elementProp>
                 </collectionProp>
               </elementProp>
