@@ -11,7 +11,7 @@ public class PrimeiroExemplo {
 
 
         // abre o firefox
-        WebDriver driver = SeleniumBootstrap.setupChrome();
+        WebDriver driver = SeleniumBootstrap.setupExistingBrowser();
 
         // acessa o site do Selenium
         driver.get("http://www.seleniumhq.org");

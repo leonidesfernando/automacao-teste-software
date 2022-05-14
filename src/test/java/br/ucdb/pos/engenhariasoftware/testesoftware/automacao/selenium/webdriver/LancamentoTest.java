@@ -26,7 +26,7 @@ public class LancamentoTest {
 
     @BeforeClass
     private void inicialliza() {
-        driver = SeleniumBootstrap.setupFirefox();
+        driver = SeleniumBootstrap.setupExistingBrowser();
         listaLancamentosPage = new ListaLancamentosPage(driver);
         lancamentoPage = new LancamentoPage(driver);
     }

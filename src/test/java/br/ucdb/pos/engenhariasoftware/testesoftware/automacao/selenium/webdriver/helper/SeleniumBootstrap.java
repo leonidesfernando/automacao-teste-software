@@ -18,6 +18,14 @@ import java.io.File;
 @UtilityClass
 public class SeleniumBootstrap {
 
+    public WebDriver setupExistingBrowser(){
+        try {
+            return setupFirefox();
+        }catch (Exception e){
+            return setupChrome();
+        }
+    }
+
     public WebDriver setupChrome(){
         WebDriverManager driverManager = WebDriverManager.chromedriver();
         driverManager.setup();
