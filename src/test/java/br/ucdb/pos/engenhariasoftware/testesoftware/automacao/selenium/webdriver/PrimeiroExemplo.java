@@ -17,7 +17,7 @@ public class PrimeiroExemplo {
         driver.get("http://www.seleniumhq.org");
 
         //obtem e clica no link da página de download
-        driver.findElement(By.id("menu_download")).click();
+        driver.findElement(By.linkText("Downloads")).click();
 
         // fecha todas as janelas do navegador e finaliza a sessão do WebDriver
         driver.quit();

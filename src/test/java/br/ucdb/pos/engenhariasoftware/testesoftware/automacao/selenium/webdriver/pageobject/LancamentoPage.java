@@ -1,8 +1,11 @@
 package br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.pageobject;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.Select;
+import org.testng.Assert;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -17,7 +20,7 @@ public class LancamentoPage {
     }
 
     public void cria(final String descricaoLancamento, final BigDecimal valorLancamento,
-                     LocalDateTime dataHora, TipoLancamento tipo){
+                     LocalDateTime dataHora, TipoLancamento tipo, Categoria categoria){
 
         if(tipo == TipoLancamento.SAIDA) {
             driver.findElement(By.id("tipoLancamento2")).click(); // informa lançamento: SAÍDA
@@ -36,7 +39,18 @@ public class LancamentoPage {
         WebElement valor = driver.findElement(By.id("valor"));
         driver.findElement(By.id("tipoLancamento2")).click();
         valor.sendKeys(String.valueOf(valorLancamento));
+
+        Select categoriaCb = new Select(driver.findElement(By.id("categoria")));
+        categoriaCb.selectByValue(categoria.name());
         driver.findElement(By.id("btnSalvar")).click();
+
+        try{
+            WebElement errorMessage = driver.findElement(By.cssSelector("div.alert.alert-danger"));
+            Assert.fail(String.format("Houve ao salvar o lancamento. provavelmente um campo nao foi preeenchido. %s", errorMessage.getText()));
+
+        }catch (NoSuchElementException e){
+
+        }
     }
 }
 

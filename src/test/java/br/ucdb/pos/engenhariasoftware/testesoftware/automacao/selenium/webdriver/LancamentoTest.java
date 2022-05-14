@@ -1,5 +1,7 @@
 package br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver;
 
+import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.helper.SeleniumBootstrap;
+import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.pageobject.Categoria;
 import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.pageobject.LancamentoPage;
 import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.pageobject.ListaLancamentosPage;
 import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.pageobject.TipoLancamento;
@@ -24,11 +26,7 @@ public class LancamentoTest {
 
     @BeforeClass
     private void inicialliza() {
-        boolean windows = System.getProperty("os.name").toUpperCase().contains("WIN");
-        System.setProperty("webdriver.gecko.driver",
-                System.getProperty("user.dir") + "/src/test/resources/drivers/" +
-                        "/geckodriver" + (windows ? ".exe" : ""));
-        driver = new FirefoxDriver();
+        driver = SeleniumBootstrap.setupFirefox();
         listaLancamentosPage = new ListaLancamentosPage(driver);
         lancamentoPage = new LancamentoPage(driver);
     }
@@ -42,7 +40,7 @@ public class LancamentoTest {
         DateTimeFormatter formatoLancamento = DateTimeFormatter.ofPattern("dd.MM.yy");
         final String descricaoLancamento = "Lançando saída automatizada " + dataHora.format(formatoLancamento);
         final BigDecimal valor = getValorLancamento();
-        lancamentoPage.cria(descricaoLancamento, valor, dataHora, TipoLancamento.SAIDA);
+        lancamentoPage.cria(descricaoLancamento, valor, dataHora, TipoLancamento.SAIDA, Categoria.LAZER);
 
         assertTrue(listaLancamentosPage.existeLancamento(descricaoLancamento, valor, dataHora, TipoLancamento.SAIDA));
     }

@@ -25,6 +25,7 @@
 		<webdrivermanager.version>5.1.1</webdrivermanager.version>
 		<selenium.version>4.1.4</selenium.version>
 		<testng.version>7.5</testng.version>
+		<lombok.version>1.18.24</lombok.version>
 	</properties>
 
 	<dependencies>
@@ -49,6 +50,11 @@
 			<artifactId>testng</artifactId>
 			<version>${testng.version}</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>${lombok.version}</version>
 		</dependency>
 		<!-- dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
