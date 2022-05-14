@@ -1,5 +1,6 @@
 package br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver;
 
+import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.helper.SeleniumBootstrap;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -8,14 +9,9 @@ public class PrimeiroExemplo {
 
     public static void main(String[] args) {
 
-        // seta o gecko driver no classpath do prorama
-        boolean windows = System.getProperty("os.name").toUpperCase().contains("WIN");
-        System.setProperty("webdriver.gecko.driver",
-                System.getProperty("user.dir") + "/src/test/resources/drivers/" +
-                        "/geckodriver" + (windows ? ".exe" : ""));
 
         // abre o firefox
-        WebDriver driver = new FirefoxDriver();
+        WebDriver driver = SeleniumBootstrap.setupChrome();
 
         // acessa o site do Selenium
         driver.get("http://www.seleniumhq.org");
