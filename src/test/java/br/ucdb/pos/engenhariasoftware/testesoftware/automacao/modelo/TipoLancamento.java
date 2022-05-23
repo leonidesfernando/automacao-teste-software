@@ -1,4 +1,4 @@
-package br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.pageobject;
+package br.ucdb.pos.engenhariasoftware.testesoftware.automacao.modelo;
 
 public enum TipoLancamento {
     ENTRADA("Entrada"),

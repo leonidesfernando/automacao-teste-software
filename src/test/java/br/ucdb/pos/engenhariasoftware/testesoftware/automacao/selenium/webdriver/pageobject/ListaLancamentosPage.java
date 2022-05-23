@@ -1,5 +1,6 @@
 package br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.pageobject;
 
+import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.modelo.TipoLancamento;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 

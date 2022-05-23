@@ -1,12 +1,11 @@
 package br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver;
 
 import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.helper.SeleniumBootstrap;
-import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.pageobject.Categoria;
+import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.modelo.Categoria;
 import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.pageobject.LancamentoPage;
 import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.pageobject.ListaLancamentosPage;
-import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.pageobject.TipoLancamento;
+import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.modelo.TipoLancamento;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;

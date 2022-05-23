@@ -14,7 +14,7 @@ public class PrimeiroExemplo {
         WebDriver driver = SeleniumBootstrap.setupExistingBrowser();
 
         // acessa o site do Selenium
-        driver.get("http://www.seleniumhq.org");
+        driver.get("https://www.selenium.dev");
 
         //obtem e clica no link da página de download
         driver.findElement(By.linkText("Downloads")).click();
