@@ -1,20 +1,19 @@
 package br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.pageobject;
 
 import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.modelo.TipoLancamento;
+import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.helper.SeleniumUtil;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class ListaLancamentosPage {
-
-    private WebDriver driver;
+public class ListaLancamentosPage extends BasePage {
 
     @FindBy(id = "novoLancamento")
     private WebElement newEntry;
@@ -25,9 +24,10 @@ public class ListaLancamentosPage {
     @FindBy(id = "bth-search")
     private WebElement btnSearch;
 
+    private final static String LIST_TABLE_ID = "divTabelaLancamentos";
+
     public ListaLancamentosPage(final WebDriver driver){
-        this.driver = driver;
-        PageFactory.initElements(driver, this);
+        super(driver);
     }
 
     public ListaLancamentosPage acessa(){
@@ -36,6 +36,7 @@ public class ListaLancamentosPage {
     }
 
     public LancamentoPage novoLancamento(){
+        aguardarPagina();
         driver.findElement(By.id("novoLancamento")).click();
         return new LancamentoPage(driver);
     }
@@ -43,6 +44,7 @@ public class ListaLancamentosPage {
     public boolean existeLancamento(final String descricaoLancamento, final BigDecimal valorLancamento,
                                     LocalDateTime dataHora, TipoLancamento tipo){
 
+        aguardarPagina();
         buscaLancamentoPorDescricao(descricaoLancamento);
         DateTimeFormatter formatoDataLancamento = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         String lancamentos = driver.getPageSource();
@@ -56,6 +58,12 @@ public class ListaLancamentosPage {
     public void buscaLancamentoPorDescricao(String descricaoLancamento){
         searchItem.sendKeys(descricaoLancamento);
         btnSearch.click();
+        aguardarPagina();
+    }
+
+    protected void aguardarPagina(){
+        SeleniumUtil.fluentWait(driver)
+                .until(ExpectedConditions.presenceOfElementLocated(By.id(LIST_TABLE_ID)));
     }
 }
 
