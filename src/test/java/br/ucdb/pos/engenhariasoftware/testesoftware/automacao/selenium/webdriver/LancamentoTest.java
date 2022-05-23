@@ -20,20 +20,17 @@ import static org.testng.Assert.assertTrue;
 public class LancamentoTest {
 
     private WebDriver driver;
-    private ListaLancamentosPage listaLancamentosPage;
-    private LancamentoPage lancamentoPage;
 
     @BeforeClass
     private void inicialliza() {
         driver = SeleniumBootstrap.setupExistingBrowser();
-        listaLancamentosPage = new ListaLancamentosPage(driver);
-        lancamentoPage = new LancamentoPage(driver);
     }
 
     @Test
     public void criaLancamento(){
-        listaLancamentosPage.acessa();
-        listaLancamentosPage.novoLancamento();
+        ListaLancamentosPage listaLancamentosPage = new ListaLancamentosPage(driver);
+        LancamentoPage lancamentoPage = listaLancamentosPage.acessa()
+            .novoLancamento();
 
         LocalDateTime dataHora = LocalDateTime.now();
         DateTimeFormatter formatoLancamento = DateTimeFormatter.ofPattern("dd.MM.yy");
