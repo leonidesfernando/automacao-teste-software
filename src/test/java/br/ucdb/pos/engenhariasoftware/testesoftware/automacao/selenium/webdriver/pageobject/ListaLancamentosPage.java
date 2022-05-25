@@ -31,7 +31,7 @@ public class ListaLancamentosPage extends BasePage {
     }
 
     public ListaLancamentosPage acessa(){
-        driver.get("http://localhost:8080/lancamentos");
+        driver.get("http://localhost:8080/lancamentos/");
         return this;
     }
 
