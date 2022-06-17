@@ -5,6 +5,7 @@ import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.modelo.Categoria;
 import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.pageobject.LancamentoPage;
 import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.pageobject.ListaLancamentosPage;
 import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.modelo.TipoLancamento;
+import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.util.DataGen;
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -23,7 +24,7 @@ public class LancamentoTest {
 
     @BeforeClass
     private void inicialliza() {
-        driver = SeleniumBootstrap.setupExistingBrowser();
+        driver = SeleniumBootstrap.setupChrome();
     }
 
     @Test
@@ -34,7 +35,9 @@ public class LancamentoTest {
 
         LocalDateTime dataHora = LocalDateTime.now();
         DateTimeFormatter formatoLancamento = DateTimeFormatter.ofPattern("dd.MM.yy");
-        final String descricaoLancamento = "Lançando saída automatizada " + dataHora.format(formatoLancamento);
+        final String descricaoLancamento = "Lançando saída automatizada "
+                + DataGen.productName()
+                + dataHora.format(formatoLancamento);
         final BigDecimal valor = getValorLancamento();
         lancamentoPage.cria(descricaoLancamento, valor, dataHora, TipoLancamento.SAIDA, Categoria.LAZER);
 

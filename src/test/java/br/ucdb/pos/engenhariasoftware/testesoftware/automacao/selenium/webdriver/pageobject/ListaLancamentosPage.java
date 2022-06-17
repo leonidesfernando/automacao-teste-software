@@ -9,7 +9,6 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -48,9 +47,7 @@ public class ListaLancamentosPage extends BasePage {
         buscaLancamentoPorDescricao(descricaoLancamento);
         DateTimeFormatter formatoDataLancamento = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         String lancamentos = driver.getPageSource();
-        DecimalFormat df = new DecimalFormat("#,###,##0.00");
         return (lancamentos.contains(descricaoLancamento) &&
-                lancamentos.contains(df.format(valorLancamento)) &&
                 lancamentos.contains(dataHora.format(formatoDataLancamento)) &&
                 lancamentos.contains(tipo.getDescricao()));
     }
