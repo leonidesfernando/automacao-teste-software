@@ -43,8 +43,8 @@ public class LancamentoPage extends BasePage {
 
     @Override
     protected void aguardarPagina() {
-        SeleniumUtil.fluentWait(driver)
-                .until(ExpectedConditions.presenceOfElementLocated(By.id(btnSalvar.getAttribute("id"))));
+        SeleniumUtil.waitForPresenceOfId(driver,
+                btnSalvar.getAttribute("id"));
     }
 
     public void cria(final String descricaoLancamento, final BigDecimal valorLancamento,

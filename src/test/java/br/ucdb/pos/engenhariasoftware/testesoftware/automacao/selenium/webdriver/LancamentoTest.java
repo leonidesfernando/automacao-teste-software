@@ -6,6 +6,7 @@ import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver
 import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.pageobject.ListaLancamentosPage;
 import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.modelo.TipoLancamento;
 import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.util.DataGen;
+import lombok.SneakyThrows;
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -45,6 +46,7 @@ public class LancamentoTest {
     }
 
     @AfterClass
+    @SneakyThrows
     private void finaliza(){
         driver.quit();
     }

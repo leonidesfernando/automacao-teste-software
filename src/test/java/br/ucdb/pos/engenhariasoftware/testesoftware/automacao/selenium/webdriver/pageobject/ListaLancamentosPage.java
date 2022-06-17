@@ -1,16 +1,18 @@
 package br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.pageobject;
 
+import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.components.GridUI;
 import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.modelo.TipoLancamento;
 import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.helper.SeleniumUtil;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
+import static org.testng.Assert.assertEquals;
 
 public class ListaLancamentosPage extends BasePage {
 
@@ -22,6 +24,10 @@ public class ListaLancamentosPage extends BasePage {
 
     @FindBy(id = "bth-search")
     private WebElement btnSearch;
+
+    private static final String COL_DESCRIPTION = "Descrição";
+    private static final String COL_RELEASE_DATE = "Data Lançamento";
+    private static final String COL_TYPE = "Tipo";
 
     private final static String LIST_TABLE_ID = "divTabelaLancamentos";
 
@@ -46,10 +52,12 @@ public class ListaLancamentosPage extends BasePage {
         aguardarPagina();
         buscaLancamentoPorDescricao(descricaoLancamento);
         DateTimeFormatter formatoDataLancamento = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        String lancamentos = driver.getPageSource();
-        return (lancamentos.contains(descricaoLancamento) &&
-                lancamentos.contains(dataHora.format(formatoDataLancamento)) &&
-                lancamentos.contains(tipo.getDescricao()));
+        GridUI grid = new GridUI(driver).id("tabelaLancamentos");
+        assertEquals(grid.getElements().size(), 1);
+        assertEquals(grid.getCellValueAt(0, COL_DESCRIPTION), descricaoLancamento);
+        assertEquals(grid.getCellValueAt(0, COL_RELEASE_DATE), dataHora.format(formatoDataLancamento));
+        assertEquals(grid.getCellValueAt(0, COL_TYPE), tipo.getDescricao());
+        return true;
     }
 
     public void buscaLancamentoPorDescricao(String descricaoLancamento){
@@ -59,8 +67,7 @@ public class ListaLancamentosPage extends BasePage {
     }
 
     protected void aguardarPagina(){
-        SeleniumUtil.fluentWait(driver)
-                .until(ExpectedConditions.presenceOfElementLocated(By.id(LIST_TABLE_ID)));
+        SeleniumUtil.waitForPresenceOfId(driver, LIST_TABLE_ID);
     }
 }
 
