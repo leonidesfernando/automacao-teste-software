@@ -1,4 +1,4 @@
-package br.ucdb.pos.engenhariasoftware.testesoftware.automacao.components;
+package br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.components;
 
 import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.helper.SeleniumUtil;
 import org.openqa.selenium.By;
