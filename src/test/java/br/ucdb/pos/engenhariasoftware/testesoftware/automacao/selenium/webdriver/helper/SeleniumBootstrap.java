@@ -1,7 +1,9 @@
 package br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.helper;
 
+import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.config.Configurations;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import lombok.experimental.UtilityClass;
+import org.aeonbits.owner.ConfigFactory;
 import org.openqa.selenium.UnexpectedAlertBehaviour;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -17,6 +19,17 @@ import java.io.File;
 
 @UtilityClass
 public class SeleniumBootstrap {
+
+    private static final String HEADLESS = "headless";
+    private final static Configurations config = ConfigFactory.create(Configurations.class);
+
+    private boolean isHeadlessMode() {
+        if (System.getProperty(HEADLESS) == null) {
+            return config.headless();
+        }
+        return Boolean.parseBoolean(System.getProperty(HEADLESS));
+    }
+
 
     public WebDriver setupExistingBrowser(){
         try {
@@ -35,7 +48,13 @@ public class SeleniumBootstrap {
         chromeOptions.addArguments("disable-extensions");
         chromeOptions.addArguments("--no-sandbox");
 
+        chromeOptions.setHeadless(isHeadlessMode());
+
         return new ChromeDriver(chromeOptions);
+    }
+
+    public WebDriver setupEdge(){
+        throw new UnsupportedOperationException();
     }
 
     public WebDriver setupFirefox(){
@@ -54,7 +73,12 @@ public class SeleniumBootstrap {
         firefoxProfile.setPreference("browser.download.manager.useWindow", false);
         firefoxProfile.setPreference("browser.helperApps.alwaysAsk.force", false);
 
-        WebDriver driver =  new FirefoxDriver();
+        FirefoxOptions options = new FirefoxOptions();
+        if(isHeadlessMode()){
+            options.addArguments("--headless");
+        }
+
+        WebDriver driver =  new FirefoxDriver(options);
         driver.manage().window().maximize();
         return driver;
     }

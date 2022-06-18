@@ -29,6 +29,7 @@
 		<cucumber.version>7.3.4</cucumber.version>
 		<argLine>-Xms256m -Xmx1524m -XX:MaxPermSize=256m -Duser.language=en</argLine>
 		<java.faker>1.0.2</java.faker>
+		<owner.version>1.0.4</owner.version>
 	</properties>
 
 	<dependencies>
@@ -130,6 +131,14 @@
 			<artifactId>javafaker</artifactId>
 			<version>${java.faker}</version>
 		</dependency>
+
+		<!-- properties -->
+		<dependency>
+			<groupId>org.aeonbits.owner</groupId>
+			<artifactId>owner</artifactId>
+			<version>${owner.version}</version>
+		</dependency>
+
 
 	</dependencies>
 

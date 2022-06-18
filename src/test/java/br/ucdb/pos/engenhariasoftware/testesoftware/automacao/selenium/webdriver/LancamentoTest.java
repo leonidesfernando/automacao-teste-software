@@ -1,15 +1,12 @@
 package br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver;
 
-import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.helper.SeleniumBootstrap;
 import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.modelo.Categoria;
+import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.modelo.TipoLancamento;
 import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.pageobject.LancamentoPage;
 import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.pageobject.ListaLancamentosPage;
-import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.modelo.TipoLancamento;
 import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.util.DataGen;
 import lombok.SneakyThrows;
-import org.openqa.selenium.WebDriver;
 import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.math.BigDecimal;
@@ -19,18 +16,11 @@ import java.time.format.DateTimeFormatter;
 
 import static org.testng.Assert.assertTrue;
 
-public class LancamentoTest {
-
-    private WebDriver driver;
-
-    @BeforeClass
-    private void inicialliza() {
-        driver = SeleniumBootstrap.setupChrome();
-    }
+public class LancamentoTest extends BaseSeleniumTest {
 
     @Test
     public void criaLancamento(){
-        ListaLancamentosPage listaLancamentosPage = new ListaLancamentosPage(driver);
+        ListaLancamentosPage listaLancamentosPage = new ListaLancamentosPage(webDriver);
         LancamentoPage lancamentoPage = listaLancamentosPage.acessa()
             .novoLancamento();
 
@@ -48,7 +38,7 @@ public class LancamentoTest {
     @AfterClass
     @SneakyThrows
     private void finaliza(){
-        driver.quit();
+        webDriver.quit();
     }
 
     private BigDecimal getValorLancamento() {
