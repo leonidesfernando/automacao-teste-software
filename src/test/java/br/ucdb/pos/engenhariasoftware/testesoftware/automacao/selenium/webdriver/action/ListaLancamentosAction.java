@@ -1,13 +1,12 @@
-package br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.pageobject;
+package br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.action;
 
-import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.components.GridUI;
 import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.modelo.TipoLancamento;
+import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.components.GridUI;
 import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.helper.SeleniumUtil;
-import lombok.Getter;
+import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.pageobject.LancamentoPage;
+import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.pageobject.ListaLancamentosPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -15,17 +14,7 @@ import java.time.format.DateTimeFormatter;
 
 import static org.testng.Assert.assertEquals;
 
-@Getter
-public class ListaLancamentosPage extends BasePage {
-
-    @FindBy(id = "novoLancamento")
-    private WebElement newEntry;
-
-    @FindBy(id = "itemBusca")
-    private WebElement searchItem;
-
-    @FindBy(id = "bth-search")
-    private WebElement btnSearch;
+public class ListaLancamentosAction extends BaseAction<ListaLancamentosPage> {
 
     private static final String COL_DESCRIPTION = "Descrição";
     private static final String COL_RELEASE_DATE = "Data Lançamento";
@@ -33,19 +22,23 @@ public class ListaLancamentosPage extends BasePage {
 
     private final static String LIST_TABLE_ID = "divTabelaLancamentos";
 
-    public ListaLancamentosPage(final WebDriver driver){
-        super(driver);
+
+    private ListaLancamentosPage page;
+    public ListaLancamentosAction(WebDriver webDriver) {
+        super(webDriver, new ListaLancamentosPage(webDriver));
+        page = basePage;
     }
 
+/*
     public ListaLancamentosPage acessa(){
-        driver.get("http://localhost:8080/lancamentos/");
+        webDriver.get(url);
         return this;
-    }
+    }*/
 
     public LancamentoPage novoLancamento(){
         aguardarPagina();
-        driver.findElement(By.id("novoLancamento")).click();
-        return new LancamentoPage(driver);
+        webDriver.findElement(By.id("novoLancamento")).click();
+        return new LancamentoPage(webDriver);
     }
 
     public boolean existeLancamento(final String descricaoLancamento, final BigDecimal valorLancamento,
@@ -54,7 +47,7 @@ public class ListaLancamentosPage extends BasePage {
         aguardarPagina();
         buscaLancamentoPorDescricao(descricaoLancamento);
         DateTimeFormatter formatoDataLancamento = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        GridUI grid = new GridUI(driver).id("tabelaLancamentos");
+        GridUI grid = new GridUI(webDriver).id("tabelaLancamentos");
         assertEquals(grid.getElements().size(), 1);
         assertEquals(grid.getCellValueAt(0, COL_DESCRIPTION), descricaoLancamento);
         assertEquals(grid.getCellValueAt(0, COL_RELEASE_DATE), dataHora.format(formatoDataLancamento));
@@ -63,13 +56,12 @@ public class ListaLancamentosPage extends BasePage {
     }
 
     public void buscaLancamentoPorDescricao(String descricaoLancamento){
-        searchItem.sendKeys(descricaoLancamento);
-        btnSearch.click();
+        page.getSearchItem().sendKeys(descricaoLancamento);
+        page.getBtnSearch().click();
         aguardarPagina();
     }
 
     protected void aguardarPagina(){
-        SeleniumUtil.waitForPresenceOfId(driver, LIST_TABLE_ID);
+        SeleniumUtil.waitForPresenceOfId(webDriver, LIST_TABLE_ID);
     }
 }
-

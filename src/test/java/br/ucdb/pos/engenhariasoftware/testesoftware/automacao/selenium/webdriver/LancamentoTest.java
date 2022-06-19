@@ -2,11 +2,11 @@ package br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdrive
 
 import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.modelo.Categoria;
 import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.modelo.TipoLancamento;
+import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.action.ListaLancamentosAction;
 import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.pageobject.LancamentoPage;
 import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.pageobject.ListaLancamentosPage;
 import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.util.DataGen;
-import lombok.SneakyThrows;
-import org.testng.annotations.AfterClass;
+import org.openqa.selenium.WebDriver;
 import org.testng.annotations.Test;
 
 import java.math.BigDecimal;
@@ -17,6 +17,13 @@ import java.time.format.DateTimeFormatter;
 import static org.testng.Assert.assertTrue;
 
 public class LancamentoTest extends BaseSeleniumTest {
+
+    private ListaLancamentosAction listaLancamentosAction;
+
+    public LancamentoTest(WebDriver webDriver) {
+        super(webDriver);
+        listaLancamentosAction = new ListaLancamentosAction(webDriver);
+    }
 
     @Test
     public void criaLancamento(){
@@ -35,15 +42,9 @@ public class LancamentoTest extends BaseSeleniumTest {
         assertTrue(listaLancamentosPage.existeLancamento(descricaoLancamento, valor, dataHora, TipoLancamento.SAIDA));
     }
 
-    @AfterClass
-    @SneakyThrows
-    private void finaliza(){
-        webDriver.quit();
-    }
-
     private BigDecimal getValorLancamento() {
 
-        boolean  aplicaVariante = (System.currentTimeMillis() % 3) == 0;
+        /*boolean  aplicaVariante = (System.currentTimeMillis() % 3) == 0;
         int fator = 10;
         long mim = 30;
         long max = 900;
@@ -51,7 +52,9 @@ public class LancamentoTest extends BaseSeleniumTest {
             mim /= fator;
             max /= fator;
         }
-        return new BigDecimal(( 1 + (Math.random() * (max - mim)))).setScale(2, RoundingMode.HALF_DOWN);
+        return new BigDecimal(( 1 + (Math.random() * (max - mim)))).setScale(2, RoundingMode.HALF_DOWN); */
+        return BigDecimal.valueOf(DataGen.moneyValue())
+                .setScale(2, RoundingMode.HALF_UP);
     }
     
 }

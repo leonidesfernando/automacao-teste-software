@@ -3,6 +3,7 @@ package br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdrive
 import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.modelo.Categoria;
 import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.modelo.TipoLancamento;
 import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.helper.SeleniumUtil;
+import lombok.Getter;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -13,6 +14,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+@Getter
 public class LancamentoPage extends BasePage {
 
     @FindBy(id = "tipoLancamento1")
