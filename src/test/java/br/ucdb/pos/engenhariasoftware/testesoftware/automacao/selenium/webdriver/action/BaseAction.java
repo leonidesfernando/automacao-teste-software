@@ -11,7 +11,7 @@ public abstract class BaseAction<T extends BasePage> {
     @Getter
     protected WebDriver webDriver;
 
-    @Getter
-    protected T basePage;
+    protected T page;
 
+    abstract public T getPage();
 }

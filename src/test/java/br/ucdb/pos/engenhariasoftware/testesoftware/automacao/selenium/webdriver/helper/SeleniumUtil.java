@@ -1,6 +1,8 @@
 package br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.helper;
 
 import lombok.experimental.UtilityClass;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
@@ -14,6 +16,8 @@ import java.time.Duration;
 @UtilityClass
 public class SeleniumUtil {
 
+    private static final Logger logger = LogManager.getLogger(SeleniumUtil.class);
+
     private static final int DEFAULT_TIMEOUT_SECONDS = 60;
     private static final int DEFAULT_POLLING_SECONDS = 2;
 
@@ -23,9 +27,9 @@ public class SeleniumUtil {
                 DEFAULT_POLLING_SECONDS);
     }
 
-    public Wait<WebDriver> fluentWait(WebDriver driver, int timeout) {
+    public Wait<WebDriver> fluentWait(WebDriver driver, int seconds) {
         return new FluentWait<>(driver)
-                .withTimeout(Duration.ofSeconds(timeout))
+                .withTimeout(Duration.ofSeconds(seconds))
                 .pollingEvery(Duration.ofSeconds(DEFAULT_POLLING_SECONDS))
                 .ignoring(StaleElementReferenceException.class);
     }
@@ -39,6 +43,21 @@ public class SeleniumUtil {
 
     public WebElement waitForPresenceOfId(WebDriver driver, String id){
         return waitForPresenceBy(driver, By.id(id));
+    }
+
+    public WebElement waitForPresentOfIdWithRetries(WebDriver driver, String id, int retries){
+        var counter = 0;
+        do{
+            try{
+                return waitForPresenceOfId(driver, id);
+            }catch (Exception e){
+                counter++;
+                logger.info("Error to wait for element by id: {} at {} retry", id, counter);
+            }
+        }while (counter < retries);
+        String errorMessage = String.format("Was not possible wait for element by id %s after %d retries", id, retries);
+        logger.error(errorMessage);
+        throw new IllegalStateException(errorMessage);
     }
 
     private WebElement waitForPresenceBy(WebDriver driver, By by){

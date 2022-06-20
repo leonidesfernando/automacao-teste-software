@@ -4,18 +4,20 @@ import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.config.Configurati
 import io.github.bonigarcia.wdm.WebDriverManager;
 import lombok.experimental.UtilityClass;
 import org.aeonbits.owner.ConfigFactory;
-import org.openqa.selenium.UnexpectedAlertBehaviour;
+import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.firefox.FirefoxBinary;
+import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
+import org.openqa.selenium.logging.LogType;
+import org.openqa.selenium.logging.LoggingPreferences;
 import org.openqa.selenium.remote.CapabilityType;
-import org.openqa.selenium.remote.DesiredCapabilities;
 
-import java.io.File;
+import java.util.logging.Level;
 
 @UtilityClass
 public class SeleniumBootstrap {
@@ -42,19 +44,50 @@ public class SeleniumBootstrap {
     public WebDriver setupChrome(){
         WebDriverManager driverManager = WebDriverManager.chromedriver();
         driverManager.setup();
-        ChromeOptions chromeOptions = new ChromeOptions();
-        chromeOptions.addArguments("--start-maximized");
-        chromeOptions.addArguments("disable-infobars");
-        chromeOptions.addArguments("disable-extensions");
-        chromeOptions.addArguments("--no-sandbox");
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--start-maximized");
+        options.addArguments("disable-infobars");
+        options.addArguments("disable-extensions");
+        options.addArguments("--no-sandbox");
 
-        chromeOptions.setHeadless(isHeadlessMode());
+        options.setHeadless(isHeadlessMode());
+        turnOffLog(options);
 
-        return new ChromeDriver(chromeOptions);
+        return maximize(new ChromeDriver(options));
+    }
+
+    private void turnOffLog(MutableCapabilities options){
+        var loggingPrefs = new LoggingPreferences();
+        loggingPrefs.enable(LogType.PERFORMANCE, Level.WARNING);
+        loggingPrefs.enable(LogType.BROWSER, Level.SEVERE);
+        loggingPrefs.enable(LogType.CLIENT, Level.SEVERE);
+        loggingPrefs.enable(LogType.DRIVER, Level.SEVERE);
+        loggingPrefs.enable(LogType.SERVER, Level.SEVERE);
+
+        options.setCapability(CapabilityType.LOGGING_PREFS, loggingPrefs);
+        options.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
+        options.setCapability(CapabilityType.ACCEPT_INSECURE_CERTS, true);
     }
 
     public WebDriver setupEdge(){
-        throw new UnsupportedOperationException();
+        WebDriverManager driverManager = WebDriverManager.edgedriver();
+        driverManager.setup();
+
+        EdgeOptions options = new EdgeOptions();
+        options.addArguments("--start-maximized");
+        options.addArguments("disable-infobars");
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-extensions");
+        options.addArguments("--disable-in-process-stack-traces");
+
+        turnOffLog(options);
+        options.setHeadless(isHeadlessMode());
+        return maximize(new EdgeDriver(options));
+    }
+
+    private WebDriver maximize(WebDriver driver){
+        driver.manage().window().maximize();
+        return driver;
     }
 
     public WebDriver setupFirefox(){
@@ -77,9 +110,8 @@ public class SeleniumBootstrap {
         if(isHeadlessMode()){
             options.addArguments("--headless");
         }
+        turnOffLog(options);
 
-        WebDriver driver =  new FirefoxDriver(options);
-        driver.manage().window().maximize();
-        return driver;
+        return maximize(new FirefoxDriver(options));
     }
 }

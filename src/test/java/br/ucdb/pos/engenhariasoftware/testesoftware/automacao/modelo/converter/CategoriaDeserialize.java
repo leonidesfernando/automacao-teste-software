@@ -12,7 +12,11 @@ import java.io.IOException;
 public class CategoriaDeserialize extends JsonDeserializer<Categoria> {
     @Override
     public Categoria deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JacksonException {
+        String text = StringUtil.removeAccents(jsonParser.getText()).toUpperCase()
+                .replaceAll("\\u00a0", "")
+                .replaceAll("\\s*", "")
+                .replace("&","_");
 
-        return Categoria.valueOf(StringUtil.removeAccents(jsonParser.getText()).toUpperCase());
+        return Categoria.valueOf(text);
     }
 }

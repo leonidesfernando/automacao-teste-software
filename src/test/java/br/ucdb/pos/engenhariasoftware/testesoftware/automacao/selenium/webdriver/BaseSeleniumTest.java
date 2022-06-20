@@ -1,9 +1,10 @@
 package br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver;
 
 import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.config.Configurations;
-import lombok.AllArgsConstructor;
+import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.helper.SeleniumUtil;
 import lombok.SneakyThrows;
 import org.aeonbits.owner.ConfigFactory;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.testng.ITestContext;
 import org.testng.annotations.AfterClass;
@@ -12,8 +13,9 @@ import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
 
-@AllArgsConstructor
 public abstract class BaseSeleniumTest {
+
+    private static final String BROWSER = "browser";
 
     protected WebDriver webDriver;
 
@@ -23,10 +25,16 @@ public abstract class BaseSeleniumTest {
     protected void beforeSuite(ITestContext context){
     }
 
-    @Test(priority = 0)
+    @Test(priority = -1)
     public void access(){
         webDriver.get(config.url());
+        SeleniumUtil.fluentWait(webDriver, 120)
+                .until(driver ->
+                        ((JavascriptExecutor) driver)
+                                .executeScript("return document.readyState")
+                                .equals("complete"));
     }
+
     @AfterClass
     @SneakyThrows
     protected void finaliza(){
@@ -34,11 +42,14 @@ public abstract class BaseSeleniumTest {
     }
 
     @BeforeClass
-    public void init(ITestContext context){
+    protected void init(ITestContext context){
         webDriver = loadWebDriver();
     }
 
     protected WebDriver loadWebDriver(){
-        return config.browser().loadBrowser() ;
+        if (System.getProperty(BROWSER) == null) {
+            return config.browser().loadBrowser();
+        }
+        return Browser.valueOf(System.getProperty(BROWSER)).loadBrowser();
     }
 }

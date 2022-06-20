@@ -10,6 +10,4 @@ public abstract class BasePage {
         this.driver = driver;
         PageFactory.initElements(driver, this);
     }
-
-    abstract protected void aguardarPagina();
 }

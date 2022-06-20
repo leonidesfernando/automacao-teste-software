@@ -11,6 +11,7 @@ import java.util.List;
 public class GridUI extends GenericUI{
 
     private WebElement grid;
+    private String id;
 
     public GridUI(WebDriver webDriver) {
         super(webDriver);
@@ -18,11 +19,13 @@ public class GridUI extends GenericUI{
 
     public GridUI gridElement(WebElement grid){
         this.grid = grid;
+        this.id = grid.getAttribute("id");
         return this;
     }
 
     public GridUI id(String id){
         this.grid = getWebDriver().findElement(By.id(id));
+        this.id = id;
         return this;
     }
 
@@ -60,7 +63,7 @@ public class GridUI extends GenericUI{
 
     private List<WebElement> getHeader(){
         waitForGridVisible();
-        return SeleniumUtil.waitForPresenceOfId(getWebDriver(), grid.getAttribute("id"))
+        return SeleniumUtil.waitForPresenceOfId(getWebDriver(), id)
                 .findElements(By.xpath("thead/tr/th"));
     }
 
@@ -75,6 +78,6 @@ public class GridUI extends GenericUI{
     }
 
     protected void waitForGridVisible(){
-        SeleniumUtil.waitForPresenceOfId(getWebDriver(), grid.getAttribute("id"));
+        SeleniumUtil.waitForPresenceOfId(getWebDriver(), id);
     }
 }
