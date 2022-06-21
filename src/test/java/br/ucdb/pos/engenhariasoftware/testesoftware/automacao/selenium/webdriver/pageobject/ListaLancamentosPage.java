@@ -38,14 +38,14 @@ public class ListaLancamentosPage extends BasePage {
     }
 
     public ListaLancamentosPage acessa(){
-        driver.get("http://localhost:8080/lancamentos/");
+        webDriver.get("http://localhost:8080/lancamentos/");
         return this;
     }
 
     public LancamentoPage novoLancamento(){
         aguardarPagina();
-        driver.findElement(By.id("novoLancamento")).click();
-        return new LancamentoPage(driver);
+        webDriver.findElement(By.id("novoLancamento")).click();
+        return new LancamentoPage(webDriver);
     }
 
     public boolean existeLancamento(final String descricaoLancamento, final BigDecimal valorLancamento,
@@ -54,7 +54,7 @@ public class ListaLancamentosPage extends BasePage {
         aguardarPagina();
         buscaLancamentoPorDescricao(descricaoLancamento);
         DateTimeFormatter formatoDataLancamento = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        GridUI grid = new GridUI(driver).id("tabelaLancamentos");
+        GridUI grid = new GridUI(webDriver).id("tabelaLancamentos");
         assertEquals(grid.getElements().size(), 1);
         assertEquals(grid.getCellValueAt(0, COL_DESCRIPTION), descricaoLancamento);
         assertEquals(grid.getCellValueAt(0, COL_RELEASE_DATE), dataHora.format(formatoDataLancamento));
@@ -69,7 +69,7 @@ public class ListaLancamentosPage extends BasePage {
     }
 
     protected void aguardarPagina(){
-        SeleniumUtil.waitForPresenceOfId(driver, LIST_TABLE_ID);
+        SeleniumUtil.waitForPresenceOfId(webDriver, LIST_TABLE_ID);
     }
 }
 

@@ -5,9 +5,9 @@ import org.openqa.selenium.support.PageFactory;
 
 public abstract class BasePage {
 
-    protected WebDriver driver;
-    public BasePage(WebDriver driver){
-        this.driver = driver;
-        PageFactory.initElements(driver, this);
+    protected WebDriver webDriver;
+    public BasePage(WebDriver webDriver){
+        this.webDriver = webDriver;
+        PageFactory.initElements(webDriver, this);
     }
 }

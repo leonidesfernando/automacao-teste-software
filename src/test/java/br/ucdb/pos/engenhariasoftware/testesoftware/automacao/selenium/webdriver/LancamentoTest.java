@@ -17,7 +17,7 @@ import static org.testng.Assert.assertTrue;
 
 public class LancamentoTest extends BaseSeleniumTest {
 
-    @Test
+    @Test(dependsOnMethods = "access")
     public void criaLancamento(){
         ListaLancamentosAction listaLancamentosAction = new ListaLancamentosAction(webDriver);
         LancamentoAction lancamentoAction = listaLancamentosAction.novoLancamento();

@@ -13,11 +13,7 @@ import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
-import org.openqa.selenium.logging.LogType;
-import org.openqa.selenium.logging.LoggingPreferences;
 import org.openqa.selenium.remote.CapabilityType;
-
-import java.util.logging.Level;
 
 @UtilityClass
 public class SeleniumBootstrap {
@@ -31,7 +27,6 @@ public class SeleniumBootstrap {
         }
         return Boolean.parseBoolean(System.getProperty(HEADLESS));
     }
-
 
     public WebDriver setupExistingBrowser(){
         try {
@@ -51,20 +46,11 @@ public class SeleniumBootstrap {
         options.addArguments("--no-sandbox");
 
         options.setHeadless(isHeadlessMode());
-        turnOffLog(options);
-
+        acceptSslAndInsecureCerts(options);
         return maximize(new ChromeDriver(options));
     }
 
-    private void turnOffLog(MutableCapabilities options){
-        var loggingPrefs = new LoggingPreferences();
-        loggingPrefs.enable(LogType.PERFORMANCE, Level.WARNING);
-        loggingPrefs.enable(LogType.BROWSER, Level.SEVERE);
-        loggingPrefs.enable(LogType.CLIENT, Level.SEVERE);
-        loggingPrefs.enable(LogType.DRIVER, Level.SEVERE);
-        loggingPrefs.enable(LogType.SERVER, Level.SEVERE);
-
-        options.setCapability(CapabilityType.LOGGING_PREFS, loggingPrefs);
+    private void acceptSslAndInsecureCerts(MutableCapabilities options){
         options.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
         options.setCapability(CapabilityType.ACCEPT_INSECURE_CERTS, true);
     }
@@ -79,9 +65,9 @@ public class SeleniumBootstrap {
         options.addArguments("--no-sandbox");
         options.addArguments("--disable-extensions");
         options.addArguments("--disable-in-process-stack-traces");
-
-        turnOffLog(options);
         options.setHeadless(isHeadlessMode());
+
+        acceptSslAndInsecureCerts(options);
         return maximize(new EdgeDriver(options));
     }
 
@@ -110,8 +96,7 @@ public class SeleniumBootstrap {
         if(isHeadlessMode()){
             options.addArguments("--headless");
         }
-        turnOffLog(options);
-
+        acceptSslAndInsecureCerts(options);
         return maximize(new FirefoxDriver(options));
     }
 }

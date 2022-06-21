@@ -12,6 +12,7 @@ import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
 
 import java.time.Duration;
+import java.util.concurrent.TimeUnit;
 
 @UtilityClass
 public class SeleniumUtil {
@@ -51,6 +52,10 @@ public class SeleniumUtil {
             try{
                 return waitForPresenceOfId(driver, id);
             }catch (Exception e){
+                try {
+                    TimeUnit.MILLISECONDS.sleep(800);
+                }catch (Exception ee){}
+
                 counter++;
                 logger.info("Error to wait for element by id: {} at {} retry", id, counter);
             }
