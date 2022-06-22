@@ -40,8 +40,12 @@ public class DataGen {
 
     private int getDayByMonth(int month){
         var months31Days = List.of(1,3,5,7,8,10,12);
-        int day = month == 2 ? number(28) :
-                months31Days.contains(month) ? number(31) : number(30);
+
+        int day = 0;
+        while(day == 0){
+            day = month == 2 ? number(28) :
+                    months31Days.contains(month) ? number(31) : number(30);
+        }
         return day;
     }
 

@@ -13,6 +13,7 @@ import org.openqa.selenium.support.ui.Wait;
 
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
+import java.util.function.BiFunction;
 
 @UtilityClass
 public class SeleniumUtil {
@@ -46,27 +47,42 @@ public class SeleniumUtil {
         return waitForPresenceBy(driver, By.id(id));
     }
 
-    public WebElement waitForPresentOfIdWithRetries(WebDriver driver, String id, int retries){
+    public WebElement waitForPresenceOfXpath(WebDriver driver, String xpath){
+        return waitForPresenceBy(driver, By.xpath(xpath));
+    }
+
+    public void waitForPresentOfIdWithRetries(WebDriver driver, String id, int retries){
+        waitForWithRetries(SeleniumUtil::waitForPresenceOfId, driver, id, retries);
+    }
+
+    public void waifForPresenceOfXpathWithRetries(WebDriver driver, String xpath, int retries){
+        waitForWithRetries(SeleniumUtil::waitForPresenceOfXpath, driver, xpath, retries);
+    }
+
+    private WebElement waitForPresenceBy(WebDriver driver, By by){
+        return fluentWait(driver)
+                .until(ExpectedConditions.presenceOfElementLocated(by));
+    }
+
+    private <WebDriver, T> WebElement waitForWithRetries(BiFunction<WebDriver, T, WebElement> function,
+                                                         WebDriver driver, T elementIdentifier, int retries){
         var counter = 0;
         do{
             try{
-                return waitForPresenceOfId(driver, id);
+                return function.apply(driver, elementIdentifier);
             }catch (Exception e){
                 try {
                     TimeUnit.MILLISECONDS.sleep(800);
                 }catch (Exception ee){}
 
                 counter++;
-                logger.info("Error to wait for element by id: {} at {} retry", id, counter);
+                logger.info("Error to wait for element by id: {} at {} retry",
+                        elementIdentifier.toString(), counter);
             }
         }while (counter < retries);
-        String errorMessage = String.format("Was not possible wait for element by id %s after %d retries", id, retries);
+        String errorMessage = String.format("Was not possible wait for element by id %s after %d retries",
+                elementIdentifier.toString(), retries);
         logger.error(errorMessage);
         throw new IllegalStateException(errorMessage);
-    }
-
-    private WebElement waitForPresenceBy(WebDriver driver, By by){
-        return fluentWait(driver)
-                .until(ExpectedConditions.presenceOfElementLocated(by));
     }
 }
