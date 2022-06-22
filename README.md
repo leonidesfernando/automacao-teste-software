@@ -3,7 +3,7 @@
 Project to explorer tests e2e and load and stress with: TestNG, Mockito, REST Assured, Cucumber, Selenium Webdriver and JMeter.
 
 
-## Requeriments
+## Requirements
 - Maven
 - JDK 17+
 
