@@ -46,6 +46,10 @@ public class GridUI extends GenericUI{
         return getColumnsAtLine(row).get(getColunIndex(col)).getText();
     }
 
+    public List<WebElement> getButtonsAt(int row, int col){
+        return getColumnsAtLine(row).get(col).findElements(By.tagName("a"));
+    }
+
     public List<WebElement> getColumnsAtLine(int row){
         return getElements().get(row).findElements(By.tagName("td"));
     }

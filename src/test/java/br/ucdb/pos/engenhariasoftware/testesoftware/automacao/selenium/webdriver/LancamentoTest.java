@@ -5,6 +5,7 @@ import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.modelo.TipoLancame
 import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.action.LancamentoAction;
 import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.action.ListaLancamentosAction;
 import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.util.DataGen;
+import org.testng.ITestContext;
 import org.testng.annotations.Test;
 
 import java.math.BigDecimal;
@@ -17,16 +18,28 @@ import static org.testng.Assert.assertTrue;
 
 public class LancamentoTest extends BaseSeleniumTest {
 
+
     @Test(dependsOnMethods = "access")
-    public void criaLancamento(){
+    public void criaLancamento(ITestContext context){
         ListaLancamentosAction listaLancamentosAction = new ListaLancamentosAction(webDriver);
         LancamentoAction lancamentoAction = listaLancamentosAction.novoLancamento();
         String description = getDescription();
         BigDecimal value = getValorLancamento();
         String date = DataGen.strDateCurrentMonth();
-        lancamentoAction.cria(description, value,
+        lancamentoAction.salvaLancamento(description, value,
                 date, TipoLancamento.SAIDA, Categoria.LAZER);
+        context.setAttribute("dd", description);
         assertTrue(listaLancamentosAction.existeLancamento(description, value, date, TipoLancamento.SAIDA));
+    }
+
+    @Test(dependsOnMethods = "criaLancamento")
+    public void editaLancamento(ITestContext context){
+        String descricao = context.getAttribute("dd").toString();
+        ListaLancamentosAction listaLancamentosAction = new ListaLancamentosAction(webDriver);
+        listaLancamentosAction.abreLancamentoParaEdicao(descricao)
+                .setDescricao(descricao + " EDITADO Selenium")
+                .salvaLancamento();
+        listaLancamentosAction.buscaLancamentoPorDescricao(descricao + " EDITADO Selenium");
     }
 
     private String getDescription(){

@@ -31,6 +31,11 @@ public class ListaLancamentosAction extends BaseAction<ListaLancamentosPage> {
         return new LancamentoAction(webDriver);
     }
 
+    public LancamentoAction abreLancamentoParaEdicao(String descricaoLancamento){
+        aguardarPagina();
+        return clicaBotaoEditar();
+    }
+
     public boolean existeLancamento(final String descricaoLancamento, final BigDecimal valorLancamento,
                                     String date, TipoLancamento tipo){
 
@@ -44,14 +49,25 @@ public class ListaLancamentosAction extends BaseAction<ListaLancamentosPage> {
         return true;
     }
 
-    public void buscaLancamentoPorDescricao(String descricaoLancamento){
+    private LancamentoAction clicaBotaoEditar(){
+        aguardarPagina();
+        GridUI gridUI = new GridUI(getWebDriver()).id("tabelaLancamentos");
+        gridUI.getButtonsAt(0, 5).get(0).click();
+        return new LancamentoAction(webDriver);
+    }
+
+    public ListaLancamentosAction buscaLancamentoPorDescricao(String descricaoLancamento){
+        page.getSearchItem().clear();
         page.getSearchItem().sendKeys(descricaoLancamento);
         page.getBtnSearch().click();
+        SeleniumUtil.waitAjaxCompleted(getWebDriver());
         aguardarPagina();
+        return this;
     }
 
     protected void aguardarPagina(){
         SeleniumUtil.waitForPresentOfIdWithRetries(webDriver, LIST_TABLE_ID, 5);
+        //SeleniumUtil.waitSomeTime();
     }
 
     @Override

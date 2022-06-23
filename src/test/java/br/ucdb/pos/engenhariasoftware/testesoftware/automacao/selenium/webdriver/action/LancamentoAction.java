@@ -28,9 +28,31 @@ public class LancamentoAction extends BaseAction<LancamentoPage> {
                 getPage().getBtnSalvar().getAttribute("id"));
     }
 
-    public void cria(final String descricaoLancamento, final BigDecimal valorLancamento,
-                     String date, TipoLancamento tipo, Categoria categoria){
+    public void salvaLancamento(){
+        getPage().getBtnSalvar().click();
+        try{
+            Assert.fail(String.format(
+                    "Houve ao salvar o lancamento. provavelmente um campo nao foi preeenchido. %s",
+                    getPage().getDivError().getText())
+            );
+        }catch (NoSuchElementException e){}
+    }
 
+    public void salvaLancamento(String descricaoLancamento, BigDecimal valorLancamento,
+                                String date, TipoLancamento tipo, Categoria categoria){
+        fillData(descricaoLancamento, valorLancamento, date, tipo, categoria);
+        salvaLancamento();
+    }
+
+    public LancamentoAction setDescricao(String descricaoLancamento){
+        getPage().getDescricao().clear();
+        getPage().getDescricao().click();
+        getPage().getDescricao().sendKeys(descricaoLancamento);
+        return this;
+    }
+
+    private void fillData(String descricaoLancamento, BigDecimal valorLancamento,
+                          String date, TipoLancamento tipo, Categoria categoria){
         aguardarPagina();
         if(tipo == TipoLancamento.SAIDA) {
             getPage().getSaida().click(); // informa lançamento: SAÍDA
@@ -38,22 +60,12 @@ public class LancamentoAction extends BaseAction<LancamentoPage> {
             getPage().getEntrada().click(); // informa lançamento: ENTRADA
         }
 
-        getPage().getDescricao().click();
-        getPage().getDescricao().sendKeys(descricaoLancamento);
-
+        setDescricao(descricaoLancamento);
         getPage().getDataLancamento().sendKeys(date);
         getPage().getDataLancamento().sendKeys(Keys.TAB);
 
         getPage().getValor().click();
         getPage().getValor().sendKeys(String.valueOf(valorLancamento));
-
         getPage().getCategoryCombo().selectByValue(categoria.name());
-        getPage().getBtnSalvar().click();
-
-        try{
-            Assert.fail(String.format("Houve ao salvar o lancamento. provavelmente um campo nao foi preeenchido. %s",
-                    getPage().getDivError().getText()));
-
-        }catch (NoSuchElementException e){}
     }
 }

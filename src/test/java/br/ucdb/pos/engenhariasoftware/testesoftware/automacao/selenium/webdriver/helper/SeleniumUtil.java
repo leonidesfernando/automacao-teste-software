@@ -3,10 +3,7 @@ package br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdrive
 import lombok.experimental.UtilityClass;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.openqa.selenium.By;
-import org.openqa.selenium.StaleElementReferenceException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
@@ -43,6 +40,15 @@ public class SeleniumUtil {
                 .ignoring(StaleElementReferenceException.class);
     }
 
+    public void waitAjaxCompleted(WebDriver driver){
+        fluentWait(driver)
+                .until(
+                        d -> ((JavascriptExecutor)driver)
+                                .executeScript("return document.readyState")
+                                .equals("complete"));
+        driver.manage().timeouts().implicitlyWait(Duration.ofMillis(200));
+    }
+
     public WebElement waitForPresenceOfId(WebDriver driver, String id){
         return waitForPresenceBy(driver, By.id(id));
     }
@@ -71,10 +77,7 @@ public class SeleniumUtil {
             try{
                 return function.apply(driver, elementIdentifier);
             }catch (Exception e){
-                try {
-                    TimeUnit.MILLISECONDS.sleep(800);
-                }catch (Exception ee){}
-
+                waitSomeTime();
                 counter++;
                 logger.info("Error to wait for element by id: {} at {} retry",
                         elementIdentifier.toString(), counter);
@@ -84,5 +87,15 @@ public class SeleniumUtil {
                 elementIdentifier.toString(), retries);
         logger.error(errorMessage);
         throw new IllegalStateException(errorMessage);
+    }
+
+    private void waitSomeTime(){
+        waitSomeTime(800);
+    }
+
+    private void waitSomeTime(int miliseconds){
+        try {
+            TimeUnit.MILLISECONDS.sleep(miliseconds);
+        }catch (Exception ee){}
     }
 }
