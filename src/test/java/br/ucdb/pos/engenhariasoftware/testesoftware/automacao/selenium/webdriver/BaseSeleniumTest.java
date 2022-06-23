@@ -12,6 +12,8 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
+import java.util.Objects;
+
 
 public abstract class BaseSeleniumTest {
 
@@ -51,5 +53,11 @@ public abstract class BaseSeleniumTest {
             return config.browser().loadBrowser();
         }
         return Browser.valueOf(System.getProperty(BROWSER)).loadBrowser();
+    }
+
+    protected <T> T getContextAttribute(String key, ITestContext context){
+        T attribute = (T) context.getAttribute(key);
+        Objects.requireNonNull(attribute);
+        return attribute;
     }
 }

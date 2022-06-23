@@ -36,12 +36,16 @@ public class ListaLancamentosAction extends BaseAction<ListaLancamentosPage> {
         return clicaBotaoEditar();
     }
 
+    private GridUI getGrid(){
+        return new GridUI(webDriver).id("tabelaLancamentos");
+    }
+
     public boolean existeLancamento(final String descricaoLancamento, final BigDecimal valorLancamento,
                                     String date, TipoLancamento tipo){
 
         aguardarPagina();
         buscaLancamentoPorDescricao(descricaoLancamento);
-        GridUI grid = new GridUI(webDriver).id("tabelaLancamentos");
+        GridUI grid = getGrid();
         assertEquals(grid.getElements().size(), 1);
         assertEquals(grid.getCellValueAt(0, COL_DESCRIPTION), descricaoLancamento);
         assertEquals(grid.getCellValueAt(0, COL_RELEASE_DATE), date);
@@ -49,9 +53,17 @@ public class ListaLancamentosAction extends BaseAction<ListaLancamentosPage> {
         return true;
     }
 
+    public boolean existeLancamentoPorDescricao(String descricaoLancamento){
+        aguardarPagina();
+        buscaLancamentoPorDescricao(descricaoLancamento);
+        GridUI grid = getGrid();
+        assertEquals(grid.getElements().size(), 1);
+        return grid.getCellValueAt(0, COL_DESCRIPTION).equals(descricaoLancamento);
+    }
+
     private LancamentoAction clicaBotaoEditar(){
         aguardarPagina();
-        GridUI gridUI = new GridUI(getWebDriver()).id("tabelaLancamentos");
+        GridUI gridUI = getGrid();
         gridUI.getButtonsAt(0, 5).get(0).click();
         return new LancamentoAction(webDriver);
     }
@@ -67,7 +79,6 @@ public class ListaLancamentosAction extends BaseAction<ListaLancamentosPage> {
 
     protected void aguardarPagina(){
         SeleniumUtil.waitForPresentOfIdWithRetries(webDriver, LIST_TABLE_ID, 5);
-        //SeleniumUtil.waitSomeTime();
     }
 
     @Override

@@ -19,6 +19,8 @@ import static org.testng.Assert.assertTrue;
 public class LancamentoTest extends BaseSeleniumTest {
 
 
+    public static final String DESCRICAO = "descricao";
+
     @Test(dependsOnMethods = "access")
     public void criaLancamento(ITestContext context){
         ListaLancamentosAction listaLancamentosAction = new ListaLancamentosAction(webDriver);
@@ -28,18 +30,20 @@ public class LancamentoTest extends BaseSeleniumTest {
         String date = DataGen.strDateCurrentMonth();
         lancamentoAction.salvaLancamento(description, value,
                 date, TipoLancamento.SAIDA, Categoria.LAZER);
-        context.setAttribute("dd", description);
+        context.setAttribute(DESCRICAO, description);
         assertTrue(listaLancamentosAction.existeLancamento(description, value, date, TipoLancamento.SAIDA));
     }
 
     @Test(dependsOnMethods = "criaLancamento")
     public void editaLancamento(ITestContext context){
-        String descricao = context.getAttribute("dd").toString();
+        String sufixoEdicao = " EDITADO Selenium";
+        String descricao = getContextAttribute(DESCRICAO, context);
         ListaLancamentosAction listaLancamentosAction = new ListaLancamentosAction(webDriver);
         listaLancamentosAction.abreLancamentoParaEdicao(descricao)
-                .setDescricao(descricao + " EDITADO Selenium")
+                .setDescricao(descricao + sufixoEdicao)
                 .salvaLancamento();
-        listaLancamentosAction.buscaLancamentoPorDescricao(descricao + " EDITADO Selenium");
+        assertTrue(listaLancamentosAction.existeLancamentoPorDescricao(descricao + sufixoEdicao),
+                "Deveria existir o lancamento que foi editado " + (descricao+sufixoEdicao));
     }
 
     private String getDescription(){
