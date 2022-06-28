@@ -48,7 +48,7 @@ public class LancamentoTest extends BaseSeleniumTest {
 
     private String getDescription(){
         LocalDateTime dataHora = LocalDateTime.now();
-        DateTimeFormatter formatoLancamento = DateTimeFormatter.ofPattern("dd.MM.yy");
+        DateTimeFormatter formatoLancamento = DateTimeFormatter.ofPattern("dd.MM.yy-ss");
         StringJoiner descricaoLancamento = new StringJoiner(" ")
                 .add("Lançando saída automatizada")
                 .add(DataGen.productName())
