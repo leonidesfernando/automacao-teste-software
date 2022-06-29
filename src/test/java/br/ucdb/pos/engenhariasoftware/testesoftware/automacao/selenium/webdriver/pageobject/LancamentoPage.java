@@ -1,5 +1,6 @@
 package br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.pageobject;
 
+import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.modelo.TipoLancamento;
 import lombok.Getter;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -10,10 +11,10 @@ import org.openqa.selenium.support.ui.Select;
 
 public class LancamentoPage extends BasePage {
 
-    @Getter @FindBy(id = "tipoLancamento1")
+    @FindBy(id = "tipoLancamento1")
     private WebElement entrada;
 
-    @Getter @FindBy(id = "tipoLancamento2")
+    @FindBy(id = "tipoLancamento2")
     private WebElement saida;
 
     @Getter @FindBy(id = "descricao")
@@ -42,6 +43,14 @@ public class LancamentoPage extends BasePage {
 
     public WebElement getDivError(){
         return webDriver.findElement(By.cssSelector("div.alert.alert-danger"));
+    }
+
+    public void setTipoLancamento(TipoLancamento tipoLancamento){
+        if(tipoLancamento == TipoLancamento.SAIDA) {
+            saida.click(); // informa lançamento: SAÍDA
+        }else{
+            entrada.click(); // informa lançamento: ENTRADA
+        }
     }
 }
 
