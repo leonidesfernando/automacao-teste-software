@@ -1,6 +1,5 @@
 package br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.components;
 
-import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.helper.SeleniumUtil;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
@@ -31,6 +30,7 @@ public class GridUI extends GenericUI{
 
     public GridUI xpath(String xpath){
         this.grid = getWebDriver().findElement(By.xpath(xpath));
+        this.id = grid.getAttribute("id");
         return this;
     }
 
@@ -67,8 +67,7 @@ public class GridUI extends GenericUI{
 
     private List<WebElement> getHeader(){
         waitForGridVisible();
-        return SeleniumUtil.waitForPresenceOfId(getWebDriver(), id)
-                .findElements(By.xpath("thead/tr/th"));
+        return getWebDriver().findElements(By.xpath(".//thead/tr/th"));
     }
 
     public boolean areThereElements(){
@@ -81,7 +80,8 @@ public class GridUI extends GenericUI{
         }
     }
 
+    @Deprecated
     protected void waitForGridVisible(){
-        SeleniumUtil.waitForPresenceOfId(getWebDriver(), id);
+        //SeleniumUtil.waitForElementVisible(getWebDriver(), grid);
     }
 }

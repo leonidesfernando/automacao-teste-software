@@ -5,31 +5,32 @@ import lombok.Getter;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.CacheLookup;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.Select;
 
 
 public class LancamentoPage extends BasePage {
 
-    @FindBy(id = "tipoLancamento1")
+    @CacheLookup @FindBy(id = "tipoLancamento1")
     private WebElement entrada;
 
-    @FindBy(id = "tipoLancamento2")
+    @CacheLookup @FindBy(id = "tipoLancamento2")
     private WebElement saida;
 
-    @Getter @FindBy(id = "descricao")
+    @CacheLookup @Getter @FindBy(id = "descricao")
     private WebElement descricao;
 
-    @Getter @FindBy(name = "dataLancamento")
+    @CacheLookup @Getter @FindBy(name = "dataLancamento")
     private WebElement dataLancamento;
 
-    @Getter @FindBy(id = "valor")
+    @CacheLookup @Getter @FindBy(id = "valor")
     private WebElement valor;
 
-    @FindBy(id = "categoria")
+    @CacheLookup @FindBy(id = "categoria")
     private WebElement categoriaWebElement;
 
-    @Getter @FindBy(id = "btnSalvar")
+    @CacheLookup @Getter @FindBy(id = "btnSalvar")
     private WebElement btnSalvar;
 
 

@@ -3,6 +3,7 @@ package br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdrive
 import lombok.Getter;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 public abstract class GenericUI {
 
@@ -15,6 +16,8 @@ public abstract class GenericUI {
     }
 
     protected void init(){
-        PageFactory.initElements(webDriver, this);
+        PageFactory.initElements(
+                new AjaxElementLocatorFactory(webDriver, 20),
+                this);
     }
 }

@@ -27,7 +27,8 @@ public class ListaLancamentosAction extends BaseAction<ListaLancamentosPage> {
 
     public LancamentoAction novoLancamento(){
         aguardarPagina();
-        webDriver.findElement(By.id("novoLancamento")).click();
+        page.getNewEntry().click();
+        //webDriver.findElement(By.id("novoLancamento")).click();
         return new LancamentoAction(webDriver);
     }
 
@@ -36,16 +37,12 @@ public class ListaLancamentosAction extends BaseAction<ListaLancamentosPage> {
         return clicaBotaoEditar();
     }
 
-    private GridUI getGrid(){
-        return new GridUI(webDriver).id("tabelaLancamentos");
-    }
-
     public boolean existeLancamento(final String descricaoLancamento, final BigDecimal valorLancamento,
                                     String date, TipoLancamento tipo){
 
         aguardarPagina();
         buscaLancamentoPorDescricao(descricaoLancamento);
-        GridUI grid = getGrid();
+        GridUI grid = page.getGrid();
         assertEquals(grid.getElements().size(), 1);
         assertEquals(grid.getCellValueAt(0, COL_DESCRIPTION), descricaoLancamento);
         assertEquals(grid.getCellValueAt(0, COL_RELEASE_DATE), date);
@@ -56,14 +53,14 @@ public class ListaLancamentosAction extends BaseAction<ListaLancamentosPage> {
     public boolean existeLancamentoPorDescricao(String descricaoLancamento){
         aguardarPagina();
         buscaLancamentoPorDescricao(descricaoLancamento);
-        GridUI grid = getGrid();
+        GridUI grid = page.getGrid();
         assertEquals(grid.getElements().size(), 1);
         return grid.getCellValueAt(0, COL_DESCRIPTION).equals(descricaoLancamento);
     }
 
     private LancamentoAction clicaBotaoEditar(){
         aguardarPagina();
-        GridUI gridUI = getGrid();
+        GridUI gridUI = page.getGrid();
         gridUI.getButtonsAt(0, 5).get(0).click();
         return new LancamentoAction(webDriver);
     }
@@ -77,8 +74,9 @@ public class ListaLancamentosAction extends BaseAction<ListaLancamentosPage> {
         return this;
     }
 
+    @Deprecated
     protected void aguardarPagina(){
-        SeleniumUtil.waitForPresentOfIdWithRetries(webDriver, LIST_TABLE_ID, 5);
+        //SeleniumUtil.waitForPresentOfIdWithRetries(webDriver, LIST_TABLE_ID, 5);
     }
 
     @Override

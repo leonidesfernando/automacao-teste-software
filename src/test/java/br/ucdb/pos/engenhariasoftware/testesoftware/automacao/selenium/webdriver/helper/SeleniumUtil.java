@@ -70,14 +70,19 @@ public class SeleniumUtil {
                 .until(ExpectedConditions.presenceOfElementLocated(by));
     }
 
-    private <WebDriver, T> WebElement waitForWithRetries(BiFunction<WebDriver, T, WebElement> function,
-                                                         WebDriver driver, T elementIdentifier, int retries){
+    public WebElement waitForElementVisible(WebDriver driver, WebElement element){
+        return fluentWait(driver)
+                .until(ExpectedConditions.visibilityOf(element));
+    }
+
+    private <WD, T> WebElement waitForWithRetries(BiFunction<WD, T, WebElement> function,
+                                                         WD driver, T elementIdentifier, int retries){
         var counter = 0;
         do{
             try{
                 return function.apply(driver, elementIdentifier);
             }catch (Exception e){
-                waitSomeTime();
+                waitSomeTime((WebDriver) driver);
                 counter++;
                 logger.info("Error to wait for element by id: {} at {} retry",
                         elementIdentifier.toString(), counter);
@@ -89,13 +94,13 @@ public class SeleniumUtil {
         throw new IllegalStateException(errorMessage);
     }
 
-    private void waitSomeTime(){
-        waitSomeTime(800);
+    private void waitSomeTime(WebDriver driver){
+        waitSomeTime(driver,800);
     }
 
-    private void waitSomeTime(int miliseconds){
-        try {
-            TimeUnit.MILLISECONDS.sleep(miliseconds);
-        }catch (Exception ee){}
+    private void waitSomeTime(WebDriver driver, int miliseconds){
+        driver.manage()
+                .timeouts()
+                .implicitlyWait(Duration.ofMillis(miliseconds));
     }
 }
