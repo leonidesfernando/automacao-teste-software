@@ -2,21 +2,21 @@ package br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdrive
 
 import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.components.GridUI;
 import lombok.Getter;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.CacheLookup;
 import org.openqa.selenium.support.FindBy;
 
 @Getter
 public class ListaLancamentosPage extends BasePage {
 
-    @CacheLookup @FindBy(id = "novoLancamento")
+    @FindBy(id = "novoLancamento")
     private WebElement newEntry;
 
-    @CacheLookup @FindBy(id = "itemBusca")
+    @FindBy(id = "itemBusca")
     private WebElement searchItem;
 
-    @CacheLookup @FindBy(id = "bth-search")
+    @FindBy(id = "bth-search")
     private WebElement btnSearch;
 
     private static final String COL_DESCRIPTION = "Descrição";
@@ -31,6 +31,22 @@ public class ListaLancamentosPage extends BasePage {
 
     public GridUI getGrid(){
         return new GridUI(webDriver).id("tabelaLancamentos");
+    }
+
+
+    @Override
+    protected void isLoaded() throws Error {
+        boolean loaded = false;
+        try {
+            loaded = btnSearch.isEnabled()
+                    && webDriver.findElement(By.id("tabelaLancamentos")).isDisplayed();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if(!loaded){
+            throw new Error("ListaLancamentosPage not loaded yet :/");
+        }
     }
 
 }

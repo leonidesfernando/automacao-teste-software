@@ -2,9 +2,7 @@ package br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdrive
 
 import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.modelo.TipoLancamento;
 import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.components.GridUI;
-import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.helper.SeleniumUtil;
 import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.pageobject.ListaLancamentosPage;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
 import java.math.BigDecimal;
@@ -26,21 +24,17 @@ public class ListaLancamentosAction extends BaseAction<ListaLancamentosPage> {
 
 
     public LancamentoAction novoLancamento(){
-        aguardarPagina();
         page.getNewEntry().click();
-        //webDriver.findElement(By.id("novoLancamento")).click();
         return new LancamentoAction(webDriver);
     }
 
-    public LancamentoAction abreLancamentoParaEdicao(String descricaoLancamento){
-        aguardarPagina();
+    public LancamentoAction abreLancamentoParaEdicao(){
         return clicaBotaoEditar();
     }
 
     public boolean existeLancamento(final String descricaoLancamento, final BigDecimal valorLancamento,
                                     String date, TipoLancamento tipo){
 
-        aguardarPagina();
         buscaLancamentoPorDescricao(descricaoLancamento);
         GridUI grid = page.getGrid();
         assertEquals(grid.getElements().size(), 1);
@@ -51,7 +45,6 @@ public class ListaLancamentosAction extends BaseAction<ListaLancamentosPage> {
     }
 
     public boolean existeLancamentoPorDescricao(String descricaoLancamento){
-        aguardarPagina();
         buscaLancamentoPorDescricao(descricaoLancamento);
         GridUI grid = page.getGrid();
         assertEquals(grid.getElements().size(), 1);
@@ -59,7 +52,6 @@ public class ListaLancamentosAction extends BaseAction<ListaLancamentosPage> {
     }
 
     private LancamentoAction clicaBotaoEditar(){
-        aguardarPagina();
         GridUI gridUI = page.getGrid();
         gridUI.getButtonsAt(0, 5).get(0).click();
         return new LancamentoAction(webDriver);
@@ -69,15 +61,9 @@ public class ListaLancamentosAction extends BaseAction<ListaLancamentosPage> {
         page.getSearchItem().clear();
         page.getSearchItem().sendKeys(descricaoLancamento);
         page.getBtnSearch().click();
-        SeleniumUtil.waitAjaxCompleted(getWebDriver());
-        aguardarPagina();
         return this;
     }
 
-    @Deprecated
-    protected void aguardarPagina(){
-        //SeleniumUtil.waitForPresentOfIdWithRetries(webDriver, LIST_TABLE_ID, 5);
-    }
 
     @Override
     public ListaLancamentosPage getPage() {

@@ -2,7 +2,6 @@ package br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdrive
 
 import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.modelo.Categoria;
 import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.modelo.TipoLancamento;
-import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.helper.SeleniumUtil;
 import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.pageobject.LancamentoPage;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.Keys;
@@ -23,11 +22,6 @@ public class LancamentoAction extends BaseAction<LancamentoPage> {
     @Override
     public LancamentoPage getPage() {
         return page;
-    }
-
-    protected void aguardarPagina() {
-        SeleniumUtil.waitForPresenceOfId(webDriver,
-                getPage().getBtnSalvar().getAttribute("id"));
     }
 
     public void salvaLancamento(){
@@ -57,7 +51,6 @@ public class LancamentoAction extends BaseAction<LancamentoPage> {
 
     private void fillData(String descricaoLancamento, BigDecimal valorLancamento,
                           String date, TipoLancamento tipo, Categoria categoria){
-        aguardarPagina();
         getPage().setTipoLancamento(tipo);
 
         setDescricao(descricaoLancamento);

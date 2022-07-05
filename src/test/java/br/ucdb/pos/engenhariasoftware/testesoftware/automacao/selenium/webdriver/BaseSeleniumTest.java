@@ -1,10 +1,8 @@
 package br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver;
 
 import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.config.Configurations;
-import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.helper.SeleniumUtil;
 import lombok.SneakyThrows;
 import org.aeonbits.owner.ConfigFactory;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.testng.ITestContext;
 import org.testng.annotations.AfterClass;
@@ -21,7 +19,7 @@ public abstract class BaseSeleniumTest {
 
     protected WebDriver webDriver;
 
-    private static Configurations config = ConfigFactory.create(Configurations.class);
+    private static final Configurations config = ConfigFactory.create(Configurations.class);
 
     @BeforeSuite
     protected void beforeSuite(ITestContext context){
@@ -30,11 +28,6 @@ public abstract class BaseSeleniumTest {
     @Test(priority = -1)
     public void access(){
         webDriver.get(config.url());
-        SeleniumUtil.fluentWait(webDriver, 120)
-                .until(driver ->
-                        ((JavascriptExecutor) driver)
-                                .executeScript("return document.readyState")
-                                .equals("complete"));
     }
 
     @AfterClass
@@ -55,6 +48,7 @@ public abstract class BaseSeleniumTest {
         return Browser.valueOf(System.getProperty(BROWSER)).loadBrowser();
     }
 
+    @SuppressWarnings("unchecked")
     protected <T> T getContextAttribute(String key, ITestContext context){
         T attribute = (T) context.getAttribute(key);
         Objects.requireNonNull(attribute);

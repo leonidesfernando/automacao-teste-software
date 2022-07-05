@@ -39,7 +39,7 @@ public class LancamentoTest extends BaseSeleniumTest {
         String sufixoEdicao = " EDITADO Selenium";
         String descricao = getContextAttribute(DESCRICAO, context);
         ListaLancamentosAction listaLancamentosAction = new ListaLancamentosAction(webDriver);
-        listaLancamentosAction.abreLancamentoParaEdicao(descricao)
+        listaLancamentosAction.abreLancamentoParaEdicao()
                 .setDescricao(descricao + sufixoEdicao)
                 .salvaLancamento();
         assertTrue(listaLancamentosAction.existeLancamentoPorDescricao(descricao + sufixoEdicao),
