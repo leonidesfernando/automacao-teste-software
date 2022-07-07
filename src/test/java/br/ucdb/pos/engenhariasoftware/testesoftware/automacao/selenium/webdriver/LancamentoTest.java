@@ -31,7 +31,7 @@ public class LancamentoTest extends BaseSeleniumTest {
         lancamentoAction.salvaLancamento(description, value,
                 date, TipoLancamento.SAIDA, Categoria.LAZER);
         context.setAttribute(DESCRICAO, description);
-        assertTrue(listaLancamentosAction.existeLancamento(description, value, date, TipoLancamento.SAIDA));
+        assertTrue(listaLancamentosAction.existeLancamento(description, date, TipoLancamento.SAIDA));
     }
 
     @Test(dependsOnMethods = "criaLancamento")
@@ -44,6 +44,14 @@ public class LancamentoTest extends BaseSeleniumTest {
                 .salvaLancamento();
         assertTrue(listaLancamentosAction.existeLancamentoPorDescricao(descricao + sufixoEdicao),
                 "Deveria existir o lancamento que foi editado " + (descricao+sufixoEdicao));
+        context.setAttribute(DESCRICAO, descricao + sufixoEdicao);
+    }
+
+    @Test(dependsOnMethods = "editaLancamento")
+    public void removeLancamento(ITestContext context){
+        String descricao = getContextAttribute(DESCRICAO, context);
+        ListaLancamentosAction listaLancamentosAction = new ListaLancamentosAction(webDriver);
+        listaLancamentosAction.removeLancamento(descricao);
     }
 
     private String getDescription(){

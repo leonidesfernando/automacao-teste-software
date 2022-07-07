@@ -6,6 +6,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 import java.util.List;
+import java.util.Objects;
 
 public class GridUI extends GenericUI{
 
@@ -14,6 +15,20 @@ public class GridUI extends GenericUI{
 
     public GridUI(WebDriver webDriver) {
         super(webDriver);
+    }
+
+    @Override
+    protected void isLoaded() throws Error {
+        Objects.requireNonNull(grid);
+        boolean loaded = false;
+        try{
+            loaded = grid.isDisplayed();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        if(!loaded){
+            throw new Error("GridUI is not loaded yet :/");
+        }
     }
 
     public GridUI gridElement(WebElement grid){
@@ -35,7 +50,6 @@ public class GridUI extends GenericUI{
     }
 
     public List<WebElement> getElements(){
-        waitForGridVisible();
         if(!areThereElements()){
             throw new IllegalStateException("No elements present. The data table is empty.");
         }
@@ -66,22 +80,15 @@ public class GridUI extends GenericUI{
     }
 
     private List<WebElement> getHeader(){
-        waitForGridVisible();
         return getWebDriver().findElements(By.xpath(".//thead/tr/th"));
     }
 
     public boolean areThereElements(){
-        waitForGridVisible();
         try{
             getWebDriver().findElement(By.className("ui-empty-table"));
             return false;
         }catch (NoSuchElementException e){
             return true;
         }
-    }
-
-    @Deprecated
-    protected void waitForGridVisible(){
-        //SeleniumUtil.waitForElementVisible(getWebDriver(), grid);
     }
 }
