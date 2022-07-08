@@ -18,12 +18,12 @@ import static org.testng.Assert.assertTrue;
 
 public class LancamentoTest extends BaseSeleniumTest {
 
-
+    private ListaLancamentosAction listaLancamentosAction;
     public static final String DESCRICAO = "descricao";
 
     @Test(dependsOnMethods = "access")
     public void criaLancamento(ITestContext context){
-        ListaLancamentosAction listaLancamentosAction = new ListaLancamentosAction(webDriver);
+        listaLancamentosAction = new ListaLancamentosAction(webDriver);
         LancamentoAction lancamentoAction = listaLancamentosAction.novoLancamento();
         String description = getDescription();
         BigDecimal value = getValorLancamento();
@@ -38,7 +38,6 @@ public class LancamentoTest extends BaseSeleniumTest {
     public void editaLancamento(ITestContext context){
         String sufixoEdicao = " EDITADO Selenium";
         String descricao = getContextAttribute(DESCRICAO, context);
-        ListaLancamentosAction listaLancamentosAction = new ListaLancamentosAction(webDriver);
         listaLancamentosAction.abreLancamentoParaEdicao()
                 .setDescricao(descricao + sufixoEdicao)
                 .salvaLancamento();
@@ -50,7 +49,6 @@ public class LancamentoTest extends BaseSeleniumTest {
     @Test(dependsOnMethods = "editaLancamento")
     public void removeLancamento(ITestContext context){
         String descricao = getContextAttribute(DESCRICAO, context);
-        ListaLancamentosAction listaLancamentosAction = new ListaLancamentosAction(webDriver);
         listaLancamentosAction.removeLancamento(descricao);
     }
 
@@ -69,7 +67,6 @@ public class LancamentoTest extends BaseSeleniumTest {
         return BigDecimal.valueOf(DataGen.moneyValue())
                 .setScale(2, RoundingMode.HALF_UP);
     }
-    
 }
 
 

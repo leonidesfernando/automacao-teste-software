@@ -1,6 +1,5 @@
 package br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.helper;
 
-import lombok.experimental.UtilityClass;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.*;
@@ -9,10 +8,9 @@ import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
 
 import java.time.Duration;
-import java.util.concurrent.TimeUnit;
 import java.util.function.BiFunction;
 
-@UtilityClass
+
 public class SeleniumUtil {
 
     private static final Logger logger = LogManager.getLogger(SeleniumUtil.class);
@@ -20,7 +18,7 @@ public class SeleniumUtil {
     private static final int DEFAULT_TIMEOUT_SECONDS = 60;
     private static final int DEFAULT_POLLING_SECONDS = 2;
 
-    public Wait<WebDriver> fluentWait(WebDriver driver){
+    public static Wait<WebDriver> fluentWait(WebDriver driver){
         return fluentWait(driver,
                 DEFAULT_TIMEOUT_SECONDS,
                 DEFAULT_POLLING_SECONDS);
@@ -33,7 +31,7 @@ public class SeleniumUtil {
                 .ignoring(StaleElementReferenceException.class);
     }
 
-    public Wait<WebDriver> fluentWait(WebDriver driver, int timeout, int polling) {
+    public static Wait<WebDriver> fluentWait(WebDriver driver, int timeout, int polling) {
         return new FluentWait<>(driver)
                 .withTimeout(Duration.ofSeconds(timeout))
                 .pollingEvery(Duration.ofSeconds(polling))
@@ -49,11 +47,11 @@ public class SeleniumUtil {
         driver.manage().timeouts().implicitlyWait(Duration.ofMillis(200));
     }
 
-    public WebElement waitForPresenceOfId(WebDriver driver, String id){
+    public static WebElement waitForPresenceOfId(WebDriver driver, String id){
         return waitForPresenceBy(driver, By.id(id));
     }
 
-    public WebElement waitForPresenceOfXpath(WebDriver driver, String xpath){
+    public static WebElement waitForPresenceOfXpath(WebDriver driver, String xpath){
         return waitForPresenceBy(driver, By.xpath(xpath));
     }
 
@@ -65,12 +63,12 @@ public class SeleniumUtil {
         waitForWithRetries(SeleniumUtil::waitForPresenceOfXpath, driver, xpath, retries);
     }
 
-    private WebElement waitForPresenceBy(WebDriver driver, By by){
+    private static WebElement waitForPresenceBy(WebDriver driver, By by){
         return fluentWait(driver)
                 .until(ExpectedConditions.presenceOfElementLocated(by));
     }
 
-    public WebElement waitForElementVisible(WebDriver driver, WebElement element){
+    public static WebElement waitForElementVisible(WebDriver driver, WebElement element){
         return fluentWait(driver)
                 .until(ExpectedConditions.visibilityOf(element));
     }
@@ -89,7 +87,7 @@ public class SeleniumUtil {
             }
         }while (counter < retries);
         String errorMessage = String.format("Was not possible wait for element by id %s after %d retries",
-                elementIdentifier.toString(), retries);
+                elementIdentifier, retries);
         logger.error(errorMessage);
         throw new IllegalStateException(errorMessage);
     }

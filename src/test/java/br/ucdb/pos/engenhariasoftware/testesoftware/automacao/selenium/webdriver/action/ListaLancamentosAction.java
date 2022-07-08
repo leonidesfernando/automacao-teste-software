@@ -88,6 +88,11 @@ public class ListaLancamentosAction extends BaseAction<ListaLancamentosPage> {
         return this;
     }
 
+    public DashboardAction gotToDashboard(){
+        page.getBtnDashboard().click();
+        return new DashboardAction(getWebDriver());
+    }
+
 
     @Override
     public ListaLancamentosPage getPage() {

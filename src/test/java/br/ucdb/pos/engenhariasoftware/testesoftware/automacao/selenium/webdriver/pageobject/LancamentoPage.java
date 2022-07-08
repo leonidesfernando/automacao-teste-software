@@ -55,19 +55,9 @@ public class LancamentoPage extends BasePage {
     }
 
     @Override
-    protected void isLoaded() throws Error {
-        boolean loaded = false;
-        try{
-            loaded = entrada.isEnabled() &&
-                    saida.isEnabled() &&
-                    btnSalvar.isEnabled();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        if(!loaded){
-            throw new Error("LancamentoPage is not loaded yet :/");
-        }
+    protected boolean isReady() {
+        return entrada.isEnabled() &&
+                saida.isEnabled() &&
+                btnSalvar.isEnabled();
     }
 }
-
-

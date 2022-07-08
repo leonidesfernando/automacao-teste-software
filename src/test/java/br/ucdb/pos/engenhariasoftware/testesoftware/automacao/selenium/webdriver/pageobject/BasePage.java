@@ -24,4 +24,19 @@ public abstract class BasePage extends LoadableComponent<BasePage> {
      */
     @Override
     protected void load() {}
+
+    @Override
+    protected void isLoaded() throws Error {
+        boolean loaded = false;
+        try{
+            loaded = isReady();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        if(!loaded){
+            throw new Error(String.format("%s is not loaded yet :/", this.getClass().getSimpleName()));
+        }
+    }
+
+    abstract protected boolean isReady();
 }

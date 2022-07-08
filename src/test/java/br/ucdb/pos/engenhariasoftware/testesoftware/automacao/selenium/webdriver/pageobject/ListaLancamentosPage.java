@@ -19,6 +19,9 @@ public class ListaLancamentosPage extends BasePage {
     @FindBy(id = "bth-search")
     private WebElement btnSearch;
 
+    @FindBy(css = "a[title='Gráfico']")
+    private WebElement btnDashboard;
+
     private static final String COL_DESCRIPTION = "Descrição";
     private static final String COL_RELEASE_DATE = "Data Lançamento";
     private static final String COL_TYPE = "Tipo";
@@ -33,21 +36,9 @@ public class ListaLancamentosPage extends BasePage {
         return new GridUI(webDriver).id("tabelaLancamentos");
     }
 
-
     @Override
-    protected void isLoaded() throws Error {
-        boolean loaded = false;
-        try {
-            loaded = btnSearch.isEnabled()
-                    && webDriver.findElement(By.id("tabelaLancamentos")).isDisplayed();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        if(!loaded){
-            throw new Error("ListaLancamentosPage not loaded yet :/");
-        }
+    protected boolean isReady() {
+        return btnSearch.isEnabled()
+                && webDriver.findElement(By.id("tabelaLancamentos")).isDisplayed();
     }
-
 }
-

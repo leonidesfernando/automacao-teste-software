@@ -1,9 +1,10 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
-<suite name="Suíte-Tests por Classes" parallel="methods" thread-count="10" verbose="1" data-provider-thread-count="6">
+<suite name="Suite-Tests por Classes" parallel="methods" thread-count="10" verbose="1" data-provider-thread-count="6">
     <test name="E2E Tests - Need the app running">
         <classes>
             <class name="br.ucdb.pos.engenhariasoftware.testesoftware.automacao.cucumber.testrunner.TestRunnerManager"></class>
             <class name="br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.LancamentoTest"></class>
+            <class name="br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.DashboardTest"></class>
             <class name="br.ucdb.pos.engenhariasoftware.testesoftware.automacao.restassured.ControllerTest"></class>
         </classes>
     </test>
