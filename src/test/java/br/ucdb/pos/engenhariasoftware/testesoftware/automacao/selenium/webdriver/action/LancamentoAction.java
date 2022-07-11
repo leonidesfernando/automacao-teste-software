@@ -51,8 +51,8 @@ public class LancamentoAction extends BaseAction<LancamentoPage> {
 
     private void fillData(String descricaoLancamento, BigDecimal valorLancamento,
                           String date, TipoLancamento tipo, Categoria categoria){
-        getPage().setTipoLancamento(tipo);
 
+        getPage().setTipoLancamento(tipo);
         setDescricao(descricaoLancamento);
         getPage().getDataLancamento().sendKeys(date);
         getPage().getDataLancamento().sendKeys(Keys.TAB);

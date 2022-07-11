@@ -6,10 +6,10 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 import org.openqa.selenium.support.ui.LoadableComponent;
 
-public abstract class GenericUI extends LoadableComponent {
+public abstract class GenericUI extends LoadableComponent<GenericUI> {
 
     @Getter
-    private WebDriver webDriver;
+    private final WebDriver webDriver;
 
     public GenericUI(WebDriver webDriver){
         this.webDriver = webDriver;
@@ -32,4 +32,19 @@ public abstract class GenericUI extends LoadableComponent {
      */
     @Override
     protected void load() {}
+
+    @Override
+    protected void isLoaded() throws Error {
+        boolean loaded = false;
+        try{
+            loaded = isReady();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        if(!loaded){
+            throw new Error(String.format("%s is not loaded yet :/", this.getClass().getSimpleName()));
+        }
+    }
+
+    abstract protected boolean isReady();
 }

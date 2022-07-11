@@ -1,8 +1,8 @@
 package br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.pageobject;
 
 import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.components.GridUI;
+import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.helper.SeleniumUtil;
 import lombok.Getter;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -38,7 +38,7 @@ public class ListaLancamentosPage extends BasePage {
 
     @Override
     protected boolean isReady() {
-        return btnSearch.isEnabled()
-                && webDriver.findElement(By.id("tabelaLancamentos")).isDisplayed();
+        return SeleniumUtil.waitForElementVisible(webDriver, btnSearch).isEnabled()
+                && getGrid().getWebElement().isDisplayed();
     }
 }

@@ -38,12 +38,22 @@ public class SeleniumUtil {
                 .ignoring(StaleElementReferenceException.class);
     }
 
-    public void waitAjaxCompleted(WebDriver driver){
-        fluentWait(driver)
+    public static void waitForPageLoad(WebDriver driver){
+        waitAjaxCompleted(driver);
+    }
+
+    public static void waitAjaxCompleted(WebDriver driver){
+        /*fluentWait(driver)
                 .until(
                         d -> ((JavascriptExecutor)driver)
                                 .executeScript("return document.readyState")
-                                .equals("complete"));
+                                .equals("complete"));*/
+        fluentWait(driver)
+                .until(dr -> String
+                        .valueOf(((JavascriptExecutor) dr).executeScript(
+                                "return document.readyState")
+                                )
+                        .equals("complete"));
         driver.manage().timeouts().implicitlyWait(Duration.ofMillis(200));
     }
 

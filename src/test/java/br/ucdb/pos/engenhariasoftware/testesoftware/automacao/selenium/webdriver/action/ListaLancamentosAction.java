@@ -2,6 +2,7 @@ package br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdrive
 
 import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.modelo.TipoLancamento;
 import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.components.GridUI;
+import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.helper.SeleniumUtil;
 import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.pageobject.ListaLancamentosPage;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.StaleElementReferenceException;
@@ -18,6 +19,10 @@ public class ListaLancamentosAction extends BaseAction<ListaLancamentosPage> {
     private static final String COL_RELEASE_DATE = "Data Lançamento";
     private static final String COL_TYPE = "Tipo";
 
+    enum Botao{
+        EDITAR,
+        EXCLUIR
+    }
 
     public ListaLancamentosAction(WebDriver webDriver) {
         super(webDriver, new ListaLancamentosPage(webDriver));
@@ -25,11 +30,14 @@ public class ListaLancamentosAction extends BaseAction<ListaLancamentosPage> {
 
 
     public LancamentoAction novoLancamento(){
+        page.get();
         page.getNewEntry().click();
+        SeleniumUtil.waitForPageLoad(webDriver);
         return new LancamentoAction(webDriver);
     }
 
     public LancamentoAction abreLancamentoParaEdicao(){
+        page.get();
         return clicaBotaoEditar();
     }
 
@@ -59,23 +67,24 @@ public class ListaLancamentosAction extends BaseAction<ListaLancamentosPage> {
         return grid.getCellValueAt(0, COL_DESCRIPTION).equals(descricaoLancamento);
     }
 
-    private void clicaBotao(int index){
+    private void clicaBotao(Botao btn){
         GridUI gridUI = page.getGrid();
-        gridUI.getButtonsAt(0, 5).get(index).click();
+        gridUI.getButtonsAt(0, 5).get(btn.ordinal()).click();
     }
 
     protected LancamentoAction clicaBotaoEditar(){
-        clicaBotao(0);
+        clicaBotao(Botao.EDITAR);
         return new LancamentoAction(webDriver);
     }
 
     protected ListaLancamentosAction clicaBotaoExcluir(){
-        clicaBotao(1);
+        clicaBotao(Botao.EXCLUIR);
         return this;
     }
 
     public ListaLancamentosAction buscaLancamentoPorDescricao(String descricaoLancamento){
         try {
+            page.get();
             waitForElementVisible(webDriver, page.getSearchItem()).clear();
             waitForElementVisible(webDriver, page.getSearchItem()).sendKeys(descricaoLancamento);
             waitForElementVisible(webDriver, page.getBtnSearch()).click();
@@ -92,7 +101,6 @@ public class ListaLancamentosAction extends BaseAction<ListaLancamentosPage> {
         page.getBtnDashboard().click();
         return new DashboardAction(getWebDriver());
     }
-
 
     @Override
     public ListaLancamentosPage getPage() {

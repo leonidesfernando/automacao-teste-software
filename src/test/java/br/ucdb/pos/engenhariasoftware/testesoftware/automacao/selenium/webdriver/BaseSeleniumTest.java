@@ -1,7 +1,6 @@
 package br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver;
 
 import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.config.Configurations;
-import lombok.SneakyThrows;
 import org.aeonbits.owner.ConfigFactory;
 import org.openqa.selenium.WebDriver;
 import org.testng.ITestContext;
@@ -9,6 +8,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
+import org.testng.util.Strings;
 
 import java.util.Objects;
 
@@ -31,9 +31,12 @@ public abstract class BaseSeleniumTest {
     }
 
     @AfterClass
-    @SneakyThrows
     protected void finaliza(){
-        webDriver.quit();
+        try{
+            webDriver.quit();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @BeforeClass
@@ -42,10 +45,15 @@ public abstract class BaseSeleniumTest {
     }
 
     protected WebDriver loadWebDriver(){
-        if (System.getProperty(BROWSER) == null) {
-            return config.browser().loadBrowser();
+        return getBrowser().loadBrowser();
+    }
+    
+    private Browser getBrowser(){
+        String browser = System.getProperty(BROWSER);
+        if(Strings.isNotNullAndNotEmpty(browser)) {
+            return Browser.valueOf(browser.toUpperCase());
         }
-        return Browser.valueOf(System.getProperty(BROWSER)).loadBrowser();
+        return config.browser();
     }
 
     @SuppressWarnings("unchecked")

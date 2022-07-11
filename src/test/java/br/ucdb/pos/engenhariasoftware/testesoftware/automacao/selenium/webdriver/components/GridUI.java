@@ -17,18 +17,11 @@ public class GridUI extends GenericUI{
         super(webDriver);
     }
 
+
     @Override
-    protected void isLoaded() throws Error {
+    protected boolean isReady() {
         Objects.requireNonNull(grid);
-        boolean loaded = false;
-        try{
-            loaded = grid.isDisplayed();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        if(!loaded){
-            throw new Error("GridUI is not loaded yet :/");
-        }
+        return grid.isDisplayed();
     }
 
     public GridUI gridElement(WebElement grid){
@@ -47,6 +40,11 @@ public class GridUI extends GenericUI{
         this.grid = getWebDriver().findElement(By.xpath(xpath));
         this.id = grid.getAttribute("id");
         return this;
+    }
+
+    public WebElement getWebElement(){
+        Objects.requireNonNull(grid);
+        return grid;
     }
 
     public List<WebElement> getElements(){
