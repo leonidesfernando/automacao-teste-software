@@ -5,12 +5,11 @@ import br.com.home.lab.softwaretesting.automation.selenium.webdriver.components.
 import br.com.home.lab.softwaretesting.automation.selenium.webdriver.helper.SeleniumUtil;
 import br.com.home.lab.softwaretesting.automation.selenium.webdriver.pageobject.ListaLancamentosPage;
 import lombok.extern.slf4j.Slf4j;
-import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 
+import static br.com.home.lab.softwaretesting.automation.selenium.webdriver.helper.SeleniumUtil.waitForElementVisible;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
-import static br.com.home.lab.softwaretesting.automation.selenium.webdriver.helper.SeleniumUtil.waitForElementVisible;
 
 @Slf4j
 public class ListaLancamentosAction extends BaseAction<ListaLancamentosPage> {
@@ -29,16 +28,15 @@ public class ListaLancamentosAction extends BaseAction<ListaLancamentosPage> {
     }
 
 
-    public LancamentoAction novoLancamento(){
+    public void novoLancamento(){
         page.get();
         page.getNewEntry().click();
         SeleniumUtil.waitForPageLoad(webDriver);
-        return new LancamentoAction(webDriver);
     }
 
-    public LancamentoAction abreLancamentoParaEdicao(){
+    public void abreLancamentoParaEdicao(){
         page.get();
-        return clicaBotaoEditar();
+        clicaBotaoEditar();
     }
 
     public boolean existeLancamento(final String descricaoLancamento, String date, TipoLancamento tipo){
@@ -72,17 +70,15 @@ public class ListaLancamentosAction extends BaseAction<ListaLancamentosPage> {
         gridUI.getButtonsAt(0, 5).get(btn.ordinal()).click();
     }
 
-    protected LancamentoAction clicaBotaoEditar(){
+    protected void clicaBotaoEditar(){
         clicaBotao(Botao.EDITAR);
-        return new LancamentoAction(webDriver);
     }
 
-    protected ListaLancamentosAction clicaBotaoExcluir(){
+    protected void clicaBotaoExcluir(){
         clicaBotao(Botao.EXCLUIR);
-        return this;
     }
 
-    public ListaLancamentosAction buscaLancamentoPorDescricao(String descricaoLancamento){
+    public void buscaLancamentoPorDescricao(String descricaoLancamento){
         /*try {
             page.get();
             waitForElementVisible(webDriver, page.getSearchItem()).clear();
@@ -99,13 +95,10 @@ public class ListaLancamentosAction extends BaseAction<ListaLancamentosPage> {
         waitForElementVisible(webDriver, page.getSearchItem()).clear();
         waitForElementVisible(webDriver, page.getSearchItem()).sendKeys(descricaoLancamento);
         waitForElementVisible(webDriver, page.getBtnSearch()).click();
-
-        return this;
     }
 
-    public DashboardAction gotToDashboard(){
+    public void gotToDashboard(){
         page.getBtnDashboard().click();
-        return new DashboardAction(getWebDriver());
     }
 
     @Override

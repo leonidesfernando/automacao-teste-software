@@ -24,7 +24,7 @@ public class LancamentoAction extends BaseAction<LancamentoPage> {
         return page;
     }
 
-    public ListaLancamentosAction salvaLancamento(){
+    public void salvaLancamento(){
         getPage().getBtnSalvar().click();
         try{
             Assert.fail(String.format(
@@ -33,9 +33,7 @@ public class LancamentoAction extends BaseAction<LancamentoPage> {
             );
         }catch (NoSuchElementException e){
             log.info("Entry save successfully");
-            return new ListaLancamentosAction(webDriver);
         }
-        return null;
     }
 
     public void salvaLancamento(String descricaoLancamento, BigDecimal valorLancamento,
@@ -44,11 +42,10 @@ public class LancamentoAction extends BaseAction<LancamentoPage> {
         salvaLancamento();
     }
 
-    public LancamentoAction setDescricao(String descricaoLancamento){
+    public void setDescricao(String descricaoLancamento){
         getPage().getDescricao().clear();
         getPage().getDescricao().click();
         getPage().getDescricao().sendKeys(descricaoLancamento);
-        return this;
     }
 
     private void fillData(String descricaoLancamento, BigDecimal valorLancamento,

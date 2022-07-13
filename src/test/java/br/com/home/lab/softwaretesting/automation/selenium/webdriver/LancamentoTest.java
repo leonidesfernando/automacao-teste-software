@@ -24,7 +24,8 @@ public class LancamentoTest extends BaseSeleniumTest {
     @Test(dependsOnMethods = "access")
     public void criaLancamento(ITestContext context){
         listaLancamentosAction = new ListaLancamentosAction(webDriver);
-        LancamentoAction lancamentoAction = listaLancamentosAction.novoLancamento();
+        listaLancamentosAction.novoLancamento();
+        LancamentoAction lancamentoAction = new LancamentoAction(webDriver);
         String description = getDescription();
         BigDecimal value = getValorLancamento();
         String date = DataGen.strDateCurrentMonth();
@@ -38,9 +39,10 @@ public class LancamentoTest extends BaseSeleniumTest {
     public void editaLancamento(ITestContext context){
         String sufixoEdicao = " EDITADO Selenium";
         String descricao = getContextAttribute(DESCRICAO, context);
-        listaLancamentosAction.abreLancamentoParaEdicao()
-                .setDescricao(descricao + sufixoEdicao)
-                .salvaLancamento();
+        listaLancamentosAction.abreLancamentoParaEdicao();
+        LancamentoAction lancamentoAction = new LancamentoAction(webDriver);
+        lancamentoAction.setDescricao(descricao + sufixoEdicao);
+        lancamentoAction.salvaLancamento();
         assertTrue(listaLancamentosAction.existeLancamentoPorDescricao(descricao + sufixoEdicao),
                 "Deveria existir o lancamento que foi editado " + (descricao+sufixoEdicao));
         context.setAttribute(DESCRICAO, descricao + sufixoEdicao);

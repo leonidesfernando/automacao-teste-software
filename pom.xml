@@ -155,6 +155,13 @@
 				<version>3.0.0-M5</version>
 				<configuration>
 					<argLine>-Dfile.encoding=UTF-8 --add-opens java.base/java.lang=ALL-UNNAMED  ${surefireArgLine}</argLine>
+					<parallel>methods</parallel>
+					<threadCount>8</threadCount>
+					<suiteXmlFiles>
+						<suiteXmlFile>
+							src\test\resources\suite-testng.xml
+						</suiteXmlFile>
+					</suiteXmlFiles>
 				</configuration>
 			</plugin>
 			<plugin>
