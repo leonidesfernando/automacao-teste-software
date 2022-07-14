@@ -14,7 +14,8 @@ public class DashboardAction extends BaseAction<DashboardPage> {
         return page;
     }
 
-    public void goToList(){
+    public ListaLancamentosAction goToList(){
         page.getBtnList().click();
+        return new ListaLancamentosAction(getWebDriver());
     }
 }

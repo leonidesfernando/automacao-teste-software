@@ -23,14 +23,15 @@ public class LancamentoTest extends BaseSeleniumTest {
 
     @Test(dependsOnMethods = "access")
     public void criaLancamento(ITestContext context){
-        listaLancamentosAction = new ListaLancamentosAction(webDriver);
-        listaLancamentosAction.novoLancamento();
-        LancamentoAction lancamentoAction = new LancamentoAction(webDriver);
         String description = getDescription();
         BigDecimal value = getValorLancamento();
         String date = DataGen.strDateCurrentMonth();
-        lancamentoAction.salvaLancamento(description, value,
-                date, TipoLancamento.SAIDA, Categoria.LAZER);
+        listaLancamentosAction = new ListaLancamentosAction(webDriver);
+        listaLancamentosAction.novoLancamento()
+                .and()
+                .salvaLancamento(description, value,
+                        date, TipoLancamento.SAIDA, Categoria.LAZER);
+
         context.setAttribute(DESCRICAO, description);
         assertTrue(listaLancamentosAction.existeLancamento(description, date, TipoLancamento.SAIDA));
     }
@@ -39,10 +40,12 @@ public class LancamentoTest extends BaseSeleniumTest {
     public void editaLancamento(ITestContext context){
         String sufixoEdicao = " EDITADO Selenium";
         String descricao = getContextAttribute(DESCRICAO, context);
-        listaLancamentosAction.abreLancamentoParaEdicao();
-        LancamentoAction lancamentoAction = new LancamentoAction(webDriver);
-        lancamentoAction.setDescricao(descricao + sufixoEdicao);
-        lancamentoAction.salvaLancamento();
+        listaLancamentosAction.abreLancamentoParaEdicao()
+                .and()
+                .setDescricao(descricao + sufixoEdicao)
+                .then()
+                .salvaLancamento();
+
         assertTrue(listaLancamentosAction.existeLancamentoPorDescricao(descricao + sufixoEdicao),
                 "Deveria existir o lancamento que foi editado " + (descricao+sufixoEdicao));
         context.setAttribute(DESCRICAO, descricao + sufixoEdicao);

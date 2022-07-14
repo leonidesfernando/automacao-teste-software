@@ -2,7 +2,6 @@ package br.com.home.lab.softwaretesting.automation.selenium.webdriver.action;
 
 import br.com.home.lab.softwaretesting.automation.modelo.TipoLancamento;
 import br.com.home.lab.softwaretesting.automation.selenium.webdriver.components.GridUI;
-import br.com.home.lab.softwaretesting.automation.selenium.webdriver.helper.SeleniumUtil;
 import br.com.home.lab.softwaretesting.automation.selenium.webdriver.pageobject.ListaLancamentosPage;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.WebDriver;
@@ -27,16 +26,15 @@ public class ListaLancamentosAction extends BaseAction<ListaLancamentosPage> {
         super(webDriver, new ListaLancamentosPage(webDriver));
     }
 
-
-    public void novoLancamento(){
+    public LancamentoAction novoLancamento(){
         page.get();
         page.getNewEntry().click();
-        SeleniumUtil.waitForPageLoad(webDriver);
+        return new LancamentoAction(webDriver);
     }
 
-    public void abreLancamentoParaEdicao(){
+    public LancamentoAction abreLancamentoParaEdicao(){
         page.get();
-        clicaBotaoEditar();
+        return clicaBotaoEditar();
     }
 
     public boolean existeLancamento(final String descricaoLancamento, String date, TipoLancamento tipo){
@@ -70,8 +68,9 @@ public class ListaLancamentosAction extends BaseAction<ListaLancamentosPage> {
         gridUI.getButtonsAt(0, 5).get(btn.ordinal()).click();
     }
 
-    protected void clicaBotaoEditar(){
+    protected LancamentoAction clicaBotaoEditar(){
         clicaBotao(Botao.EDITAR);
+        return new LancamentoAction(webDriver);
     }
 
     protected void clicaBotaoExcluir(){

@@ -24,6 +24,14 @@ public class LancamentoAction extends BaseAction<LancamentoPage> {
         return page;
     }
 
+    public LancamentoAction and() {
+        return this;
+    }
+
+    public LancamentoAction then() {
+        return this;
+    }
+
     public void salvaLancamento(){
         getPage().getBtnSalvar().click();
         try{
@@ -42,10 +50,11 @@ public class LancamentoAction extends BaseAction<LancamentoPage> {
         salvaLancamento();
     }
 
-    public void setDescricao(String descricaoLancamento){
+    public LancamentoAction setDescricao(String descricaoLancamento){
         getPage().getDescricao().clear();
         getPage().getDescricao().click();
         getPage().getDescricao().sendKeys(descricaoLancamento);
+        return this;
     }
 
     private void fillData(String descricaoLancamento, BigDecimal valorLancamento,
