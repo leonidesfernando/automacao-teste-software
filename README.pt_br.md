@@ -1,6 +1,7 @@
 # _automacao-teste-software_
 Projeto para explorar testes com: TestNG, Mockito, REST Assured, Cucumber, Selenium Webdriver e JMeter
 
+Todos os tests foram construídos para serem executados contra uma simples aplicação web presente no repositório [teste-software](https://github.com/leonidesfernando/teste-software)
 ## Requisitos
 - Maven
 - JDK 17+

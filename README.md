@@ -2,6 +2,7 @@
 
 Project to explorer tests e2e and load and stress with: TestNG, Mockito, REST Assured, Cucumber, Selenium Webdriver and JMeter.
 
+All tests were built to run against a simple web application in the [teste-software](https://github.com/leonidesfernando/teste-software) repository.
 
 ## Requirements
 - Maven
