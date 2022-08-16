@@ -40,7 +40,7 @@ public class ControllerTest {
         formParams.put(DESCRICAO, descricao);
         formParams.put(VALOR, String.valueOf(DataGen.moneyValue()));
         formParams.put(DATA_LANCAMENTO, DataGen.strDate());
-        formParams.put(TIPO_LANCAMENTO, (factor/2) > 3 ? "ENTRADA" : "SAIDA");
+        formParams.put(TIPO_LANCAMENTO, (factor/2) > 3 ? "RENDA" : "DESPESA");
         formParams.put(CATEGORIA, categorias[(int)factor].name());
 
         Response response = RestAssurredUtil.doRequestFormParam(HttpMethod.POST,

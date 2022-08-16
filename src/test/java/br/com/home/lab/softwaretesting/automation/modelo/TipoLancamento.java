@@ -7,10 +7,14 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum TipoLancamento {
 
-    @JsonProperty("Entrada")
-    ENTRADA("Entrada"),
-    @JsonProperty("SAIDA")
-    SAIDA("Saída");
+    @JsonProperty("Renda")
+    RENDA("Renda"),
+    @JsonProperty("Despesa")
+    DESPESA("Despesa"),
+
+    @JsonProperty("Transf")
+    TRANSF("Transf");
+
 
     @Getter
     private String descricao;

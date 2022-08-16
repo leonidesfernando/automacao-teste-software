@@ -13,10 +13,13 @@ import org.openqa.selenium.support.ui.Select;
 public class LancamentoPage extends BasePage {
 
     @CacheLookup @FindBy(id = "tipoLancamento1")
-    private WebElement entrada;
+    private WebElement renda;
 
     @CacheLookup @FindBy(id = "tipoLancamento2")
-    private WebElement saida;
+    private WebElement despesa;
+
+    @CacheLookup @FindBy(id = "tipoLancamento3")
+    private WebElement transf;
 
     @CacheLookup @Getter @FindBy(id = "descricao")
     private WebElement descricao;
@@ -47,17 +50,18 @@ public class LancamentoPage extends BasePage {
     }
 
     public void setTipoLancamento(TipoLancamento tipoLancamento){
-        if(tipoLancamento == TipoLancamento.SAIDA) {
-            saida.click(); // informa lançamento: SAÍDA
-        }else{
-            entrada.click(); // informa lançamento: ENTRADA
+        switch (tipoLancamento){
+            case DESPESA -> despesa.click();
+            case RENDA -> renda.click();
+            case TRANSF -> transf.click();
         }
     }
 
     @Override
     protected boolean isReady() {
-        return entrada.isEnabled() &&
-                saida.isEnabled() &&
+        return renda.isEnabled() &&
+                despesa.isEnabled() &&
+                transf.isEnabled() &&
                 btnSalvar.isEnabled();
     }
 }

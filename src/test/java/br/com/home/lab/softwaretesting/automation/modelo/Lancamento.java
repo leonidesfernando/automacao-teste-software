@@ -32,7 +32,7 @@ public class Lancamento {
 
     @JsonDeserialize(using = TipoLancamentoDeserialize.class)
     @Getter @Setter
-    private TipoLancamento tipoLancamento = TipoLancamento.SAIDA;
+    private TipoLancamento tipoLancamento = TipoLancamento.DESPESA;
 
     @JsonDeserialize(using = CategoriaDeserialize.class)
     @Getter @Setter
