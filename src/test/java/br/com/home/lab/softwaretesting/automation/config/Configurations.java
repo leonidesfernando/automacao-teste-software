@@ -9,7 +9,12 @@ import org.aeonbits.owner.Config;
 public interface Configurations extends Config {
 
     String url();
+
     boolean headless();
 
     Browser browser();
+
+    String username();
+
+    String password();
 }

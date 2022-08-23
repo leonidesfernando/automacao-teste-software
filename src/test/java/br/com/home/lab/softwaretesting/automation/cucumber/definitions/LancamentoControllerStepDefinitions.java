@@ -5,6 +5,7 @@ import br.com.home.lab.softwaretesting.automation.modelo.Lancamento;
 import br.com.home.lab.softwaretesting.automation.modelo.vo.LancamentoVO;
 import br.com.home.lab.softwaretesting.automation.restassured.RestAssurredUtil;
 import br.com.home.lab.softwaretesting.automation.selenium.webdriver.model.User;
+import br.com.home.lab.softwaretesting.automation.util.LoadConfigurationUtil;
 import io.cucumber.java.DataTableType;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -23,19 +24,17 @@ import java.util.List;
 import java.util.Map;
 
 import static br.com.home.lab.softwaretesting.automation.util.Constants.*;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.*;
 
 public class LancamentoControllerStepDefinitions {
 
     private static final ScenarioContextData context = new ScenarioContextData();
 
-    private static final User user = new User("user", "a");
+    private static final User user = LoadConfigurationUtil.getUser();
 
     @Given("Usuario e senha existente nas configuracoes")
     public void usuarioSenhaExistenteConfiguracoes() {
-        //TODO: carregar das configs
-        System.out.println(user.toString());
+        assertNotNull(user);
     }
     @Then("Deve logar e acessar a home")
     public void deveLogarAcessarHome() {

@@ -2,7 +2,6 @@ package br.com.home.lab.softwaretesting.automation.selenium.webdriver;
 
 import br.com.home.lab.softwaretesting.automation.selenium.webdriver.action.DashboardAction;
 import br.com.home.lab.softwaretesting.automation.selenium.webdriver.action.ListaLancamentosAction;
-import br.com.home.lab.softwaretesting.automation.selenium.webdriver.model.User;
 import org.testng.annotations.Test;
 
 public class DashboardTest extends BaseSeleniumTest {
@@ -11,7 +10,7 @@ public class DashboardTest extends BaseSeleniumTest {
     DashboardAction dashboardAction;
 
     public DashboardTest(){
-        super(new User("user", "a"));
+        super();
     }
 
     @Test(dependsOnMethods = "login")
@@ -22,8 +21,13 @@ public class DashboardTest extends BaseSeleniumTest {
     }
 
     @Test(dependsOnMethods = "accessDashboard")
-    public void backToList(){
+    public void backToList() {
         dashboardAction = new DashboardAction(webDriver);
         dashboardAction.goToList();
+    }
+
+    @Test(dependsOnMethods = "backToList")
+    public void logout() {
+        super.doLogout();
     }
 }

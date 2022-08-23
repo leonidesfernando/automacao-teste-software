@@ -6,6 +6,7 @@ import br.com.home.lab.softwaretesting.automation.modelo.Lancamento;
 import br.com.home.lab.softwaretesting.automation.modelo.converter.MoneyToStringConverter;
 import br.com.home.lab.softwaretesting.automation.selenium.webdriver.model.User;
 import br.com.home.lab.softwaretesting.automation.util.DataGen;
+import br.com.home.lab.softwaretesting.automation.util.LoadConfigurationUtil;
 import io.restassured.RestAssured;
 import io.restassured.filter.session.SessionFilter;
 import io.restassured.path.json.JsonPath;
@@ -35,22 +36,18 @@ public class ControllerTest {
     private static final String DESCRIPTION_TEST = "DESCRIPTION_TEST";
     private static final String ID_TO_USE = "ID_TO_USE";
 
-    private static final User user = new User("user", "a");
-
     private static final ScenarioContextData context = new ScenarioContextData();
 
     @BeforeTest
-    public void before(){
-        //TODO: load from config properties
-        RestAssured.baseURI = "http://localhost";
-        RestAssured.port = 8080;
-
+    public void before() {
+        RestAssured.baseURI = LoadConfigurationUtil.getOnlyUrl();
+        RestAssured.port = LoadConfigurationUtil.getPort();
         login();
     }
 
-
     @SneakyThrows
     private void login(){
+        User user = LoadConfigurationUtil.getUser();
         SessionFilter sessionFilter = RestAssurredUtil.doFormLogin(user, "/login");
         Assert.assertNotNull(sessionFilter);
         Assert.assertTrue(Strings.isNotNullAndNotEmpty(sessionFilter.getSessionId()));
@@ -99,10 +96,10 @@ public class ControllerTest {
     }
 
 
+    @SuppressWarnings("rawtypes")
     @Test(dependsOnMethods = {"salvarTest", "buscandoComPostTest"})
     public void editarTest() {
-        int id = Integer.parseInt(context.get(ID_TO_USE).toString());
-        Pair<String,String> param = new Pair("id", id);
+        Pair<String, String> param = new Pair<>("id", context.get(ID_TO_USE));
         Response response = RestAssurredUtil.doGetWithPathParam(getSessionId(), param, "/editar/{id}");
         String html = response.body().asString();
         XmlPath xmlPath = new XmlPath(XmlPath.CompatibilityMode.HTML, html);
@@ -110,10 +107,10 @@ public class ControllerTest {
         assertEquals(titulo, "Cadastro de Lançamento");
     }
 
+    @SuppressWarnings("rawtypes")
     @Test(dependsOnMethods = {"buscandoComPostTest", "salvarTest", "editarTest"})
     public void removeTest() {
-        int id = Integer.parseInt(context.get(ID_TO_USE).toString());
-        Pair<String, String> param = new Pair("id", id);
+        Pair<String, String> param = new Pair<>("id", context.get(ID_TO_USE));
         Response response = RestAssurredUtil.doDeleteWithParam(getSessionId(), param, "/remover/{id}");
         assertEquals(response.getStatusCode(), 302);
         assertTrue(response.getHeader("Location").contains("/lancamentos/"));

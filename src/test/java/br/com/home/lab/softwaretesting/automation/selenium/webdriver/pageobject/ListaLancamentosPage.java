@@ -1,10 +1,8 @@
 package br.com.home.lab.softwaretesting.automation.selenium.webdriver.pageobject;
 
-import br.com.home.lab.softwaretesting.automation.config.Configurations;
 import br.com.home.lab.softwaretesting.automation.selenium.webdriver.components.GridUI;
 import br.com.home.lab.softwaretesting.automation.selenium.webdriver.helper.SeleniumUtil;
 import lombok.Getter;
-import org.aeonbits.owner.ConfigFactory;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;

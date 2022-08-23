@@ -1,8 +1,10 @@
 package br.com.home.lab.softwaretesting.automation.selenium.webdriver;
 
 import br.com.home.lab.softwaretesting.automation.config.Configurations;
+import br.com.home.lab.softwaretesting.automation.selenium.webdriver.action.HomeAction;
 import br.com.home.lab.softwaretesting.automation.selenium.webdriver.action.LoginAction;
 import br.com.home.lab.softwaretesting.automation.selenium.webdriver.model.User;
+import br.com.home.lab.softwaretesting.automation.util.LoadConfigurationUtil;
 import org.aeonbits.owner.ConfigFactory;
 import org.openqa.selenium.WebDriver;
 import org.testng.ITestContext;
@@ -25,16 +27,16 @@ public abstract class BaseSeleniumTest {
     private User loggedUser;
 
 
-    public BaseSeleniumTest(User user){
-        loggedUser = user;
+    public BaseSeleniumTest() {
+        loggedUser = LoadConfigurationUtil.getUser();
     }
 
     @BeforeSuite
-    protected void beforeSuite(ITestContext context){
+    protected void beforeSuite(ITestContext context) {
     }
 
     @Test(priority = -1)
-    public void login(){
+    public void login() {
         login(loggedUser);
     }
 
@@ -44,21 +46,26 @@ public abstract class BaseSeleniumTest {
         doLogin();
     }
 
-    protected void doLogin(){
+    protected void doLogin() {
         LoginAction loginAction = new LoginAction(webDriver);
         loginAction.doLogin(loggedUser);
     }
 
+    public void doLogout() {
+        HomeAction homeAction = new HomeAction(webDriver);
+        homeAction.doLogout();
+    }
 
-    protected void access(){
-        webDriver.get(config.url());
+
+    protected void access() {
+        webDriver.get(LoadConfigurationUtil.getUrl());
     }
 
     @AfterClass
-    protected void finaliza(){
-        try{
+    protected void finaliza() {
+        try {
             webDriver.quit();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

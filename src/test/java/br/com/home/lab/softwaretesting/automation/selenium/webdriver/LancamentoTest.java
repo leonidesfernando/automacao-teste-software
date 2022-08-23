@@ -3,7 +3,6 @@ package br.com.home.lab.softwaretesting.automation.selenium.webdriver;
 import br.com.home.lab.softwaretesting.automation.modelo.Categoria;
 import br.com.home.lab.softwaretesting.automation.modelo.TipoLancamento;
 import br.com.home.lab.softwaretesting.automation.selenium.webdriver.action.ListaLancamentosAction;
-import br.com.home.lab.softwaretesting.automation.selenium.webdriver.model.User;
 import br.com.home.lab.softwaretesting.automation.util.DataGen;
 import org.testng.ITestContext;
 import org.testng.annotations.Test;
@@ -37,11 +36,11 @@ public class LancamentoTest extends BaseSeleniumTest {
         tiposLancamento.put(Stream.of(Categoria.values())
                         .filter(c -> c != Categoria.INVESTIMENTOS && c != Categoria.SALARIO)
                         .collect(Collectors.toList()),
-                Arrays.asList(TipoLancamento.DESPESA));
+                Collections.singletonList(TipoLancamento.DESPESA));
     }
 
     public LancamentoTest(){
-        super(new User("user", "a"));
+        super();
     }
 
     @Test(dependsOnMethods = "login")
@@ -72,17 +71,22 @@ public class LancamentoTest extends BaseSeleniumTest {
                 .salvaLancamento();
 
         assertTrue(listaLancamentosAction.existeLancamentoPorDescricao(descricao + sufixoEdicao),
-                "Deveria existir o lancamento que foi editado " + (descricao+sufixoEdicao));
+                "Deveria existir o lancamento que foi editado " + (descricao + sufixoEdicao));
         context.setAttribute(DESCRICAO, descricao + sufixoEdicao);
     }
 
     @Test(dependsOnMethods = "editaLancamento")
-    public void removeLancamento(ITestContext context){
+    public void removeLancamento(ITestContext context) {
         String descricao = getContextAttribute(DESCRICAO, context);
         listaLancamentosAction.removeLancamento(descricao);
     }
 
-    private String getDescription(){
+    @Test(dependsOnMethods = "removeLancamento")
+    public void logout() {
+        super.doLogout();
+    }
+
+    private String getDescription() {
         LocalDateTime dataHora = LocalDateTime.now();
         DateTimeFormatter formatoLancamento = DateTimeFormatter.ofPattern("dd.MM.yy-ss");
         StringJoiner descricaoLancamento = new StringJoiner(" ")

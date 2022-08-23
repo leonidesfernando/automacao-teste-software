@@ -1,5 +1,6 @@
 package br.com.home.lab.softwaretesting.automation.selenium.webdriver.components;
 
+import br.com.home.lab.softwaretesting.automation.selenium.webdriver.helper.SeleniumUtil;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
@@ -20,6 +21,7 @@ public class GridUI extends GenericUI{
     @Override
     protected boolean isReady() {
         Objects.requireNonNull(grid);
+        grid = SeleniumUtil.waitForElementVisible(getWebDriver(), grid);
         return grid.isDisplayed();
     }
 

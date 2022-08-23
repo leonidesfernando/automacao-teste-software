@@ -78,18 +78,6 @@ public class ListaLancamentosAction extends BaseAction<ListaLancamentosPage> {
     }
 
     public void buscaLancamentoPorDescricao(String descricaoLancamento){
-        /*try {
-            page.get();
-            waitForElementVisible(webDriver, page.getSearchItem()).clear();
-            waitForElementVisible(webDriver, page.getSearchItem()).sendKeys(descricaoLancamento);
-            waitForElementVisible(webDriver, page.getBtnSearch()).click();
-        }catch (StaleElementReferenceException e){
-            log.info("Trying to search again after get a StaleElementReferenceException");
-            waitForElementVisible(webDriver, page.getSearchItem()).clear();
-            waitForElementVisible(webDriver, page.getSearchItem()).sendKeys(descricaoLancamento);
-            waitForElementVisible(webDriver, page.getBtnSearch()).click();
-        }*/
-
         page.get();
         waitForElementVisible(webDriver, page.getSearchItem()).clear();
         waitForElementVisible(webDriver, page.getSearchItem()).sendKeys(descricaoLancamento);
