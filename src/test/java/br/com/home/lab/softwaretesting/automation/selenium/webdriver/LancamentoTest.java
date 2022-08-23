@@ -3,6 +3,7 @@ package br.com.home.lab.softwaretesting.automation.selenium.webdriver;
 import br.com.home.lab.softwaretesting.automation.modelo.Categoria;
 import br.com.home.lab.softwaretesting.automation.modelo.TipoLancamento;
 import br.com.home.lab.softwaretesting.automation.selenium.webdriver.action.ListaLancamentosAction;
+import br.com.home.lab.softwaretesting.automation.selenium.webdriver.model.User;
 import br.com.home.lab.softwaretesting.automation.util.DataGen;
 import org.testng.ITestContext;
 import org.testng.annotations.Test;
@@ -39,7 +40,11 @@ public class LancamentoTest extends BaseSeleniumTest {
                 Arrays.asList(TipoLancamento.DESPESA));
     }
 
-    @Test(dependsOnMethods = "access")
+    public LancamentoTest(){
+        super(new User("user", "a"));
+    }
+
+    @Test(dependsOnMethods = "login")
     public void criaLancamento(ITestContext context){
         String description = getDescription();
         BigDecimal value = getValorLancamento();

@@ -4,14 +4,19 @@ import br.com.home.lab.softwaretesting.automation.cucumber.ScenarioContextData;
 import br.com.home.lab.softwaretesting.automation.modelo.Lancamento;
 import br.com.home.lab.softwaretesting.automation.modelo.vo.LancamentoVO;
 import br.com.home.lab.softwaretesting.automation.restassured.RestAssurredUtil;
+import br.com.home.lab.softwaretesting.automation.selenium.webdriver.model.User;
 import io.cucumber.java.DataTableType;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
+import io.restassured.filter.session.SessionFilter;
 import io.restassured.path.json.JsonPath;
 import io.restassured.path.xml.XmlPath;
 import io.restassured.response.Response;
 import org.springframework.http.HttpMethod;
+import org.testng.Assert;
 import org.testng.internal.collections.Pair;
+import org.testng.util.Strings;
 
 import java.util.HashMap;
 import java.util.List;
@@ -19,28 +24,45 @@ import java.util.Map;
 
 import static br.com.home.lab.softwaretesting.automation.util.Constants.*;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 public class LancamentoControllerStepDefinitions {
 
-    private ScenarioContextData context;
+    private static final ScenarioContextData context = new ScenarioContextData();
 
-    public LancamentoControllerStepDefinitions(ScenarioContextData context){
-        this.context = context;
+    private static final User user = new User("user", "a");
+
+    @Given("Usuario e senha existente nas configuracoes")
+    public void usuarioSenhaExistenteConfiguracoes() {
+        //TODO: carregar das configs
+        System.out.println(user.toString());
+    }
+    @Then("Deve logar e acessar a home")
+    public void deveLogarAcessarHome() {
+        SessionFilter sessionFilter = RestAssurredUtil.doFormLogin(user, "/login");
+        Assert.assertNotNull(sessionFilter);
+        Assert.assertTrue(Strings.isNotNullAndNotEmpty(sessionFilter.getSessionId()));
+        context.setContext(SESSION_ID, sessionFilter.getSessionId());
+    }
+
+    private String getSessionId(){
+        return context.get(SESSION_ID);
     }
 
     @And("Remover o primeiro lancamento encontrado")
     public void removerOPrimeiroLancamentoEncontrado() {
         List<Lancamento> lancamentos = context.get(LANCAMENTOS);
         Pair<String, String> param = new Pair("id", lancamentos.get(0).getId());
-        Response response = RestAssurredUtil.doDeleteWithParam(param, "/remover/{id}");
+        Response response = RestAssurredUtil.doDeleteWithParam(getSessionId(), param, "/remover/{id}");
         assertEquals(response.getStatusCode(), 302);
+        assertTrue(response.getHeader("Location").contains("/lancamentos/"));
     }
 
     @And("Editar o primeiro lancamento encontrado")
     public void editar_o_primeiro_lancamento_encontrado() {
         List<Lancamento> lancamentos = context.get(LANCAMENTOS);
         Pair<String,String> param = new Pair("id", lancamentos.get(0).getId());
-        Response response = RestAssurredUtil.doGetWithPathParam(param, "/editar/{id}");
+        Response response = RestAssurredUtil.doGetWithPathParam(getSessionId(), param, "/editar/{id}");
         String html = response.body().asString();
         XmlPath xmlPath = new XmlPath(XmlPath.CompatibilityMode.HTML, html);
         String titulo = xmlPath.getString("html.body.div.div.div.h4");
@@ -90,18 +112,20 @@ public class LancamentoControllerStepDefinitions {
             formParams.put(TIPO_LANCAMENTO,vo.getTipoLancamento());
             formParams.put(CATEGORIA,vo.getCategoria());
 
-            Response response = RestAssurredUtil.doRequestFormParam(HttpMethod.POST,
+            Response response = RestAssurredUtil.doRequestFormParam(getSessionId(), HttpMethod.POST,
                     "/salvar", formParams);
+            assertTrue(response.getHeader("Location").contains("/lancamentos/"));
             assertEquals(response.statusCode(), 302);
         }
     }
 
     private Response buscarPor(String item){
         Response response = RestAssurredUtil.
-                doRequestWithBodyParam(HttpMethod.POST, "/buscaLancamentos", item);
+                doRequestWithBodyParam(getSessionId(), HttpMethod.POST, "/buscaLancamentos", item);
         context.setContext(LANCAMENTOS, extractListFromResponse(response));
         return response;
     }
+
 
     public List<Lancamento> extractListFromResponse(Response response) {
         return JsonPath.with( response.asInputStream())

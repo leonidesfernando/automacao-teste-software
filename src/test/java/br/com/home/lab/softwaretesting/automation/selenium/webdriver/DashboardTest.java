@@ -2,13 +2,19 @@ package br.com.home.lab.softwaretesting.automation.selenium.webdriver;
 
 import br.com.home.lab.softwaretesting.automation.selenium.webdriver.action.DashboardAction;
 import br.com.home.lab.softwaretesting.automation.selenium.webdriver.action.ListaLancamentosAction;
+import br.com.home.lab.softwaretesting.automation.selenium.webdriver.model.User;
 import org.testng.annotations.Test;
 
 public class DashboardTest extends BaseSeleniumTest {
 
     ListaLancamentosAction listaLancamentosAction;
     DashboardAction dashboardAction;
-    @Test(dependsOnMethods = "access")
+
+    public DashboardTest(){
+        super(new User("user", "a"));
+    }
+
+    @Test(dependsOnMethods = "login")
     public void accessDashboard(){
 
         listaLancamentosAction = new ListaLancamentosAction(webDriver);

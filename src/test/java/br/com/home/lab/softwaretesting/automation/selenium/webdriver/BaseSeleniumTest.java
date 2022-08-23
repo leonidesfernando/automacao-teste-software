@@ -1,6 +1,8 @@
 package br.com.home.lab.softwaretesting.automation.selenium.webdriver;
 
 import br.com.home.lab.softwaretesting.automation.config.Configurations;
+import br.com.home.lab.softwaretesting.automation.selenium.webdriver.action.LoginAction;
+import br.com.home.lab.softwaretesting.automation.selenium.webdriver.model.User;
 import org.aeonbits.owner.ConfigFactory;
 import org.openqa.selenium.WebDriver;
 import org.testng.ITestContext;
@@ -16,17 +18,39 @@ import java.util.Objects;
 public abstract class BaseSeleniumTest {
 
     private static final String BROWSER = "browser";
+    private static final Configurations config = ConfigFactory.create(Configurations.class);
 
     protected WebDriver webDriver;
 
-    private static final Configurations config = ConfigFactory.create(Configurations.class);
+    private User loggedUser;
+
+
+    public BaseSeleniumTest(User user){
+        loggedUser = user;
+    }
 
     @BeforeSuite
     protected void beforeSuite(ITestContext context){
     }
 
     @Test(priority = -1)
-    public void access(){
+    public void login(){
+        login(loggedUser);
+    }
+
+    public void login(User user){
+        loggedUser = user;
+        access();
+        doLogin();
+    }
+
+    protected void doLogin(){
+        LoginAction loginAction = new LoginAction(webDriver);
+        loginAction.doLogin(loggedUser);
+    }
+
+
+    protected void access(){
         webDriver.get(config.url());
     }
 

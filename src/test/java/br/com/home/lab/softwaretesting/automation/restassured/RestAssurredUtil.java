@@ -1,8 +1,10 @@
 package br.com.home.lab.softwaretesting.automation.restassured;
 
+import br.com.home.lab.softwaretesting.automation.selenium.webdriver.model.User;
+import io.restassured.authentication.FormAuthConfig;
 import io.restassured.config.EncoderConfig;
 import io.restassured.config.RestAssuredConfig;
-import io.restassured.http.ContentType;
+import io.restassured.filter.session.SessionFilter;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import lombok.experimental.UtilityClass;
@@ -16,32 +18,70 @@ import static io.restassured.RestAssured.given;
 @UtilityClass
 public class RestAssurredUtil {
 
+
+    public Response doGetWithPathParam(String sessionId, Pair<String, String> param, String endPoint){
+        return doGetWithPathParam(given().sessionId(sessionId), param, endPoint);
+    }
+
     public Response doGetWithPathParam(Pair<String, String> param, String endPoint){
-        return given()
-                .pathParam(param.first(), param.second()).when().get(endPoint);
+        return doGetWithPathParam(given(), param, endPoint);
+    }
+
+    private Response doGetWithPathParam(RequestSpecification spec, Pair<String, String> param, String endPoint){
+        return spec.pathParam(param.first(), param.second()).when().get(endPoint);
+    }
+
+    public Response doDeleteWithParam(String sessionId, Pair<String, String> param, String endPoint){
+        return doDeleteWithParam(given().sessionId(sessionId), param, endPoint);
     }
 
     public Response doDeleteWithParam(Pair<String, String> param, String endPoint){
-        return given().pathParam(param.first(), param.second())
+        return doDeleteWithParam(given(), param, endPoint);
+    }
+
+    private Response doDeleteWithParam(RequestSpecification spec, Pair<String, String> param, String endPoint){
+        return spec.pathParam(param.first(), param.second())
                 .when().delete(endPoint);
     }
 
+    public Response doRequestWithBodyParam(String sessionId, HttpMethod method, String endPoint, String bodyParam){
+        return doRequestWithBodyParam(given().sessionId(sessionId), method, endPoint, bodyParam);
+    }
     public Response doRequestWithBodyParam(HttpMethod method, String endPoint, String bodyParam){
-        RequestSpecification requestSpecification = given()
-                .config(RestAssuredConfig.config()
-                        .encoderConfig(EncoderConfig.encoderConfig().defaultContentCharset("UTF-8")))
+        return doRequestWithBodyParam(given(), method, endPoint, bodyParam);
+    }
+
+    private Response doRequestWithBodyParam(RequestSpecification spec, HttpMethod method, String endPoint, String bodyParam){
+        return spec.config(RestAssuredConfig.config()
+                .encoderConfig(EncoderConfig.encoderConfig().defaultContentCharset("UTF-8")))
                 .contentType("application/json; charset=utf-8")
-                .when();
-        return requestSpecification.body(bodyParam)
+                .when().body(bodyParam)
                 .request(method.name(), endPoint);
     }
 
     public Response doRequestFormParam(HttpMethod method, String endPoint, Map<String, String> formParams){
-        RequestSpecification requestSpecification = given().when();
-        addFormParams(requestSpecification, formParams);
-        requestSpecification.header("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
+        return doRequest(given().when(), method, endPoint, formParams);
+    }
 
-        return requestSpecification.request(method.name(), endPoint);
+    private Response doRequest(RequestSpecification requestSpecification, HttpMethod method, String endpoint, Map<String, String> formParams){
+        addFormParams(requestSpecification, formParams);
+        return requestSpecification
+                .header("Content-Type", "application/x-www-form-urlencoded;charset=utf-8")
+                .request(method.name(), endpoint);
+    }
+
+    public Response doRequestFormParam(String sessionId, HttpMethod method, String endPoint, Map<String, String> formParams){
+        return doRequest(given().sessionId(sessionId), method, endPoint, formParams);
+    }
+
+    public SessionFilter doFormLogin(User user, String formActionn){
+        SessionFilter sessionFilter = new SessionFilter();
+        given().auth()
+                .form(user.getUsername(), user.getPassword(),
+                        new FormAuthConfig(formActionn, "user", "password"))
+                .filter(sessionFilter)
+                .get();
+        return sessionFilter;
     }
 
     private void addFormParams(RequestSpecification requestSpecification, Map<String, String> formParams){

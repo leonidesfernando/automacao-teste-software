@@ -65,7 +65,7 @@ public class SeleniumUtil {
         return waitForPresenceBy(driver, By.xpath(xpath));
     }
 
-    public void waitForPresentOfIdWithRetries(WebDriver driver, String id, int retries){
+    public static void waitForPresentOfIdWithRetries(WebDriver driver, String id, int retries){
         waitForWithRetries(SeleniumUtil::waitForPresenceOfId, driver, id, retries);
     }
 
@@ -83,7 +83,7 @@ public class SeleniumUtil {
                 .until(ExpectedConditions.visibilityOf(element));
     }
 
-    private <WD, T> WebElement waitForWithRetries(BiFunction<WD, T, WebElement> function,
+    private static <WD, T> WebElement waitForWithRetries(BiFunction<WD, T, WebElement> function,
                                                          WD driver, T elementIdentifier, int retries){
         var counter = 0;
         do{
@@ -102,11 +102,11 @@ public class SeleniumUtil {
         throw new IllegalStateException(errorMessage);
     }
 
-    private void waitSomeTime(WebDriver driver){
+    private static void waitSomeTime(WebDriver driver){
         waitSomeTime(driver,800);
     }
 
-    private void waitSomeTime(WebDriver driver, int miliseconds){
+    private static void waitSomeTime(WebDriver driver, int miliseconds){
         driver.manage()
                 .timeouts()
                 .implicitlyWait(Duration.ofMillis(miliseconds));

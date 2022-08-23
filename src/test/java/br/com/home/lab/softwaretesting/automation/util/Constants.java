@@ -8,4 +8,6 @@ public interface Constants {
     String DATA_LANCAMENTO = "dataLancamento";
     String TIPO_LANCAMENTO = "tipoLancamento";
     String CATEGORIA = "categoria";
+
+    String SESSION_ID = "sessionId";
 }

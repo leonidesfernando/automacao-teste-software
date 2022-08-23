@@ -1,9 +1,14 @@
 Feature: Validar o CRUD de lancamentos de gastos e receitas
   Cenarios a validar:
-  1. criar um novo lancamento de DESPESA e de RENDA
-  2. buscar o lancamento
+  1. logar no sistema
+  2. criar um novo lancamento de DESPESA e de RENDA
+  3. buscar o lancamento
   4. editar o lancamento
   5. remover o lancamento
+
+  Scenario: Logar no sistema com usuario pre-definido via configuracoes
+    Given Usuario e senha existente nas configuracoes
+    Then Deve logar e acessar a home
 
   Scenario: Criando um lancamentos de RENDA e DESPESA
     Given Registrar lancamento com dados fornecidos
