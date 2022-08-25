@@ -1,6 +1,12 @@
 target/
 !.mvn/wrapper/maven-wrapper.jar
 
+
+### JMeter reports ###
+src/test/jmeter/report
+src/test/jmeter/reportResult.jtl
+src/test/jmeter/jmeter.log
+
 test-output
 ### STS ###
 .apt_generated

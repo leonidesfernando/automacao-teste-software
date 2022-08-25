@@ -1,7 +1,9 @@
 # _automacao-teste-software_
-Projeto para explorar testes com: TestNG, Mockito, REST Assured, Cucumber, Selenium Webdriver e JMeter
+Projeto para explorar testes com: TestNG, Mockito, REST Assured, Cucumber, Selenium Webdriver
+e [JMeter](src/test/jmeter/README-JMETER.pt_br.md)
 
-Todos os tests foram construídos para serem executados contra uma simples aplicação web presente no repositório [teste-software](https://github.com/leonidesfernando/teste-software)
+Todos os tests foram construídos para serem executados contra uma simples aplicação web presente no
+repositório [teste-software](https://github.com/leonidesfernando/teste-software)
 ## Requisitos
 - Maven
 - JDK 17+
@@ -15,4 +17,5 @@ No IntelijIDEA:
 2. Instalar o plugin do Lombok, Spring e Spring Boot(via Marketplace)
 3. Reiniciar o IDEA
 
+---
 [English](README.md)

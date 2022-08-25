@@ -1,8 +1,10 @@
 # _automacao-teste-software_
 
-Project to explorer tests e2e and load and stress with: TestNG, Mockito, REST Assured, Cucumber, Selenium Webdriver and JMeter.
+Project to explorer tests e2e and load and stress with: TestNG, Mockito, REST Assured, Cucumber, Selenium Webdriver
+and [JMeter](src/test/jmeter/README-JMETER.md).
 
-All tests were built to run against a simple web application in the [teste-software](https://github.com/leonidesfernando/teste-software) repository.
+All tests were built to run against a simple web application in
+the [teste-software](https://github.com/leonidesfernando/teste-software) repository.
 
 ## Requirements
 - Maven
@@ -18,4 +20,5 @@ For IntelijIDEA:
 2. Install plugins to Spring Boot and Lombok(via Marketplace)
 3. Restart IDEA and enjoy it.
 
+---
 [Português](README.pt_br.md)
