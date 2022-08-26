@@ -99,7 +99,7 @@ public class ControllerTest {
     @SuppressWarnings("rawtypes")
     @Test(dependsOnMethods = {"salvarTest", "buscandoComPostTest"})
     public void editarTest() {
-        Pair<String, String> param = new Pair<>("id", context.get(ID_TO_USE));
+        Pair<String, String> param = new Pair<>("id", context.get(ID_TO_USE).toString());
         Response response = RestAssurredUtil.doGetWithPathParam(getSessionId(), param, "/editar/{id}");
         String html = response.body().asString();
         XmlPath xmlPath = new XmlPath(XmlPath.CompatibilityMode.HTML, html);
@@ -110,7 +110,7 @@ public class ControllerTest {
     @SuppressWarnings("rawtypes")
     @Test(dependsOnMethods = {"buscandoComPostTest", "salvarTest", "editarTest"})
     public void removeTest() {
-        Pair<String, String> param = new Pair<>("id", context.get(ID_TO_USE));
+        Pair<String, String> param = new Pair<>("id", context.get(ID_TO_USE).toString());
         Response response = RestAssurredUtil.doDeleteWithParam(getSessionId(), param, "/remover/{id}");
         assertEquals(response.getStatusCode(), 302);
         assertTrue(response.getHeader("Location").contains("/lancamentos/"));
