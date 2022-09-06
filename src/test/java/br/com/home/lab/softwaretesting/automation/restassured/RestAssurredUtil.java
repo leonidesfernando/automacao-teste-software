@@ -77,7 +77,7 @@ public class RestAssurredUtil {
     public SessionFilter doFormLogin(User user, String formActionn){
         SessionFilter sessionFilter = new SessionFilter();
         given().auth()
-                .form(user.getUsername(), user.getPassword(),
+                .form(user.username(), user.password(),
                         new FormAuthConfig(formActionn, "user", "password"))
                 .filter(sessionFilter)
                 .get();

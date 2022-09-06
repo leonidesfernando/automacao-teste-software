@@ -1,8 +1,7 @@
 package br.com.home.lab.softwaretesting.automation.cucumber.definitions;
 
 import br.com.home.lab.softwaretesting.automation.cucumber.ScenarioContextData;
-import br.com.home.lab.softwaretesting.automation.modelo.Lancamento;
-import br.com.home.lab.softwaretesting.automation.modelo.vo.LancamentoVO;
+import br.com.home.lab.softwaretesting.automation.modelo.record.LancamentoRecord;
 import br.com.home.lab.softwaretesting.automation.restassured.RestAssurredUtil;
 import br.com.home.lab.softwaretesting.automation.selenium.webdriver.model.User;
 import br.com.home.lab.softwaretesting.automation.util.LoadConfigurationUtil;
@@ -19,7 +18,6 @@ import org.testng.Assert;
 import org.testng.internal.collections.Pair;
 import org.testng.util.Strings;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -50,8 +48,8 @@ public class LancamentoControllerStepDefinitions {
 
     @And("Remover o primeiro lancamento encontrado")
     public void removerOPrimeiroLancamentoEncontrado() {
-        List<Lancamento> lancamentos = context.get(LANCAMENTOS);
-        Pair<String, String> param = new Pair("id", lancamentos.get(0).getId());
+        List<LancamentoRecord> lancamentos = context.get(LANCAMENTOS);
+        Pair<String, String> param = new Pair("id", lancamentos.get(0).id());
         Response response = RestAssurredUtil.doDeleteWithParam(getSessionId(), param, "/remover/{id}");
         assertEquals(response.getStatusCode(), 302);
         assertTrue(response.getHeader("Location").contains("/lancamentos/"));
@@ -59,8 +57,8 @@ public class LancamentoControllerStepDefinitions {
 
     @And("Editar o primeiro lancamento encontrado")
     public void editar_o_primeiro_lancamento_encontrado() {
-        List<Lancamento> lancamentos = context.get(LANCAMENTOS);
-        Pair<String,String> param = new Pair("id", lancamentos.get(0).getId());
+        List<LancamentoRecord> lancamentos = context.get(LANCAMENTOS);
+        Pair<String, String> param = new Pair("id", lancamentos.get(0).id());
         Response response = RestAssurredUtil.doGetWithPathParam(getSessionId(), param, "/editar/{id}");
         String html = response.body().asString();
         XmlPath xmlPath = new XmlPath(XmlPath.CompatibilityMode.HTML, html);
@@ -74,14 +72,15 @@ public class LancamentoControllerStepDefinitions {
     }
 
     @DataTableType
-    public LancamentoVO lancamentos(Map<String,String> row){
-        return LancamentoVO.builder()
-                .descricao(row.get(DESCRICAO))
-                .valor(getValorByParam(row.get(VALOR)))
-                .dataLancamento(getDataLancamentoByParam(row.get(DATA_LANCAMENTO)))
-                .tipoLancamento(row.get(TIPO_LANCAMENTO))
-                .categoria(row.get(CATEGORIA))
-                .build();
+    public LancamentoRecord lancamentos(Map<String, String> row) {
+        return new LancamentoRecord(
+                0L,
+                row.get(DESCRICAO),
+                getValorByParam(row.get(VALOR)),
+                getDataLancamentoByParam(row.get(DATA_LANCAMENTO)),
+                row.get(TIPO_LANCAMENTO),
+                row.get(CATEGORIA)
+        );
     }
 
     private String getValorByParam(String param){
@@ -101,15 +100,16 @@ public class LancamentoControllerStepDefinitions {
     }
 
     @Given("Registrar lancamento com dados fornecidos")
-    public void registrar_lancamento_com_dados_fornecidos(List<LancamentoVO> lancamentos) {
+    public void registrar_lancamento_com_dados_fornecidos(List<LancamentoRecord> lancamentos) {
 
-        for(LancamentoVO vo : lancamentos){
-            Map<String, String> formParams = new HashMap<>();
-            formParams.put(DESCRICAO, vo.getDescricao());
-            formParams.put(VALOR,vo.getValor());
-            formParams.put(DATA_LANCAMENTO,vo.getDataLancamento());
-            formParams.put(TIPO_LANCAMENTO,vo.getTipoLancamento());
-            formParams.put(CATEGORIA,vo.getCategoria());
+        for (LancamentoRecord record : lancamentos) {
+            Map<String, String> formParams = Map.ofEntries(
+                    Map.entry(DESCRICAO, record.descricao()),
+                    Map.entry(VALOR, record.valor()),
+                    Map.entry(DATA_LANCAMENTO, record.dataLancamento()),
+                    Map.entry(TIPO_LANCAMENTO, record.tipoLancamento()),
+                    Map.entry(CATEGORIA, record.categoria())
+            );
 
             Response response = RestAssurredUtil.doRequestFormParam(getSessionId(), HttpMethod.POST,
                     "/salvar", formParams);
@@ -126,8 +126,8 @@ public class LancamentoControllerStepDefinitions {
     }
 
 
-    public List<Lancamento> extractListFromResponse(Response response) {
-        return JsonPath.with( response.asInputStream())
-                .getList("lancamentos", Lancamento.class);
+    public List<LancamentoRecord> extractListFromResponse(Response response) {
+        return JsonPath.with(response.asInputStream())
+                .getList("lancamentos", LancamentoRecord.class);
     }
 }

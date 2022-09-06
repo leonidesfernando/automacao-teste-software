@@ -22,9 +22,9 @@ public class LoginPage extends BasePage {
 
     public void submitUserCredentials(User user){
         usernameInput.clear();
-        usernameInput.sendKeys(user.getUsername());
+        usernameInput.sendKeys(user.username());
         passwordInput.clear();
-        passwordInput.sendKeys(user.getPassword());
+        passwordInput.sendKeys(user.password());
         passwordInput.sendKeys(Keys.RETURN);
     }
 

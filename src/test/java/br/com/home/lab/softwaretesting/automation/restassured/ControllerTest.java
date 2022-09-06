@@ -2,8 +2,8 @@ package br.com.home.lab.softwaretesting.automation.restassured;
 
 import br.com.home.lab.softwaretesting.automation.cucumber.ScenarioContextData;
 import br.com.home.lab.softwaretesting.automation.modelo.Categoria;
-import br.com.home.lab.softwaretesting.automation.modelo.Lancamento;
 import br.com.home.lab.softwaretesting.automation.modelo.converter.MoneyToStringConverter;
+import br.com.home.lab.softwaretesting.automation.modelo.record.LancamentoRecord;
 import br.com.home.lab.softwaretesting.automation.selenium.webdriver.model.User;
 import br.com.home.lab.softwaretesting.automation.util.DataGen;
 import br.com.home.lab.softwaretesting.automation.util.LoadConfigurationUtil;
@@ -88,11 +88,11 @@ public class ControllerTest {
         String descricao = context.get(DESCRIPTION_TEST);
         Response response = RestAssurredUtil.
                 doRequestWithBodyParam(getSessionId(), HttpMethod.POST, "/buscaLancamentos", descricao);
-        List<Lancamento> lancamentos =  JsonPath.with( response.asInputStream())
-                .getList("lancamentos", Lancamento.class);
+        List<LancamentoRecord> lancamentos = JsonPath.with(response.asInputStream())
+                .getList("lancamentos", LancamentoRecord.class);
 
         assertEquals(lancamentos.size(), 1);
-        context.setContext(ID_TO_USE, lancamentos.get(0).getId());
+        context.setContext(ID_TO_USE, lancamentos.get(0).id());
     }
 
 

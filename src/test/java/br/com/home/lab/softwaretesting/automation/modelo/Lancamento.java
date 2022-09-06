@@ -16,7 +16,7 @@ import java.util.Date;
 public class Lancamento {
     private final String DD_MM_YYYY = "dd/MM/yyyy";
 
-    @Getter @Setter
+    @Getter //@Setter
     private long id;
 
     @Getter @Setter
