@@ -11,7 +11,7 @@ the [teste-software](https://github.com/leonidesfernando/teste-software) reposit
 
 ## Requirements
 - Maven
-- JDK 17+
+- JDK 18+
 
 
 ## Structure

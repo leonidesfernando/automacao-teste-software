@@ -8,7 +8,7 @@ Todos os tests foram construídos para serem executados contra uma simples aplic
 repositório [teste-software](https://github.com/leonidesfernando/teste-software)
 ## Requisitos
 - Maven
-- JDK 17+
+- JDK 18+
 
 ## Estrutura
 Este projeto alguns frameworks como SpringBoot e Lombok. Caso venha usar uma IDE que possua plugins para esses frameworks, recomenda-se que faça a instalação.
