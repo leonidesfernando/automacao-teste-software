@@ -1,5 +1,7 @@
 # _automacao-teste-software_
-Projeto para explorar testes com: TestNG, Mockito, REST Assured, Cucumber, Selenium Webdriver
+TestNG([na branch testng](https://github.com/leonidesfernando/automacao-teste-software/tree/testng)) ou
+Junit([na branch junit](https://github.com/leonidesfernando/automacao-teste-software/tree/junit)),
+Mockito, REST Assured, Cucumber, Selenium Webdriver
 e [JMeter](src/test/jmeter/README-JMETER.pt_br.md)
 
 Todos os tests foram construídos para serem executados contra uma simples aplicação web presente no
