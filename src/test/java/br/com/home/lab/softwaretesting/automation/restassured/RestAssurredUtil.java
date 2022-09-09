@@ -8,8 +8,8 @@ import io.restassured.filter.session.SessionFilter;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import lombok.experimental.UtilityClass;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.http.HttpMethod;
-import org.testng.internal.collections.Pair;
 
 import java.util.Map;
 
@@ -28,7 +28,7 @@ public class RestAssurredUtil {
     }
 
     private Response doGetWithPathParam(RequestSpecification spec, Pair<String, String> param, String endPoint){
-        return spec.pathParam(param.first(), param.second()).when().get(endPoint);
+        return spec.pathParam(param.getLeft(), param.getRight()).when().get(endPoint);
     }
 
     public Response doDeleteWithParam(String sessionId, Pair<String, String> param, String endPoint){
@@ -40,7 +40,7 @@ public class RestAssurredUtil {
     }
 
     private Response doDeleteWithParam(RequestSpecification spec, Pair<String, String> param, String endPoint){
-        return spec.pathParam(param.first(), param.second())
+        return spec.pathParam(param.getLeft(), param.getRight())
                 .when().delete(endPoint);
     }
 

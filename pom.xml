@@ -21,15 +21,16 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<java.version>17</java.version>
+		<java.version>18</java.version>
 		<webdrivermanager.version>5.1.1</webdrivermanager.version>
 		<selenium.version>4.1.4</selenium.version>
-		<testng.version>7.5</testng.version>
 		<lombok.version>1.18.24</lombok.version>
 		<cucumber.version>7.3.4</cucumber.version>
 		<argLine>-Xms256m -Xmx1524m -XX:MaxPermSize=256m -Duser.language=en</argLine>
 		<java.faker>1.0.2</java.faker>
 		<owner.version>1.0.4</owner.version>
+		<junit-jupiter.version>5.8.2</junit-jupiter.version>
+		<junit.platform.version>1.9.0</junit.platform.version>
 	</properties>
 
 	<dependencies>
@@ -47,16 +48,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>org.junit.jupiter</groupId>
-					<artifactId>junit-jupiter</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.mockito</groupId>
-					<artifactId>mockito-junit-jupiter</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -64,12 +55,6 @@
 			<scope>test</scope>
 		</dependency>
 
-		<dependency>
-			<groupId>org.testng</groupId>
-			<artifactId>testng</artifactId>
-			<version>${testng.version}</version>
-			<scope>test</scope>
-		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
@@ -109,13 +94,18 @@
 
 		<dependency>
 			<groupId>io.cucumber</groupId>
-			<artifactId>cucumber-testng</artifactId>
+			<artifactId>cucumber-junit</artifactId>
 			<version>${cucumber.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>io.cucumber</groupId>
 			<artifactId>cucumber-picocontainer</artifactId>
+			<version>${cucumber.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.cucumber</groupId>
+			<artifactId>cucumber-junit-platform-engine</artifactId>
 			<version>${cucumber.version}</version>
 		</dependency>
 
@@ -140,6 +130,70 @@
 		</dependency>
 
 
+		<!-- start Junit deps -->
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<version>${junit-jupiter.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<version>${junit-jupiter.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-params</artifactId>
+			<version>${junit-jupiter.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.platform</groupId>
+			<artifactId>junit-platform-suite</artifactId>
+			<version>${junit.platform.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.platform</groupId>
+			<artifactId>junit-platform-suite-api</artifactId>
+			<version>${junit.platform.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.platform</groupId>
+			<artifactId>junit-platform-engine</artifactId>
+			<version>${junit.platform.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.platform</groupId>
+			<artifactId>junit-platform-commons</artifactId>
+			<version>${junit.platform.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.platform</groupId>
+			<artifactId>junit-platform-suite-engine</artifactId>
+			<version>${junit.platform.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.platform</groupId>
+			<artifactId>junit-platform-suite-commons</artifactId>
+			<version>${junit.platform.version}</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.platform</groupId>
+			<artifactId>junit-platform-launcher</artifactId>
+			<version>${junit.platform.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+
+		<!-- end Junit deps -->
+
 	</dependencies>
 
 	<build>
@@ -154,14 +208,9 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>3.0.0-M5</version>
 				<configuration>
-					<argLine>-Dfile.encoding=UTF-8 --add-opens java.base/java.lang=ALL-UNNAMED  ${surefireArgLine}</argLine>
+					<argLine>-Dfile.encoding=UTF-8 --add-opens java.base/java.lang=ALL-UNNAMED</argLine>
 					<parallel>methods</parallel>
 					<threadCount>8</threadCount>
-					<suiteXmlFiles>
-						<suiteXmlFile>
-							src\test\resources\suite-testng.xml
-						</suiteXmlFile>
-					</suiteXmlFiles>
 				</configuration>
 			</plugin>
 			<plugin>

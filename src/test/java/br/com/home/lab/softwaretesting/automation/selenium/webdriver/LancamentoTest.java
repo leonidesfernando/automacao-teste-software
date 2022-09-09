@@ -4,8 +4,10 @@ import br.com.home.lab.softwaretesting.automation.modelo.Categoria;
 import br.com.home.lab.softwaretesting.automation.modelo.TipoLancamento;
 import br.com.home.lab.softwaretesting.automation.selenium.webdriver.action.ListaLancamentosAction;
 import br.com.home.lab.softwaretesting.automation.util.DataGen;
-import org.testng.ITestContext;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -15,15 +17,17 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class LancamentoTest extends BaseSeleniumTest {
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+class LancamentoTest extends BaseSeleniumTest {
 
     private ListaLancamentosAction listaLancamentosAction;
     public static final String DESCRICAO = "descricao";
 
     private static final List<Categoria> categrias = Arrays.asList(Categoria.values());
     private static final Map<List<Categoria>, List<TipoLancamento>> tiposLancamento;
+
     static {
 
         tiposLancamento = new HashMap<>();
@@ -39,12 +43,13 @@ public class LancamentoTest extends BaseSeleniumTest {
                 Collections.singletonList(TipoLancamento.DESPESA));
     }
 
-    public LancamentoTest(){
+    public LancamentoTest() {
         super();
     }
 
-    @Test(dependsOnMethods = "login")
-    public void criaLancamento(ITestContext context){
+    @Test
+    @Order(1)
+    void criaLancamento() {
         String description = getDescription();
         BigDecimal value = getValorLancamento();
         String date = DataGen.strDateCurrentMonth();
@@ -56,14 +61,15 @@ public class LancamentoTest extends BaseSeleniumTest {
                 .salvaLancamento(description, value,
                         date, tipoLancamento, categoria);
 
-        context.setAttribute(DESCRICAO, description);
+        context.setContext(DESCRICAO, description);
         assertTrue(listaLancamentosAction.existeLancamento(description, date, tipoLancamento));
     }
 
-    @Test(dependsOnMethods = "criaLancamento")
-    public void editaLancamento(ITestContext context){
+    @Test
+    @Order(2)
+    void editaLancamento() {
         String sufixoEdicao = " EDITADO Selenium";
-        String descricao = getContextAttribute(DESCRICAO, context);
+        String descricao = context.get(DESCRICAO);
         listaLancamentosAction.abreLancamentoParaEdicao()
                 .and()
                 .setDescricao(descricao + sufixoEdicao)
@@ -72,17 +78,19 @@ public class LancamentoTest extends BaseSeleniumTest {
 
         assertTrue(listaLancamentosAction.existeLancamentoPorDescricao(descricao + sufixoEdicao),
                 "Deveria existir o lancamento que foi editado " + (descricao + sufixoEdicao));
-        context.setAttribute(DESCRICAO, descricao + sufixoEdicao);
+        context.setContext(DESCRICAO, descricao + sufixoEdicao);
     }
 
-    @Test(dependsOnMethods = "editaLancamento")
-    public void removeLancamento(ITestContext context) {
-        String descricao = getContextAttribute(DESCRICAO, context);
+    @Test
+    @Order(3)
+    void removeLancamento() {
+        String descricao = context.get(DESCRICAO);
         listaLancamentosAction.removeLancamento(descricao);
     }
 
-    @Test(dependsOnMethods = "removeLancamento")
-    public void logout() {
+    @Test
+    @Order(4)
+    void logout() {
         super.doLogout();
     }
 
@@ -117,10 +125,7 @@ public class LancamentoTest extends BaseSeleniumTest {
 
     private <T> T getAny(List<T> list){
         int n = list.size();
-        int index = DataGen.number(n);
-        if(index == n){
-            index--;
-        }
+        int index = DataGen.number(n - 1);
         return list.get(index);
     }
 }

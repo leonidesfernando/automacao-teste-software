@@ -7,8 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.WebDriver;
 
 import static br.com.home.lab.softwaretesting.automation.selenium.webdriver.helper.SeleniumUtil.waitForElementVisible;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @Slf4j
 public class ListaLancamentosAction extends BaseAction<ListaLancamentosPage> {
@@ -41,7 +41,7 @@ public class ListaLancamentosAction extends BaseAction<ListaLancamentosPage> {
 
         buscaLancamentoPorDescricao(descricaoLancamento);
         GridUI grid = page.getGrid();
-        assertEquals(grid.getElements().size(), 1);
+        assertEquals(1, grid.getElements().size());
         assertEquals(grid.getCellValueAt(0, COL_DESCRIPTION), descricaoLancamento);
         assertEquals(grid.getCellValueAt(0, COL_RELEASE_DATE), date);
         assertEquals(grid.getCellValueAt(0, COL_TYPE), tipo.getDescricao());
@@ -59,7 +59,7 @@ public class ListaLancamentosAction extends BaseAction<ListaLancamentosPage> {
     public boolean existeLancamentoPorDescricao(String descricaoLancamento){
         buscaLancamentoPorDescricao(descricaoLancamento);
         GridUI grid = page.getGrid();
-        assertEquals(grid.getElements().size(), 1);
+        assertEquals(1, grid.getElements().size());
         return grid.getCellValueAt(0, COL_DESCRIPTION).equals(descricaoLancamento);
     }
 

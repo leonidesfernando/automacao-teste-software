@@ -7,9 +7,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
-import org.testng.Assert;
 
 import java.math.BigDecimal;
+
+import static org.junit.jupiter.api.Assertions.fail;
 
 @Slf4j
 public class LancamentoAction extends BaseAction<LancamentoPage> {
@@ -32,14 +33,15 @@ public class LancamentoAction extends BaseAction<LancamentoPage> {
         return this;
     }
 
-    public void salvaLancamento(){
+    public void salvaLancamento() {
         getPage().getBtnSalvar().click();
-        try{
-            Assert.fail(String.format(
+        try {
+            log.info("Trying to save an entry");
+            fail(String.format(
                     "Houve ao salvar o lancamento. provavelmente um campo nao foi preeenchido. %s",
                     getPage().getDivError().getText())
             );
-        }catch (NoSuchElementException e){
+        } catch (NoSuchElementException e) {
             log.info("Entry save successfully");
         }
     }

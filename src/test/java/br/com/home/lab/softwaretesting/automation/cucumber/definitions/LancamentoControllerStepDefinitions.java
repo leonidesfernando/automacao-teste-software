@@ -13,16 +13,15 @@ import io.restassured.filter.session.SessionFilter;
 import io.restassured.path.json.JsonPath;
 import io.restassured.path.xml.XmlPath;
 import io.restassured.response.Response;
+import org.apache.commons.lang3.tuple.Pair;
+import org.junit.platform.commons.util.StringUtils;
 import org.springframework.http.HttpMethod;
-import org.testng.Assert;
-import org.testng.internal.collections.Pair;
-import org.testng.util.Strings;
 
 import java.util.List;
 import java.util.Map;
 
 import static br.com.home.lab.softwaretesting.automation.util.Constants.*;
-import static org.testng.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class LancamentoControllerStepDefinitions {
 
@@ -37,8 +36,8 @@ public class LancamentoControllerStepDefinitions {
     @Then("Deve logar e acessar a home")
     public void deveLogarAcessarHome() {
         SessionFilter sessionFilter = RestAssurredUtil.doFormLogin(user, "/login");
-        Assert.assertNotNull(sessionFilter);
-        Assert.assertTrue(Strings.isNotNullAndNotEmpty(sessionFilter.getSessionId()));
+        assertNotNull(sessionFilter);
+        assertTrue(StringUtils.isNotBlank(sessionFilter.getSessionId()));
         context.setContext(SESSION_ID, sessionFilter.getSessionId());
     }
 
@@ -49,21 +48,21 @@ public class LancamentoControllerStepDefinitions {
     @And("Remover o primeiro lancamento encontrado")
     public void removerOPrimeiroLancamentoEncontrado() {
         List<LancamentoRecord> lancamentos = context.get(LANCAMENTOS);
-        Pair<String, String> param = new Pair("id", lancamentos.get(0).id());
+        Pair<String, String> param = Pair.of("id", Long.toString(lancamentos.get(0).id()));
         Response response = RestAssurredUtil.doDeleteWithParam(getSessionId(), param, "/remover/{id}");
-        assertEquals(response.getStatusCode(), 302);
+        assertEquals(302, response.getStatusCode());
         assertTrue(response.getHeader("Location").contains("/lancamentos/"));
     }
 
     @And("Editar o primeiro lancamento encontrado")
     public void editar_o_primeiro_lancamento_encontrado() {
         List<LancamentoRecord> lancamentos = context.get(LANCAMENTOS);
-        Pair<String, String> param = new Pair("id", lancamentos.get(0).id());
+        Pair<String, String> param = Pair.of("id", Long.toString(lancamentos.get(0).id()));
         Response response = RestAssurredUtil.doGetWithPathParam(getSessionId(), param, "/editar/{id}");
         String html = response.body().asString();
         XmlPath xmlPath = new XmlPath(XmlPath.CompatibilityMode.HTML, html);
         String titulo = xmlPath.getString("html.body.div.div.div.h4");
-        assertEquals(titulo, "Cadastro de Lançamento");
+        assertEquals("Cadastro de Lançamento", titulo);
     }
 
     @Given("Buscar um lancamento por categoria {string}")
@@ -114,7 +113,7 @@ public class LancamentoControllerStepDefinitions {
             Response response = RestAssurredUtil.doRequestFormParam(getSessionId(), HttpMethod.POST,
                     "/salvar", formParams);
             assertTrue(response.getHeader("Location").contains("/lancamentos/"));
-            assertEquals(response.statusCode(), 302);
+            assertEquals(302, response.statusCode());
         }
     }
 

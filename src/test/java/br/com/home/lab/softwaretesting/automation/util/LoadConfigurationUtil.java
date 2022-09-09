@@ -4,7 +4,7 @@ import br.com.home.lab.softwaretesting.automation.config.Configurations;
 import br.com.home.lab.softwaretesting.automation.selenium.webdriver.model.User;
 import lombok.experimental.UtilityClass;
 import org.aeonbits.owner.ConfigFactory;
-import org.testng.util.Strings;
+import org.junit.platform.commons.util.StringUtils;
 
 
 @UtilityClass
@@ -15,16 +15,16 @@ public class LoadConfigurationUtil {
 
     public String getUrl() {
         String urlByParameter = System.getProperty(URL);
-        return Strings.isNotNullAndNotEmpty(urlByParameter) ? urlByParameter : config.url();
+        return StringUtils.isNotBlank(urlByParameter) ? urlByParameter : config.url();
     }
 
     public String getOnlyUrl() {
-        String urlAndPort[] = getUrl().split(":");
+        String[] urlAndPort = getUrl().split(":");
         return String.format("%s:%s", urlAndPort[0], urlAndPort[1]);
     }
 
     public int getPort() {
-        String urlAndPort[] = getUrl().split(":");
+        String[] urlAndPort = getUrl().split(":");
         return urlAndPort.length > 2 ?
                 Integer.parseInt(urlAndPort[2].replace("/", ""))
                 : 80;

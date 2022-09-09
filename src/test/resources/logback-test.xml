@@ -8,10 +8,10 @@
     </appender>
 
     <!-- Restrict logging for level -->
-    <logger name="io" level="INFO" />
-    <logger name="org" level="INFO" />
+    <logger name="io" level="INFO"/>
+    <logger name="org" level="INFO"/>
 
-    <root level="TRACE">
-        <appender-ref ref="stdout" />
+    <root level="ERROR">
+        <appender-ref ref="stdout"/>
     </root>
 </configuration>

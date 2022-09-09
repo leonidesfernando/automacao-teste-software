@@ -1,14 +1,22 @@
 package br.com.home.lab.softwaretesting.automation;
 
 
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.testng.annotations.Test;
+import org.springframework.context.ApplicationContext;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
-public class AutomacaoTesteSoftwareApplicationTests {
+class AutomacaoTesteSoftwareApplicationTests {
+
+	@Autowired
+	ApplicationContext context;
 
 	@Test
-	public void contextLoads() {
+	void contextLoads() {
+		assertNotNull(context);
 	}
 
 }
