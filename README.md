@@ -1,14 +1,18 @@
 # _automacao-teste-software_
 
-Project to explorer tests e2e and load and stress with: TestNG, Mockito, REST Assured, Cucumber, Selenium Webdriver
+Project to explorer tests e2e and load and stress with:
+TestNG([on testng branch](https://github.com/leonidesfernando/automacao-teste-software/tree/testng)) or
+JUnit([on junit branch](https://github.com/leonidesfernando/automacao-teste-software/tree/junit))
+, Mockito, REST Assured, Cucumber, Selenium Webdriver
 and [JMeter](src/test/jmeter/README-JMETER.md).
 
 All tests were built to run against a simple web application in
 the [teste-software](https://github.com/leonidesfernando/teste-software) repository.
 
 ## Requirements
+
 - Maven
-- JDK 17+
+- JDK 18+
 
 
 ## Structure
