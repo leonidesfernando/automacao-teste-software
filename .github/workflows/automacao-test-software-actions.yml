@@ -22,8 +22,6 @@ jobs:
     name: Start
     runs-on: ubuntu-latest
     needs: [ build_web_app ]
-    ports:
-      - 8080: 8080
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 18
@@ -32,6 +30,7 @@ jobs:
           java-version: '18'
           distribution: 'adopt'
       - name: Run the Maven to start the webapp
+        port: 8080
         run: mvn spring-boot:run
 
       - name: curl
