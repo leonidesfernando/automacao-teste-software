@@ -33,7 +33,7 @@ jobs:
         run: mvn spring-boot:run
 
       - name: Installing curl
-        run: apt-get update; apt-get install curl -y
+        run: sudo apt-get update; sudo apt-get install curl -y
       - name: curl
         uses: wei/curl@v1
         with:
