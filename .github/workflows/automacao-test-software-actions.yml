@@ -30,9 +30,10 @@ jobs:
           java-version: '18'
           distribution: 'adopt'
       - name: Run the Maven to start the webapp
-        port: 8080
         run: mvn spring-boot:run
 
+      - name: Installing curl
+        run: apt-get update; apt-get install curl -y
       - name: curl
         uses: wei/curl@v1
         with:
@@ -45,4 +46,4 @@ jobs:
           #- name: curl
           #uses: wei/curl@v1
           #with:
-          #args: -X POST http://localhost:8080/actuator/shutdown
+          #args: -X POST http://localhost:35729/actuator/shutdown
