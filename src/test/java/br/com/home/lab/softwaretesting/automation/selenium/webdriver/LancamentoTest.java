@@ -47,6 +47,8 @@ class LancamentoTest extends BaseSeleniumTest {
         super();
     }
 
+    //TODO: @RepeatedTest(value = 3, name = RepeatedTest.LONG_DISPLAY_NAME)
+    // https://www.baeldung.com/junit-5-repeated-test
     @Test
     @Order(1)
     void criaLancamento() {

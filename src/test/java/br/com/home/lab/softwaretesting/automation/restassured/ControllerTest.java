@@ -71,8 +71,8 @@ class ControllerTest {
         formParams.put(DESCRICAO, descricao);
         formParams.put(VALOR, converter.convert(BigDecimal.valueOf(DataGen.moneyValue())));
         formParams.put(DATA_LANCAMENTO, DataGen.strDate());
-        formParams.put(TIPO_LANCAMENTO, (factor/2) > 3 ? "RENDA" : "DESPESA");
-        formParams.put(CATEGORIA, categorias[(int)factor].name());
+        formParams.put(TIPO_LANCAMENTO, (factor / 2) > 3 ? "RENDA" : "DESPESA");
+        formParams.put(CATEGORIA, categorias[(int) factor].name());
 
         Response response = RestAssurredUtil.doRequestFormParam(getSessionId(), HttpMethod.POST,
                 "/salvar", formParams);
@@ -81,6 +81,8 @@ class ControllerTest {
         context.setContext(DESCRIPTION_TEST, descricao);
     }
 
+    //TODO: @RepeatedTest(value = 3, name = RepeatedTest.LONG_DISPLAY_NAME)
+    // https://www.baeldung.com/junit-5-repeated-test
     @SneakyThrows
     @Test
     @Order(2)
