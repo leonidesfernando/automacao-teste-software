@@ -10,7 +10,7 @@ jobs:
       - uses: actions/checkout@master
         with:
           name: leonidesfernando/teste-software
-          ref: refs/heads/release
+          ref: refs/heads/origin
       - name: Set up JDK 18
         uses: actions/setup-java@v3
         with:
