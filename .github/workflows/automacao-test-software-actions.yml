@@ -40,4 +40,4 @@ jobs:
       - name: curl
         uses: wei/curl@v1
         with:
-          args: -X POST http://localhost:8080/actuator/shutdown
+          args: -X POST http://localhost:35729/actuator/shutdown
