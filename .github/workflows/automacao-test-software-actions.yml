@@ -35,7 +35,7 @@ jobs:
       - name: curl
         uses: wei/curl@v1
         with:
-          args: -X POST http://localhost:35729/actuator/shutdown
+          args: -X POST localhost:35729/actuator/shutdown
           #stop_web_app:
           #name: Stop
           #runs-on: ubuntu-latest
