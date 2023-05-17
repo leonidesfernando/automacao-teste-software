@@ -18,13 +18,27 @@ Antes de rodar, você deve verificar:
 
 Este script foi criado usando os seguintes plugins do JMeter:
 
+* Ultimate Thread Group
+* Console Status Logger
 * 3 Basic Graphics
 * 5 Additional Graphics
-* Apdex Score Calculator( quando executado em background pelo script: ```runAndGenerateReports.bat```)
+* Apdex Score Calculator( when executed in background by the script: ```runAndGenerateReports.bat```)
 
 [Para instalar o gerenciador de plugins](https://jmeter-plugins.org/wiki/PluginsManager/)
 
 [Boas práticas com JMeter](https://jmeter.apache.org/usermanual/best-practices.html)
 
+## Tipos de testes
+
+Você pode usar este script para aplicar estes testes
+*capacidade*, *tempo de resposta*, *estabilidade* e *stress*.
+Para fazer isso você precisa apenas enviar uma quantidade de usuários e por quanto tempo o teste deve rodar.
+Por exemplo: _100 usuários durante 900 segundos_
+
+```
+runAndGenerateReports.bat 100 900
+```
+
 ---
-[English](README-JMETER.md)
+[Inglês](README-JMETER.md)
+
