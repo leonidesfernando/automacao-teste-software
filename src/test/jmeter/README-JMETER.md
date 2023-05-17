@@ -16,6 +16,8 @@ Before run you have to check:
 
 This script was created using the following JMeter's plugins:
 
+* Ultimate Thread Group
+* Console Status Logger
 * 3 Basic Graphics
 * 5 Additional Graphics
 * Apdex Score Calculator( when executed in background by the script: ```runAndGenerateReports.bat```)
@@ -24,5 +26,16 @@ This script was created using the following JMeter's plugins:
 
 [JMeter's best practices](https://jmeter.apache.org/usermanual/best-practices.html)
 
+## Kinds of tests
+
+You can use this script to apply *capacity*, *response time*, *stability* and *stress*
+To do that you just need to send the amount of users and for how long
+time it must be run.
+For example: _100 users during 900 seconds_
+
+```
+runAndGenerateReports.bat 100 900
+```
+
 ---
-[Português](README-JMETER.pt_br.md)
+[Portuguese](README-JMETER.pt_br.md)
