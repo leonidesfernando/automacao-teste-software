@@ -1,6 +1,6 @@
 # _automacao-teste-software_
 Projeto para explorar testes com: TestNG, Mockito, REST Assured, Cucumber, Selenium Webdriver
-e [JMeter](src/test/jmeter/README-JMETER.pt_br.md)
+, [JMeter](src/test/jmeter/README-JMETER.pt_br.md) e [Postman](src/test/postmam/README-POSTMAN.md).
 
 Todos os tests foram construídos para serem executados contra uma simples aplicação web presente no
 repositório [teste-software](https://github.com/leonidesfernando/teste-software)
