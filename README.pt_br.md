@@ -1,10 +1,6 @@
 # _automacao-teste-software_
-
-Projeto para explorar testes, unitários, e2e, API e testes de carga e stress com:  
-TestNG([na branch testng](https://github.com/leonidesfernando/automacao-teste-software/tree/testng)) ou
-Junit([na branch junit](https://github.com/leonidesfernando/automacao-teste-software/tree/junit)),
-Mockito, REST Assured, Cucumber, Selenium Webdriver
-, [JMeter](src/test/jmeter/README-JMETER.pt_br.md) e [Postman](src/test/postman/README-JMETER.pt_br.md)
+Projeto para explorar testes com: TestNG, Mockito, REST Assured, Cucumber, Selenium Webdriver
+, [JMeter](src/test/jmeter/README-JMETER.pt_br.md) e [Postman](src/test/postman/README-POSTMAN.pt_br.md).
 
 Todos os tests foram construídos para serem executados contra uma simples aplicação web presente no
 repositório [teste-software](https://github.com/leonidesfernando/teste-software)
