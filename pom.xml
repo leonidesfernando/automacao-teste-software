@@ -9,7 +9,6 @@
 	<packaging>jar</packaging>
 
 	<name>automacao-teste-software</name>
-	<description>Projeto para testes funcionais automatizados</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
