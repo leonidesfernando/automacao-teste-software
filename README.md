@@ -1,7 +1,10 @@
 # _automacao-teste-software_
 
-Project to explorer tests e2e and load and stress with: TestNG, Mockito, REST Assured, Cucumber, Selenium Webdriver
-and [JMeter](src/test/jmeter/README-JMETER.md).
+Project to explorer unit, e2e and load and stress tests with:
+TestNG([at the branch testng](https://github.com/leonidesfernando/automacao-teste-software/tree/testng)) or
+Junit([at the branch junit](https://github.com/leonidesfernando/automacao-teste-software/tree/junit))
+, Mockito, REST Assured, Cucumber, Selenium Webdriver
+, [JMeter](src/test/jmeter/README-JMETER.md) and [Postman](src/test/postman/README-JMETER.pt_br.md).
 
 All tests were built to run against a simple web application in
 the [teste-software](https://github.com/leonidesfernando/teste-software) repository.
