@@ -11,7 +11,6 @@ import org.testng.ITestContext;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeSuite;
-import org.testng.annotations.Test;
 import org.testng.util.Strings;
 
 import java.util.Objects;
@@ -35,12 +34,13 @@ public abstract class BaseSeleniumTest {
     protected void beforeSuite(ITestContext context) {
     }
 
-    @Test(priority = -1)
+    //@Test(priority = -1)
+    //@Test
     public void login() {
         login(loggedUser);
     }
 
-    public void login(User user){
+    public void login(User user) {
         loggedUser = user;
         access();
         doLogin();

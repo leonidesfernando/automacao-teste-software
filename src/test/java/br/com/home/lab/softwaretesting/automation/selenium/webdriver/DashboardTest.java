@@ -9,12 +9,17 @@ public class DashboardTest extends BaseSeleniumTest {
     ListaLancamentosAction listaLancamentosAction;
     DashboardAction dashboardAction;
 
-    public DashboardTest(){
+    public DashboardTest() {
         super();
     }
 
-    @Test(dependsOnMethods = "login")
-    public void accessDashboard(){
+    @Test
+    public void loginDashboard() {
+        super.login();
+    }
+
+    @Test(dependsOnMethods = "loginDashboard")
+    public void accessDashboard() {
 
         listaLancamentosAction = new ListaLancamentosAction(webDriver);
         listaLancamentosAction.gotToDashboard();

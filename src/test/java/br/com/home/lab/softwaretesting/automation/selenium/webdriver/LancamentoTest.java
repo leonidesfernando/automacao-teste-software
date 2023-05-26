@@ -39,12 +39,17 @@ public class LancamentoTest extends BaseSeleniumTest {
                 Collections.singletonList(TipoLancamento.DESPESA));
     }
 
-    public LancamentoTest(){
+    public LancamentoTest() {
         super();
     }
 
-    @Test(dependsOnMethods = "login")
-    public void criaLancamento(ITestContext context){
+    @Test
+    public void loginLancamentos() {
+        super.login();
+    }
+
+    @Test(dependsOnMethods = "loginLancamentos")
+    public void criaLancamento(ITestContext context) {
         String description = getDescription();
         BigDecimal value = getValorLancamento();
         String date = DataGen.strDateCurrentMonth();
