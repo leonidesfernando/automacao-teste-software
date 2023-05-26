@@ -19,6 +19,12 @@ class DashboardTest extends BaseSeleniumTest {
 
     @Test
     @Order(1)
+    void loginDashboard() {
+        super.login();
+    }
+
+    @Test
+    @Order(2)
     void accessDashboard() {
 
         listaLancamentosAction = new ListaLancamentosAction(webDriver);
@@ -26,14 +32,14 @@ class DashboardTest extends BaseSeleniumTest {
     }
 
     @Test
-    @Order(2)
+    @Order(3)
     void backToList() {
         dashboardAction = new DashboardAction(webDriver);
         dashboardAction.goToList();
     }
 
     @Test
-    @Order(3)
+    @Order(4)
     void logout() {
         super.doLogout();
     }

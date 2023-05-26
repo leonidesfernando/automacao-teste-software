@@ -49,8 +49,15 @@ class LancamentoTest extends BaseSeleniumTest {
 
     //TODO: @RepeatedTest(value = 3, name = RepeatedTest.LONG_DISPLAY_NAME)
     // https://www.baeldung.com/junit-5-repeated-test
+
     @Test
     @Order(1)
+    void loginLancamentos() {
+        super.login();
+    }
+
+    @Test
+    @Order(2)
     void criaLancamento() {
         String description = getDescription();
         BigDecimal value = getValorLancamento();
@@ -68,7 +75,7 @@ class LancamentoTest extends BaseSeleniumTest {
     }
 
     @Test
-    @Order(2)
+    @Order(3)
     void editaLancamento() {
         String sufixoEdicao = " EDITADO Selenium";
         String descricao = context.get(DESCRICAO);
@@ -84,14 +91,14 @@ class LancamentoTest extends BaseSeleniumTest {
     }
 
     @Test
-    @Order(3)
+    @Order(4)
     void removeLancamento() {
         String descricao = context.get(DESCRICAO);
         listaLancamentosAction.removeLancamento(descricao);
     }
 
     @Test
-    @Order(4)
+    @Order(5)
     void logout() {
         super.doLogout();
     }

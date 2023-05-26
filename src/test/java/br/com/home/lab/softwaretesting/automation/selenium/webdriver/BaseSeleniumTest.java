@@ -7,7 +7,9 @@ import br.com.home.lab.softwaretesting.automation.selenium.webdriver.action.Logi
 import br.com.home.lab.softwaretesting.automation.selenium.webdriver.model.User;
 import br.com.home.lab.softwaretesting.automation.util.LoadConfigurationUtil;
 import org.aeonbits.owner.ConfigFactory;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.platform.commons.util.StringUtils;
 import org.openqa.selenium.WebDriver;
 
@@ -34,8 +36,6 @@ public abstract class BaseSeleniumTest {
     protected void beforeSuite() {
     }
 
-    @Test
-    @Order(1)
     public void login() {
         assertTrue(login(loggedUser));
     }
