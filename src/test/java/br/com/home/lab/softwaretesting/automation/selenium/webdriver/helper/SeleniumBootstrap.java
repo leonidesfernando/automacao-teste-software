@@ -45,17 +45,18 @@ public class SeleniumBootstrap {
         options.addArguments("disable-extensions");
         options.addArguments("--no-sandbox");
 
-        options.setHeadless(isHeadlessMode());
+        if (isHeadlessMode()) {
+            options.addArguments("--headless");
+        }
         acceptSslAndInsecureCerts(options);
         return maximize(new ChromeDriver(options));
     }
 
     private void acceptSslAndInsecureCerts(MutableCapabilities options){
-        options.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
         options.setCapability(CapabilityType.ACCEPT_INSECURE_CERTS, true);
     }
 
-    public WebDriver setupEdge(){
+    public WebDriver setupEdge() {
         WebDriverManager driverManager = WebDriverManager.edgedriver();
         driverManager.setup();
 
@@ -65,8 +66,9 @@ public class SeleniumBootstrap {
         options.addArguments("--no-sandbox");
         options.addArguments("--disable-extensions");
         options.addArguments("--disable-in-process-stack-traces");
-        options.setHeadless(isHeadlessMode());
-
+        if (isHeadlessMode()) {
+            options.addArguments("--headless");
+        }
         acceptSslAndInsecureCerts(options);
         return maximize(new EdgeDriver(options));
     }
