@@ -99,8 +99,6 @@ public class ControllerTest {
         context.setContext(ID_TO_USE, lancamentos.get(0).id());
     }
 
-
-    //@SuppressWarnings("rawtypes")
     @Test(dependsOnMethods = {"salvarTest", "buscandoComPostTest"})
     public void editarTest() {
         Pair<String, String> param = new Pair<>("id", context.get(ID_TO_USE).toString());
@@ -111,7 +109,6 @@ public class ControllerTest {
         assertEquals(titulo, "Cadastro de Lançamento");
     }
 
-    //@SuppressWarnings("rawtypes")
     @Test(dependsOnMethods = {"buscandoComPostTest", "salvarTest", "editarTest"})
     public void removeTest() {
         Pair<String, String> param = new Pair<>("id", context.get(ID_TO_USE).toString());
