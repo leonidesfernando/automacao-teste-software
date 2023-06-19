@@ -35,7 +35,7 @@ public class RestAssurredUtil {
     private RequestSpecification pathParam(String sessionId, Pair<String, String> idParam) {
         return given()
                 .sessionId(sessionId)
-                .pathParam(idParam.first(), idParam.second());
+                .pathParam(idParam.getLeft(), idParam.getRight());
     }
 
     public Response post(String sessionId, String endPoint, String bodyParam) {

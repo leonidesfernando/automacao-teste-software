@@ -21,7 +21,6 @@ import io.restassured.path.xml.XmlPath;
 import io.restassured.response.Response;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.platform.commons.util.StringUtils;
-import org.springframework.http.HttpMethod;
 
 import java.util.List;
 import java.util.Map;
@@ -54,16 +53,16 @@ public class LancamentoControllerStepDefinitions {
     @And("Remover o primeiro lancamento encontrado")
     public void removerOPrimeiroLancamentoEncontrado() {
         List<LancamentoRecord> lancamentos = context.get(LANCAMENTOS);
-        Pair<String, String> param = new Pair("id", Long.valueOf(lancamentos.get(0).id()));
+        Pair<String, String> param = Pair.of("id", String.valueOf(lancamentos.get(0).id()));
         Response response = RestAssurredUtil.delete(getSessionId(), param, "/remover/{id}");
-        assertEquals(response.getStatusCode(), 302);
+        assertEquals(302, response.getStatusCode());
         assertTrue(response.getHeader("Location").contains("/lancamentos/"));
     }
 
     @And("Editar o primeiro lancamento encontrado")
     public void editar_o_primeiro_lancamento_encontrado() {
         List<LancamentoRecord> lancamentos = context.get(LANCAMENTOS);
-        Pair<String, String> param = new Pair("id", Long.valueOf(lancamentos.get(0).id()));
+        Pair<String, String> param = Pair.of("id", String.valueOf(lancamentos.get(0).id()));
         Response response = RestAssurredUtil.get(getSessionId(), param, "/editar/{id}");
         String html = response.body().asString();
         XmlPath xmlPath = new XmlPath(XmlPath.CompatibilityMode.HTML, html);
@@ -72,7 +71,7 @@ public class LancamentoControllerStepDefinitions {
     }
 
     @Given("Buscar um lancamento por categoria {string}")
-    public void buscar_um_lancamento_por_categoria(String categoria) {
+    public void buscar_um_lancamento_por_categoria(String categoria) throws JsonProcessingException {
         buscarPor(categoria);
     }
 

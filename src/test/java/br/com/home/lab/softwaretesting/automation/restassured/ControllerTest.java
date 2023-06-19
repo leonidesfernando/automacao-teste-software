@@ -15,9 +15,9 @@ import io.restassured.filter.session.SessionFilter;
 import io.restassured.path.xml.XmlPath;
 import io.restassured.response.Response;
 import lombok.SneakyThrows;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.*;
 import org.junit.platform.commons.util.StringUtils;
-import org.springframework.http.HttpMethod;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -77,7 +77,7 @@ class ControllerTest {
         Response response = RestAssurredUtil.post(getSessionId(),
                 "/salvar", formParams);
         assertTrue(response.getHeader("Location").contains("/lancamentos/"));
-        assertEquals(response.statusCode(), 302);
+        assertEquals(302, response.statusCode());
         context.setContext(DESCRIPTION_TEST, descricao);
     }
 
@@ -97,7 +97,7 @@ class ControllerTest {
         var lancamentos = RestAssurredUtil
                 .extractDataFromBodyResponse(response, new TypeReference<ResultadoRecord>() {
                 }).lancamentos();
-        assertEquals(lancamentos.size(), 1);
+        assertEquals(1, lancamentos.size());
         context.setContext(ID_TO_USE, lancamentos.get(0).id());
     }
 
@@ -107,7 +107,7 @@ class ControllerTest {
     @Order(3)
     void editarTest() {
         Pair<String, String> param = Pair.of("id", context.get(ID_TO_USE).toString());
-        Response response = RestAssurredUtil.doGetWithPathParam(getSessionId(), param, "/editar/{id}");
+        Response response = RestAssurredUtil.get(getSessionId(), param, "/editar/{id}");
         String html = response.body().asString();
         XmlPath xmlPath = new XmlPath(XmlPath.CompatibilityMode.HTML, html);
         String titulo = xmlPath.getString("html.body.div.div.div.h4");
@@ -119,7 +119,7 @@ class ControllerTest {
     @Order(4)
     void removeTest() {
         Pair<String, String> param = Pair.of("id", context.get(ID_TO_USE).toString());
-        Response response = RestAssurredUtil.doDeleteWithParam(getSessionId(), param, "/remover/{id}");
+        Response response = RestAssurredUtil.delete(getSessionId(), param, "/remover/{id}");
         assertEquals(302, response.getStatusCode());
         assertTrue(response.getHeader("Location").contains("/lancamentos/"));
     }
