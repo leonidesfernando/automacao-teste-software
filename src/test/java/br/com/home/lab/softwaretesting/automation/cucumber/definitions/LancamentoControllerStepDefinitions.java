@@ -1,16 +1,22 @@
 package br.com.home.lab.softwaretesting.automation.cucumber.definitions;
 
 import br.com.home.lab.softwaretesting.automation.cucumber.ScenarioContextData;
+import br.com.home.lab.softwaretesting.automation.modelo.Categoria;
+import br.com.home.lab.softwaretesting.automation.modelo.TipoLancamento;
+import br.com.home.lab.softwaretesting.automation.modelo.record.BuscaForm;
 import br.com.home.lab.softwaretesting.automation.modelo.record.LancamentoRecord;
+import br.com.home.lab.softwaretesting.automation.modelo.record.ResultadoRecord;
 import br.com.home.lab.softwaretesting.automation.restassured.RestAssurredUtil;
 import br.com.home.lab.softwaretesting.automation.selenium.webdriver.model.User;
 import br.com.home.lab.softwaretesting.automation.util.LoadConfigurationUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.java.DataTableType;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.restassured.filter.session.SessionFilter;
-import io.restassured.path.json.JsonPath;
 import io.restassured.path.xml.XmlPath;
 import io.restassured.response.Response;
 import org.apache.commons.lang3.tuple.Pair;
@@ -48,17 +54,17 @@ public class LancamentoControllerStepDefinitions {
     @And("Remover o primeiro lancamento encontrado")
     public void removerOPrimeiroLancamentoEncontrado() {
         List<LancamentoRecord> lancamentos = context.get(LANCAMENTOS);
-        Pair<String, String> param = Pair.of("id", Long.toString(lancamentos.get(0).id()));
-        Response response = RestAssurredUtil.doDeleteWithParam(getSessionId(), param, "/remover/{id}");
-        assertEquals(302, response.getStatusCode());
+        Pair<String, String> param = new Pair("id", Long.valueOf(lancamentos.get(0).id()));
+        Response response = RestAssurredUtil.delete(getSessionId(), param, "/remover/{id}");
+        assertEquals(response.getStatusCode(), 302);
         assertTrue(response.getHeader("Location").contains("/lancamentos/"));
     }
 
     @And("Editar o primeiro lancamento encontrado")
     public void editar_o_primeiro_lancamento_encontrado() {
         List<LancamentoRecord> lancamentos = context.get(LANCAMENTOS);
-        Pair<String, String> param = Pair.of("id", Long.toString(lancamentos.get(0).id()));
-        Response response = RestAssurredUtil.doGetWithPathParam(getSessionId(), param, "/editar/{id}");
+        Pair<String, String> param = new Pair("id", Long.valueOf(lancamentos.get(0).id()));
+        Response response = RestAssurredUtil.get(getSessionId(), param, "/editar/{id}");
         String html = response.body().asString();
         XmlPath xmlPath = new XmlPath(XmlPath.CompatibilityMode.HTML, html);
         String titulo = xmlPath.getString("html.body.div.div.div.h4");
@@ -77,8 +83,8 @@ public class LancamentoControllerStepDefinitions {
                 row.get(DESCRICAO),
                 getValorByParam(row.get(VALOR)),
                 getDataLancamentoByParam(row.get(DATA_LANCAMENTO)),
-                row.get(TIPO_LANCAMENTO),
-                row.get(CATEGORIA)
+                TipoLancamento.valueOf(row.get(TIPO_LANCAMENTO)),
+                Categoria.valueOf(row.get(CATEGORIA))
         );
     }
 
@@ -106,27 +112,29 @@ public class LancamentoControllerStepDefinitions {
                     Map.entry(DESCRICAO, record.descricao()),
                     Map.entry(VALOR, record.valor()),
                     Map.entry(DATA_LANCAMENTO, record.dataLancamento()),
-                    Map.entry(TIPO_LANCAMENTO, record.tipoLancamento()),
-                    Map.entry(CATEGORIA, record.categoria())
+                    Map.entry(TIPO_LANCAMENTO, record.tipoLancamento().name()),
+                    Map.entry(CATEGORIA, record.categoria().name())
             );
 
-            Response response = RestAssurredUtil.doRequestFormParam(getSessionId(), HttpMethod.POST,
+            Response response = RestAssurredUtil.post(getSessionId(),
                     "/salvar", formParams);
             assertTrue(response.getHeader("Location").contains("/lancamentos/"));
             assertEquals(302, response.statusCode());
         }
     }
 
-    private Response buscarPor(String item){
+    private Response buscarPor(String item) throws JsonProcessingException {
+        BuscaForm buscaForm = new BuscaForm(item, true);
+        ObjectMapper mapper = new ObjectMapper();
+        String json = mapper.writeValueAsString(buscaForm);
         Response response = RestAssurredUtil.
-                doRequestWithBodyParam(getSessionId(), HttpMethod.POST, "/buscaLancamentos", item);
+                post(getSessionId(), "/buscaLancamentos", json);
         context.setContext(LANCAMENTOS, extractListFromResponse(response));
         return response;
     }
 
-
-    public List<LancamentoRecord> extractListFromResponse(Response response) {
-        return JsonPath.with(response.asInputStream())
-                .getList("lancamentos", LancamentoRecord.class);
+    private List<LancamentoRecord> extractListFromResponse(Response response) {
+        return RestAssurredUtil.extractDataFromBodyResponse(response, new TypeReference<ResultadoRecord>() {
+        }).lancamentos();
     }
 }

@@ -3,17 +3,18 @@ package br.com.home.lab.softwaretesting.automation.restassured;
 import br.com.home.lab.softwaretesting.automation.cucumber.ScenarioContextData;
 import br.com.home.lab.softwaretesting.automation.modelo.Categoria;
 import br.com.home.lab.softwaretesting.automation.modelo.converter.MoneyToStringConverter;
-import br.com.home.lab.softwaretesting.automation.modelo.record.LancamentoRecord;
+import br.com.home.lab.softwaretesting.automation.modelo.record.BuscaForm;
+import br.com.home.lab.softwaretesting.automation.modelo.record.ResultadoRecord;
 import br.com.home.lab.softwaretesting.automation.selenium.webdriver.model.User;
 import br.com.home.lab.softwaretesting.automation.util.DataGen;
 import br.com.home.lab.softwaretesting.automation.util.LoadConfigurationUtil;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
 import io.restassured.filter.session.SessionFilter;
-import io.restassured.path.json.JsonPath;
 import io.restassured.path.xml.XmlPath;
 import io.restassured.response.Response;
 import lombok.SneakyThrows;
-import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.*;
 import org.junit.platform.commons.util.StringUtils;
 import org.springframework.http.HttpMethod;
@@ -21,7 +22,6 @@ import org.springframework.http.HttpMethod;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.StringJoiner;
 
@@ -70,14 +70,14 @@ class ControllerTest {
         MoneyToStringConverter converter = new MoneyToStringConverter();
         formParams.put(DESCRICAO, descricao);
         formParams.put(VALOR, converter.convert(BigDecimal.valueOf(DataGen.moneyValue())));
-        formParams.put(DATA_LANCAMENTO, DataGen.strDate());
-        formParams.put(TIPO_LANCAMENTO, (factor / 2) > 3 ? "RENDA" : "DESPESA");
+        formParams.put(DATA_LANCAMENTO, DataGen.strDateCurrentMonth());
+        formParams.put(TIPO_LANCAMENTO, ((factor / 2) > 3) ? "RENDA" : "DESPESA");
         formParams.put(CATEGORIA, categorias[(int) factor].name());
 
-        Response response = RestAssurredUtil.doRequestFormParam(getSessionId(), HttpMethod.POST,
+        Response response = RestAssurredUtil.post(getSessionId(),
                 "/salvar", formParams);
         assertTrue(response.getHeader("Location").contains("/lancamentos/"));
-        assertEquals(302, response.statusCode());
+        assertEquals(response.statusCode(), 302);
         context.setContext(DESCRIPTION_TEST, descricao);
     }
 
@@ -88,12 +88,16 @@ class ControllerTest {
     @Order(2)
     void buscandoComPostTest() {
         String descricao = context.get(DESCRIPTION_TEST);
+        BuscaForm buscaForm = new BuscaForm(descricao, true);
+        ObjectMapper mapper = new ObjectMapper();
+        var json = mapper.writeValueAsString(buscaForm);
         Response response = RestAssurredUtil.
-                doRequestWithBodyParam(getSessionId(), HttpMethod.POST, "/buscaLancamentos", descricao);
-        List<LancamentoRecord> lancamentos = JsonPath.with(response.asInputStream())
-                .getList("lancamentos", LancamentoRecord.class);
+                post(getSessionId(), "/buscaLancamentos", json);
 
-        assertEquals(1, lancamentos.size());
+        var lancamentos = RestAssurredUtil
+                .extractDataFromBodyResponse(response, new TypeReference<ResultadoRecord>() {
+                }).lancamentos();
+        assertEquals(lancamentos.size(), 1);
         context.setContext(ID_TO_USE, lancamentos.get(0).id());
     }
 
