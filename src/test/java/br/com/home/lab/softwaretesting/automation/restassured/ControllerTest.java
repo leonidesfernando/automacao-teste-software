@@ -23,9 +23,7 @@ import org.testng.util.Strings;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.StringJoiner;
+import java.util.*;
 
 import static br.com.home.lab.softwaretesting.automation.util.Constants.*;
 import static org.testng.Assert.assertEquals;
@@ -97,6 +95,16 @@ public class ControllerTest {
                 }).lancamentos();
         assertEquals(lancamentos.size(), 1);
         context.setContext(ID_TO_USE, lancamentos.get(0).id());
+    }
+
+    @Test(dependsOnMethods = {"salvarTest"})
+    public void buscandoComTextoEPaginaTest() {
+        List<Pair<String, String>> params = Arrays.asList(
+                new Pair<>("p", "1"),
+                new Pair<>("itemBusca", context.get(DESCRIPTION_TEST))
+        );
+        Response response = RestAssurredUtil.get(getSessionId(), params, "/lancamentos/{p}/{itemBusca}");
+        assertEquals(response.getStatusCode(), 200);
     }
 
     @Test(dependsOnMethods = {"salvarTest", "buscandoComPostTest"})
