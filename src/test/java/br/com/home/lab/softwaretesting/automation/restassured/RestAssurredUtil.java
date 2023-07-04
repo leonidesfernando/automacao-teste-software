@@ -26,7 +26,7 @@ public class RestAssurredUtil {
     public Response get(String sessionId, List<Pair<String, String>> params, String endPoint) {
         RequestSpecification specification = given()
                 .sessionId(sessionId);
-        params.forEach(p -> specification.pathParam(p.first(), p.second()));
+        params.forEach(p -> specification.pathParam(p.getLeft(), p.getRight()));
         return specification.get(endPoint);
     }
 
