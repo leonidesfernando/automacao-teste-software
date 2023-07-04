@@ -21,9 +21,7 @@ import org.junit.platform.commons.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.StringJoiner;
+import java.util.*;
 
 import static br.com.home.lab.softwaretesting.automation.util.Constants.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -101,6 +99,16 @@ class ControllerTest {
         context.setContext(ID_TO_USE, lancamentos.get(0).id());
     }
 
+    @Test
+    @Order(3)
+    public void buscandoComTextoEPaginaTest() {
+        List<Pair<String, String>> params = Arrays.asList(
+                Pair.of("p", "1"),
+                Pair.of("itemBusca", context.get(DESCRIPTION_TEST))
+        );
+        Response response = RestAssurredUtil.get(getSessionId(), params, "/lancamentos/{p}/{itemBusca}");
+        assertEquals(response.getStatusCode(), 200);
+    }
 
     @SuppressWarnings("rawtypes")
     @Test

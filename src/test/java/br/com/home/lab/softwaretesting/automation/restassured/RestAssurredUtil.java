@@ -15,12 +15,20 @@ import lombok.experimental.UtilityClass;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.http.HttpMethod;
 
+import java.util.List;
 import java.util.Map;
 
 import static io.restassured.RestAssured.given;
 
 @UtilityClass
 public class RestAssurredUtil {
+
+    public Response get(String sessionId, List<Pair<String, String>> params, String endPoint) {
+        RequestSpecification specification = given()
+                .sessionId(sessionId);
+        params.forEach(p -> specification.pathParam(p.first(), p.second()));
+        return specification.get(endPoint);
+    }
 
     public Response get(String sessionId, Pair<String, String> param, String endPoint) {
         return pathParam(sessionId, param)
@@ -86,7 +94,6 @@ public class RestAssurredUtil {
     public <T> T extractDataFromBodyResponse(Response response, TypeReference<T> type) {
         var jsonNode = response.body().as(JsonNode.class);
         ObjectMapper mapper = new ObjectMapper();
-        T record = mapper.convertValue(jsonNode, type);
-        return record;
+        return mapper.convertValue(jsonNode, type);
     }
 }
