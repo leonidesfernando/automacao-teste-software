@@ -3,8 +3,9 @@ package br.com.home.lab.softwaretesting.automation.selenium.webdriver;
 import br.com.home.lab.softwaretesting.automation.modelo.Categoria;
 import br.com.home.lab.softwaretesting.automation.modelo.TipoLancamento;
 import br.com.home.lab.softwaretesting.automation.selenium.webdriver.action.ListaLancamentosAction;
+import br.com.home.lab.softwaretesting.automation.selenium.webdriver.model.Entry;
 import br.com.home.lab.softwaretesting.automation.util.DataGen;
-import org.testng.ITestContext;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.math.BigDecimal;
@@ -12,6 +13,7 @@ import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -20,10 +22,11 @@ import static org.testng.Assert.assertTrue;
 public class LancamentoTest extends BaseSeleniumTest {
 
     private ListaLancamentosAction listaLancamentosAction;
-    public static final String DESCRICAO = "descricao";
+    public static final String ENTRIES = "entries";
 
     private static final List<Categoria> categrias = Arrays.asList(Categoria.values());
     private static final Map<List<Categoria>, List<TipoLancamento>> tiposLancamento;
+
     static {
 
         tiposLancamento = new HashMap<>();
@@ -39,46 +42,70 @@ public class LancamentoTest extends BaseSeleniumTest {
                 Collections.singletonList(TipoLancamento.DESPESA));
     }
 
-    public LancamentoTest(){
+    public LancamentoTest() {
         super();
     }
 
-    @Test(dependsOnMethods = "login")
-    public void criaLancamento(ITestContext context){
-        String description = getDescription();
-        BigDecimal value = getValorLancamento();
-        String date = DataGen.strDateCurrentMonth();
-        Categoria categoria = getCategoria();
-        TipoLancamento tipoLancamento = getTipoLancamento(categoria);
-        listaLancamentosAction = new ListaLancamentosAction(webDriver);
-        listaLancamentosAction.novoLancamento()
-                .and()
-                .salvaLancamento(description, value,
-                        date, tipoLancamento, categoria);
 
-        context.setAttribute(DESCRICAO, description);
-        assertTrue(listaLancamentosAction.existeLancamento(description, date, tipoLancamento));
+    @BeforeClass
+    protected void setUp() {
+        context.setContext(ENTRIES, new LinkedBlockingQueue<Entry>());
     }
 
-    @Test(dependsOnMethods = "criaLancamento")
-    public void editaLancamento(ITestContext context){
+    @Test
+    public void loginLancamentos() {
+        super.login();
+    }
+
+    @Test(dependsOnMethods = "loginLancamentos")
+    public void criaLancamento() {
+        for (int i = 0; i < 3; i++) {
+            String description = getDescription();
+            BigDecimal value = getValorLancamento();
+            String date = DataGen.strDateCurrentMonth();
+            Categoria categoria = getCategoria();
+            TipoLancamento tipoLancamento = getTipoLancamento(categoria);
+            listaLancamentosAction = new ListaLancamentosAction(getWebDriver());
+            listaLancamentosAction.novoLancamento()
+                    .and()
+                    .salvaLancamento(description, value,
+                            date, tipoLancamento, categoria);
+
+            assertTrue(listaLancamentosAction.existeLancamento(description, date, tipoLancamento));
+            setEntryInContext(new Entry(description, date, tipoLancamento));
+        }
+    }
+
+    @Test(dependsOnMethods = {"criaLancamento"})
+    public void buscaPorDescricao() {
+        Entry entry = getEntryInContext();
+        listaLancamentosAction.goHome();
+        listaLancamentosAction.buscaPor(entry.description());
+        listaLancamentosAction.buscaLancamentoPorPaginaDescricao(entry.description());
+        listaLancamentosAction.checkEntryExists(entry.description(), entry.entryDate(), entry.type());
+    }
+
+    @Test(dependsOnMethods = {"buscaPorDescricao"})
+    public void editaLancamento() {
         String sufixoEdicao = " EDITADO Selenium";
-        String descricao = getContextAttribute(DESCRICAO, context);
+        Entry entry = getEntryInContext();
+        final String newDescription = entry.description() + sufixoEdicao;
+        listaLancamentosAction.goHome();
         listaLancamentosAction.abreLancamentoParaEdicao()
                 .and()
-                .setDescricao(descricao + sufixoEdicao)
+                .setDescricao(newDescription)
                 .then()
                 .salvaLancamento();
 
-        assertTrue(listaLancamentosAction.existeLancamentoPorDescricao(descricao + sufixoEdicao),
-                "Deveria existir o lancamento que foi editado " + (descricao + sufixoEdicao));
-        context.setAttribute(DESCRICAO, descricao + sufixoEdicao);
+        assertTrue(listaLancamentosAction.existeLancamentoPorDescricao(newDescription),
+                "Deveria existir o lancamento que foi editado " + (newDescription));
     }
 
     @Test(dependsOnMethods = "editaLancamento")
-    public void removeLancamento(ITestContext context) {
-        String descricao = getContextAttribute(DESCRICAO, context);
-        listaLancamentosAction.removeLancamento(descricao);
+    public void removeLancamento() {
+        Entry entry = getEntryInContext();
+        listaLancamentosAction.goHome();
+        listaLancamentosAction.removeLancamento(entry.description());
     }
 
     @Test(dependsOnMethods = "removeLancamento")
@@ -115,14 +142,27 @@ public class LancamentoTest extends BaseSeleniumTest {
         return getAny(categrias);
     }
 
-    private <T> T getAny(List<T> list){
+    private <T> T getAny(List<T> list) {
         int n = list.size();
         int index = DataGen.number(n);
-        if(index == n){
+        if (index == n) {
             index--;
         }
         return list.get(index);
     }
+
+    private Entry getEntryInContext() {
+        Entry entry = getEntries().poll();
+        Objects.requireNonNull(entry);
+        return entry;
+    }
+
+    private void setEntryInContext(Entry entry) {
+        Objects.requireNonNull(entry);
+        getEntries().add(entry);
+    }
+
+    private Queue<Entry> getEntries() {
+        return context.get(ENTRIES);
+    }
 }
-
-

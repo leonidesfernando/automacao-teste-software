@@ -5,14 +5,24 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 import org.openqa.selenium.support.ui.LoadableComponent;
 
+import java.util.Objects;
+
 public abstract class BasePage extends LoadableComponent<BasePage> {
 
-    protected WebDriver webDriver;
-    public BasePage(WebDriver webDriver){
-        this.webDriver = webDriver;
+    protected static ThreadLocal<WebDriver> webDriver = new ThreadLocal<>();
+
+    public BasePage(WebDriver webDriver) {
+        Objects.requireNonNull(webDriver);
+        this.webDriver.set(webDriver);
         PageFactory.initElements(
-                new AjaxElementLocatorFactory(webDriver, 20),
+                new AjaxElementLocatorFactory(getWebDriver(), 20),
                 this);
+    }
+
+    public WebDriver getWebDriver() {
+        WebDriver driver = webDriver.get();
+        Objects.requireNonNull(driver);
+        return driver;
     }
 
     /**
@@ -23,7 +33,8 @@ public abstract class BasePage extends LoadableComponent<BasePage> {
      * <code>LoadableComponemt::isLoaded</code> method</p>
      */
     @Override
-    protected void load() {}
+    protected void load() {
+    }
 
     @Override
     protected void isLoaded() throws Error {
