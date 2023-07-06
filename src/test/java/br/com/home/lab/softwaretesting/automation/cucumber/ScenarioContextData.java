@@ -8,10 +8,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class ScenarioContextData {
 
-    private Map<String, Object> context;
+    private final Map<String, Object> context = new Hashtable<>();
 
-    public ScenarioContextData(){
-        context = new Hashtable<>();
+    public ScenarioContextData() {
     }
 
     public <T> void setContext(String key, T value) {

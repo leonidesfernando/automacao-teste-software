@@ -47,9 +47,6 @@ class LancamentoTest extends BaseSeleniumTest {
     }
 
 
-    //TODO: @RepeatedTest(value = 3, name = RepeatedTest.LONG_DISPLAY_NAME)
-    // https://www.baeldung.com/junit-5-repeated-test
-
     @BeforeAll
     protected void setUp() {
         context.setContext(ENTRIES, new LinkedBlockingQueue<Entry>());

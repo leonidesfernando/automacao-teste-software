@@ -31,7 +31,7 @@ public abstract class BaseSeleniumTest {
     protected final static ScenarioContextData context = new ScenarioContextData();
 
     private User loggedUser;
-    protected static ThreadLocal<WebDriver> webDriver = new ThreadLocal<>();
+    protected static final ThreadLocal<WebDriver> webDriver = new ThreadLocal<>();
 
 
     public BaseSeleniumTest() {
