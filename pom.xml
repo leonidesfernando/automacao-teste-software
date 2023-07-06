@@ -214,8 +214,6 @@
 				<version>${maven.surefire.plugin.version}</version>
 				<configuration>
 					<argLine>-Dfile.encoding=UTF-8 --add-opens java.base/java.lang=ALL-UNNAMED</argLine>
-					<parallel>methods</parallel>
-					<threadCount>8</threadCount>
 				</configuration>
 			</plugin>
 			<plugin>
