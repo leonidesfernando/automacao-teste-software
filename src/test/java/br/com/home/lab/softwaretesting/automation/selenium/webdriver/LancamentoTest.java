@@ -57,23 +57,23 @@ public class LancamentoTest extends BaseSeleniumTest {
         super.login();
     }
 
-    @Test(dependsOnMethods = "loginLancamentos")
+    @Test(dependsOnMethods = "loginLancamentos", invocationCount = 3)
     public void criaLancamento() {
-        for (int i = 0; i < 3; i++) {
-            String description = getDescription();
-            BigDecimal value = getValorLancamento();
-            String date = DataGen.strDateCurrentMonth();
-            Categoria categoria = getCategoria();
-            TipoLancamento tipoLancamento = getTipoLancamento(categoria);
-            listaLancamentosAction = new ListaLancamentosAction(getWebDriver());
-            listaLancamentosAction.novoLancamento()
-                    .and()
-                    .salvaLancamento(description, value,
-                            date, tipoLancamento, categoria);
 
-            assertTrue(listaLancamentosAction.existeLancamento(description, date, tipoLancamento));
-            setEntryInContext(new Entry(description, date, tipoLancamento));
-        }
+        String description = getDescription();
+        BigDecimal value = getValorLancamento();
+        String date = DataGen.strDateCurrentMonth();
+        Categoria categoria = getCategoria();
+        TipoLancamento tipoLancamento = getTipoLancamento(categoria);
+        listaLancamentosAction = new ListaLancamentosAction(getWebDriver());
+        listaLancamentosAction.novoLancamento()
+                .and()
+                .salvaLancamento(description, value,
+                        date, tipoLancamento, categoria);
+
+        assertTrue(listaLancamentosAction.existeLancamento(description, date, tipoLancamento));
+        setEntryInContext(new Entry(description, date, tipoLancamento));
+
     }
 
     @Test(dependsOnMethods = {"criaLancamento"})
