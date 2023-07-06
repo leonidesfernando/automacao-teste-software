@@ -24,6 +24,7 @@ class DashboardTest extends BaseSeleniumTest {
     }
 
     @Test
+    @Order(2)
     public void accessDashboard(){
 
         listaLancamentosAction = new ListaLancamentosAction(getWebDriver());
@@ -31,6 +32,7 @@ class DashboardTest extends BaseSeleniumTest {
     }
 
     @Test
+    @Order(3)
     public void backToList() {
         dashboardAction = new DashboardAction(getWebDriver());
         dashboardAction.goToList();

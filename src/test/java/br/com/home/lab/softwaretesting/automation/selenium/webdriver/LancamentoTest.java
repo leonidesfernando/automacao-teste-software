@@ -5,10 +5,7 @@ import br.com.home.lab.softwaretesting.automation.modelo.TipoLancamento;
 import br.com.home.lab.softwaretesting.automation.selenium.webdriver.action.ListaLancamentosAction;
 import br.com.home.lab.softwaretesting.automation.selenium.webdriver.model.Entry;
 import br.com.home.lab.softwaretesting.automation.util.DataGen;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.*;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -53,34 +50,34 @@ class LancamentoTest extends BaseSeleniumTest {
     //TODO: @RepeatedTest(value = 3, name = RepeatedTest.LONG_DISPLAY_NAME)
     // https://www.baeldung.com/junit-5-repeated-test
 
-    @BeforeClass
+    @BeforeAll
     protected void setUp() {
         context.setContext(ENTRIES, new LinkedBlockingQueue<Entry>());
     }
 
+
     @Test
+    @Order(1)
     public void loginLancamentos() {
         super.login();
     }
 
-    @Test
     @Order(2)
+    @RepeatedTest(3)
     public void criaLancamento() {
-        for (int i = 0; i < 3; i++) {
-            String description = getDescription();
-            BigDecimal value = getValorLancamento();
-            String date = DataGen.strDateCurrentMonth();
-            Categoria categoria = getCategoria();
-            TipoLancamento tipoLancamento = getTipoLancamento(categoria);
-            listaLancamentosAction = new ListaLancamentosAction(getWebDriver());
-            listaLancamentosAction.novoLancamento()
-                    .and()
-                    .salvaLancamento(description, value,
-                            date, tipoLancamento, categoria);
+        String description = getDescription();
+        BigDecimal value = getValorLancamento();
+        String date = DataGen.strDateCurrentMonth();
+        Categoria categoria = getCategoria();
+        TipoLancamento tipoLancamento = getTipoLancamento(categoria);
+        listaLancamentosAction = new ListaLancamentosAction(getWebDriver());
+        listaLancamentosAction.novoLancamento()
+                .and()
+                .salvaLancamento(description, value,
+                        date, tipoLancamento, categoria);
 
-            assertTrue(listaLancamentosAction.existeLancamento(description, date, tipoLancamento));
-            setEntryInContext(new Entry(description, date, tipoLancamento));
-        }
+        assertTrue(listaLancamentosAction.existeLancamento(description, date, tipoLancamento));
+        setEntryInContext(new Entry(description, date, tipoLancamento));
     }
 
     @Test

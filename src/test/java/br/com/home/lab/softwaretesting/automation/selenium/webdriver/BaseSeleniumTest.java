@@ -4,12 +4,14 @@ import br.com.home.lab.softwaretesting.automation.config.Configurations;
 import br.com.home.lab.softwaretesting.automation.cucumber.ScenarioContextData;
 import br.com.home.lab.softwaretesting.automation.selenium.webdriver.action.HomeAction;
 import br.com.home.lab.softwaretesting.automation.selenium.webdriver.action.LoginAction;
+import br.com.home.lab.softwaretesting.automation.selenium.webdriver.config.ScreenshotListener;
 import br.com.home.lab.softwaretesting.automation.selenium.webdriver.model.User;
 import br.com.home.lab.softwaretesting.automation.util.LoadConfigurationUtil;
 import org.aeonbits.owner.ConfigFactory;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.platform.commons.util.StringUtils;
 import org.openqa.selenium.WebDriver;
 
@@ -17,9 +19,12 @@ import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public abstract class BaseSeleniumTest {
 
+    @RegisterExtension
+    ScreenshotListener screenshotListener = new ScreenshotListener();
     private static final String BROWSER = "browser";
     private static final Configurations config = ConfigFactory.create(Configurations.class);
 
@@ -82,6 +87,7 @@ public abstract class BaseSeleniumTest {
         WebDriver driver = loadWebDriver();
         Objects.requireNonNull(driver);
         webDriver.set(driver);
+        screenshotListener.init(driver);
     }
 
     protected WebDriver loadWebDriver(){
