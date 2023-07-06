@@ -2,7 +2,7 @@ package br.com.home.lab.softwaretesting.automation.cucumber;
 
 import org.testng.Assert;
 
-import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Map;
 
 public class ScenarioContextData {
@@ -10,7 +10,7 @@ public class ScenarioContextData {
     private Map<String, Object> context;
 
     public ScenarioContextData(){
-        context = new HashMap<>();
+        context = new Hashtable<>();
     }
 
     public <T> void setContext(String key, T value){

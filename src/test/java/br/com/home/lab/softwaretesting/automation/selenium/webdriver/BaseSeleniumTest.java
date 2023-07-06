@@ -1,13 +1,13 @@
 package br.com.home.lab.softwaretesting.automation.selenium.webdriver;
 
 import br.com.home.lab.softwaretesting.automation.config.Configurations;
+import br.com.home.lab.softwaretesting.automation.cucumber.ScenarioContextData;
 import br.com.home.lab.softwaretesting.automation.selenium.webdriver.action.HomeAction;
 import br.com.home.lab.softwaretesting.automation.selenium.webdriver.action.LoginAction;
 import br.com.home.lab.softwaretesting.automation.selenium.webdriver.model.User;
 import br.com.home.lab.softwaretesting.automation.util.LoadConfigurationUtil;
 import org.aeonbits.owner.ConfigFactory;
 import org.openqa.selenium.WebDriver;
-import org.testng.ITestContext;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeSuite;
@@ -21,58 +21,65 @@ public abstract class BaseSeleniumTest {
     private static final String BROWSER = "browser";
     private static final Configurations config = ConfigFactory.create(Configurations.class);
 
-    protected WebDriver webDriver;
+    protected final static ScenarioContextData context = new ScenarioContextData();
 
     private User loggedUser;
+    protected static ThreadLocal<WebDriver> webDriver = new ThreadLocal<>();
 
 
     public BaseSeleniumTest() {
         loggedUser = LoadConfigurationUtil.getUser();
     }
 
-    @BeforeSuite
-    protected void beforeSuite(ITestContext context) {
+    public WebDriver getWebDriver() {
+        WebDriver driver = webDriver.get();
+        Objects.requireNonNull(driver);
+        return driver;
     }
 
-    //@Test(priority = -1)
-    //@Test
+    @BeforeSuite
+    protected void beforeSuite() {
+    }
+
     public void login() {
         login(loggedUser);
     }
 
-    public void login(User user) {
+    public void login(User user){
         loggedUser = user;
         access();
         doLogin();
     }
 
     protected void doLogin() {
-        LoginAction loginAction = new LoginAction(webDriver);
+        LoginAction loginAction = new LoginAction(getWebDriver());
         loginAction.doLogin(loggedUser);
     }
 
     public void doLogout() {
-        HomeAction homeAction = new HomeAction(webDriver);
+        HomeAction homeAction = new HomeAction(getWebDriver());
         homeAction.doLogout();
     }
 
 
     protected void access() {
-        webDriver.get(LoadConfigurationUtil.getUrl());
+        getWebDriver().get(LoadConfigurationUtil.getUrl());
     }
 
     @AfterClass
     protected void finaliza() {
         try {
-            webDriver.quit();
+            getWebDriver().quit();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @BeforeClass
-    protected void init(ITestContext context){
-        webDriver = loadWebDriver();
+    protected void init() {
+        WebDriver driver = loadWebDriver();
+        Objects.requireNonNull(driver);
+        webDriver.set(driver);
     }
 
     protected WebDriver loadWebDriver(){
@@ -85,12 +92,5 @@ public abstract class BaseSeleniumTest {
             return Browser.valueOf(browser.toUpperCase());
         }
         return config.browser();
-    }
-
-    @SuppressWarnings("unchecked")
-    protected <T> T getContextAttribute(String key, ITestContext context){
-        T attribute = (T) context.getAttribute(key);
-        Objects.requireNonNull(attribute);
-        return attribute;
     }
 }

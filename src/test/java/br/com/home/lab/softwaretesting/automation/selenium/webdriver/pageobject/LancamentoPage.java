@@ -46,7 +46,7 @@ public class LancamentoPage extends BasePage {
     }
 
     public WebElement getDivError(){
-        return webDriver.findElement(By.cssSelector("div.alert.alert-danger"));
+        return getWebDriver().findElement(By.cssSelector("div.alert.alert-danger"));
     }
 
     public void setTipoLancamento(TipoLancamento tipoLancamento){
