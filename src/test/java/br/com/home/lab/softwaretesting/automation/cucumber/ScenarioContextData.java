@@ -7,16 +7,16 @@ import java.util.Map;
 
 public class ScenarioContextData {
 
-    private Map<String, Object> context;
+    private final Map<String, Object> context = new Hashtable<>();
 
-    public ScenarioContextData(){
-        context = new Hashtable<>();
+    public ScenarioContextData() {
     }
 
     public <T> void setContext(String key, T value){
         context.put(key, value);
     }
 
+    @SuppressWarnings("unchecked")
     public <T> T get(String key){
         T value = (T)context.get(key);
         Assert.assertNotNull(value, "O valor a ser recuperado nao pode ser nulo");
