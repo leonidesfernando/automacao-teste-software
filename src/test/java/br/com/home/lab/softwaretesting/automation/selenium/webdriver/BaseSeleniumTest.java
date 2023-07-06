@@ -13,6 +13,8 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.platform.commons.util.StringUtils;
 import org.openqa.selenium.WebDriver;
 
+import java.util.Objects;
+
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -21,15 +23,20 @@ public abstract class BaseSeleniumTest {
     private static final String BROWSER = "browser";
     private static final Configurations config = ConfigFactory.create(Configurations.class);
 
-    protected WebDriver webDriver;
+    protected final static ScenarioContextData context = new ScenarioContextData();
 
     private User loggedUser;
-
-    protected final ScenarioContextData context = new ScenarioContextData();
+    protected static ThreadLocal<WebDriver> webDriver = new ThreadLocal<>();
 
 
     public BaseSeleniumTest() {
         loggedUser = LoadConfigurationUtil.getUser();
+    }
+
+    public WebDriver getWebDriver() {
+        WebDriver driver = webDriver.get();
+        Objects.requireNonNull(driver);
+        return driver;
     }
 
     @BeforeAll
@@ -47,39 +54,41 @@ public abstract class BaseSeleniumTest {
     }
 
     protected boolean doLogin() {
-        LoginAction loginAction = new LoginAction(webDriver);
+        LoginAction loginAction = new LoginAction(getWebDriver());
         return loginAction.doLogin(loggedUser);
     }
 
     public void doLogout() {
-        HomeAction homeAction = new HomeAction(webDriver);
+        HomeAction homeAction = new HomeAction(getWebDriver());
         homeAction.doLogout();
     }
 
 
     protected void access() {
-        webDriver.get(LoadConfigurationUtil.getUrl());
+        getWebDriver().get(LoadConfigurationUtil.getUrl());
     }
 
     @AfterAll
     protected void finaliza() {
         try {
-            webDriver.quit();
+            getWebDriver().quit();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @BeforeAll
-    protected void init() {
-        webDriver = loadWebDriver();
+    protected void init(){
+        WebDriver driver = loadWebDriver();
+        Objects.requireNonNull(driver);
+        webDriver.set(driver);
     }
 
-    protected WebDriver loadWebDriver() {
+    protected WebDriver loadWebDriver(){
         return getBrowser().loadBrowser();
     }
-
-    private Browser getBrowser() {
+    
+    private Browser getBrowser(){
         String browser = System.getProperty(BROWSER);
         if (StringUtils.isNotBlank(browser)) {
             return Browser.valueOf(browser.toUpperCase());

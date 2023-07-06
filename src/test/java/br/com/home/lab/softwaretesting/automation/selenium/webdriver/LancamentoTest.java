@@ -3,6 +3,7 @@ package br.com.home.lab.softwaretesting.automation.selenium.webdriver;
 import br.com.home.lab.softwaretesting.automation.modelo.Categoria;
 import br.com.home.lab.softwaretesting.automation.modelo.TipoLancamento;
 import br.com.home.lab.softwaretesting.automation.selenium.webdriver.action.ListaLancamentosAction;
+import br.com.home.lab.softwaretesting.automation.selenium.webdriver.model.Entry;
 import br.com.home.lab.softwaretesting.automation.util.DataGen;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -14,6 +15,7 @@ import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -23,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class LancamentoTest extends BaseSeleniumTest {
 
     private ListaLancamentosAction listaLancamentosAction;
-    public static final String DESCRICAO = "descricao";
+    public static final String ENTRIES = "entries";
 
     private static final List<Categoria> categrias = Arrays.asList(Categoria.values());
     private static final Map<List<Categoria>, List<TipoLancamento>> tiposLancamento;
@@ -47,59 +49,78 @@ class LancamentoTest extends BaseSeleniumTest {
         super();
     }
 
+
     //TODO: @RepeatedTest(value = 3, name = RepeatedTest.LONG_DISPLAY_NAME)
     // https://www.baeldung.com/junit-5-repeated-test
 
+    @BeforeClass
+    protected void setUp() {
+        context.setContext(ENTRIES, new LinkedBlockingQueue<Entry>());
+    }
+
     @Test
-    @Order(1)
-    void loginLancamentos() {
+    public void loginLancamentos() {
         super.login();
     }
 
     @Test
     @Order(2)
-    void criaLancamento() {
-        String description = getDescription();
-        BigDecimal value = getValorLancamento();
-        String date = DataGen.strDateCurrentMonth();
-        Categoria categoria = getCategoria();
-        TipoLancamento tipoLancamento = getTipoLancamento(categoria);
-        listaLancamentosAction = new ListaLancamentosAction(webDriver);
-        listaLancamentosAction.novoLancamento()
-                .and()
-                .salvaLancamento(description, value,
-                        date, tipoLancamento, categoria);
+    public void criaLancamento() {
+        for (int i = 0; i < 3; i++) {
+            String description = getDescription();
+            BigDecimal value = getValorLancamento();
+            String date = DataGen.strDateCurrentMonth();
+            Categoria categoria = getCategoria();
+            TipoLancamento tipoLancamento = getTipoLancamento(categoria);
+            listaLancamentosAction = new ListaLancamentosAction(getWebDriver());
+            listaLancamentosAction.novoLancamento()
+                    .and()
+                    .salvaLancamento(description, value,
+                            date, tipoLancamento, categoria);
 
-        context.setContext(DESCRICAO, description);
-        assertTrue(listaLancamentosAction.existeLancamento(description, date, tipoLancamento));
+            assertTrue(listaLancamentosAction.existeLancamento(description, date, tipoLancamento));
+            setEntryInContext(new Entry(description, date, tipoLancamento));
+        }
     }
 
     @Test
     @Order(3)
-    void editaLancamento() {
-        String sufixoEdicao = " EDITADO Selenium";
-        String descricao = context.get(DESCRICAO);
-        listaLancamentosAction.abreLancamentoParaEdicao()
-                .and()
-                .setDescricao(descricao + sufixoEdicao)
-                .then()
-                .salvaLancamento();
-
-        assertTrue(listaLancamentosAction.existeLancamentoPorDescricao(descricao + sufixoEdicao),
-                "Deveria existir o lancamento que foi editado " + (descricao + sufixoEdicao));
-        context.setContext(DESCRICAO, descricao + sufixoEdicao);
+    public void buscaPorDescricao() {
+        Entry entry = getEntryInContext();
+        listaLancamentosAction.goHome();
+        listaLancamentosAction.buscaPor(entry.description());
+        listaLancamentosAction.buscaLancamentoPorPaginaDescricao(entry.description());
+        listaLancamentosAction.checkEntryExists(entry.description(), entry.entryDate(), entry.type());
     }
 
     @Test
     @Order(4)
-    void removeLancamento() {
-        String descricao = context.get(DESCRICAO);
-        listaLancamentosAction.removeLancamento(descricao);
+    public void editaLancamento() {
+        String sufixoEdicao = " EDITADO Selenium";
+        Entry entry = getEntryInContext();
+        final String newDescription = entry.description() + sufixoEdicao;
+        listaLancamentosAction.goHome();
+        listaLancamentosAction.abreLancamentoParaEdicao()
+                .and()
+                .setDescricao(newDescription)
+                .then()
+                .salvaLancamento();
+
+        assertTrue(listaLancamentosAction.existeLancamentoPorDescricao(newDescription),
+                "Deveria existir o lancamento que foi editado " + (newDescription));
     }
 
     @Test
     @Order(5)
-    void logout() {
+    public void removeLancamento() {
+        Entry entry = getEntryInContext();
+        listaLancamentosAction.goHome();
+        listaLancamentosAction.removeLancamento(entry.description());
+    }
+
+    @Test
+    @Order(6)
+    public void logout() {
         super.doLogout();
     }
 
@@ -132,11 +153,24 @@ class LancamentoTest extends BaseSeleniumTest {
         return getAny(categrias);
     }
 
-    private <T> T getAny(List<T> list){
+    private <T> T getAny(List<T> list) {
         int n = list.size();
         int index = DataGen.number(n - 1);
         return list.get(index);
     }
+
+    private Entry getEntryInContext() {
+        Entry entry = getEntries().poll();
+        Objects.requireNonNull(entry);
+        return entry;
+    }
+
+    private void setEntryInContext(Entry entry) {
+        Objects.requireNonNull(entry);
+        getEntries().add(entry);
+    }
+
+    private Queue<Entry> getEntries() {
+        return context.get(ENTRIES);
+    }
 }
-
-

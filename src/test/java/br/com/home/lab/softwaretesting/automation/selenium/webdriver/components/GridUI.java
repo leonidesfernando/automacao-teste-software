@@ -47,10 +47,12 @@ public class GridUI extends GenericUI{
     }
 
     public List<WebElement> getElements(){
-        if(!areThereElements()){
+        if (!areThereElements()) {
             throw new IllegalStateException("No elements present. The data table is empty.");
         }
-        return getWebDriver().findElements(By.xpath(".//tbody/tr"));
+        final String xpath = ".//tbody/tr";
+        SeleniumUtil.waitForPresenceOfXpath(getWebDriver(), xpath);
+        return getWebDriver().findElements(By.xpath(xpath));
     }
 
     public String getCellValueAt(int row, String col){
@@ -82,6 +84,7 @@ public class GridUI extends GenericUI{
 
     public boolean areThereElements(){
         try{
+            SeleniumUtil.waitForPresenceOfId(getWebDriver(), grid.getAttribute("id"));
             getWebDriver().findElement(By.className("ui-empty-table"));
             return false;
         }catch (NoSuchElementException e){

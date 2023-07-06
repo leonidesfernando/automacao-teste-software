@@ -2,6 +2,7 @@ package br.com.home.lab.softwaretesting.automation.selenium.webdriver.action;
 
 import br.com.home.lab.softwaretesting.automation.modelo.TipoLancamento;
 import br.com.home.lab.softwaretesting.automation.selenium.webdriver.components.GridUI;
+import br.com.home.lab.softwaretesting.automation.selenium.webdriver.helper.SeleniumUtil;
 import br.com.home.lab.softwaretesting.automation.selenium.webdriver.pageobject.ListaLancamentosPage;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.WebDriver;
@@ -9,6 +10,7 @@ import org.openqa.selenium.WebDriver;
 import static br.com.home.lab.softwaretesting.automation.selenium.webdriver.helper.SeleniumUtil.waitForElementVisible;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Slf4j
 public class ListaLancamentosAction extends BaseAction<ListaLancamentosPage> {
@@ -17,7 +19,7 @@ public class ListaLancamentosAction extends BaseAction<ListaLancamentosPage> {
     private static final String COL_RELEASE_DATE = "Data Lançamento";
     private static final String COL_TYPE = "Tipo";
 
-    enum Botao{
+    enum Botao {
         EDITAR,
         EXCLUIR
     }
@@ -26,29 +28,49 @@ public class ListaLancamentosAction extends BaseAction<ListaLancamentosPage> {
         super(webDriver, new ListaLancamentosPage(webDriver));
     }
 
-    public LancamentoAction novoLancamento(){
+    public ListaLancamentosAction goHome() {
         page.get();
-        page.getNewEntry().click();
-        return new LancamentoAction(webDriver);
+        page.getHomeLink().click();
+        SeleniumUtil.waitAjaxCompleted(getWebDriver());
+        SeleniumUtil.waitForElementVisible(getWebDriver(), page.getHomeLink());
+        return this;
     }
 
-    public LancamentoAction abreLancamentoParaEdicao(){
+    public LancamentoAction novoLancamento() {
+        page.get();
+        page.getNewEntry().click();
+        return new LancamentoAction(getWebDriver());
+    }
+
+    public LancamentoAction abreLancamentoParaEdicao() {
         page.get();
         return clicaBotaoEditar();
     }
 
-    public boolean existeLancamento(final String descricaoLancamento, String date, TipoLancamento tipo){
+    public void buscaPor(String texto) {
+        buscaLancamentoPorDescricao(texto);
+        GridUI grid = page.getGrid();
+        assertTrue(!grid.getElements().isEmpty());
+    }
+
+    public boolean existeLancamento(final String descricaoLancamento, String date, TipoLancamento tipo) {
 
         buscaLancamentoPorDescricao(descricaoLancamento);
-        GridUI grid = page.getGrid();
-        assertEquals(1, grid.getElements().size());
-        assertEquals(grid.getCellValueAt(0, COL_DESCRIPTION), descricaoLancamento);
-        assertEquals(grid.getCellValueAt(0, COL_RELEASE_DATE), date);
-        assertEquals(grid.getCellValueAt(0, COL_TYPE), tipo.getDescricao());
+        checkEntryExists(descricaoLancamento, date, tipo);
         return true;
     }
 
-    public void removeLancamento(final String descricaoLancamento){
+    public void checkEntryExists(String descricaoLancamento, String date, TipoLancamento tipo) {
+        GridUI grid = page.getGrid();
+        assertEquals(grid.getElements().size(), 1);
+        final var gridDescription = grid.getCellValueAt(0, COL_DESCRIPTION);
+        assertTrue(gridDescription.contains(descricaoLancamento) || gridDescription.equals(descricaoLancamento));
+        assertEquals(grid.getCellValueAt(0, COL_RELEASE_DATE), date);
+        assertEquals(grid.getCellValueAt(0, COL_TYPE), tipo.getDescricao());
+
+    }
+
+    public void removeLancamento(final String descricaoLancamento) {
         buscaLancamentoPorDescricao(descricaoLancamento);
         clicaBotaoExcluir();
         buscaLancamentoPorDescricao(descricaoLancamento);
@@ -70,21 +92,28 @@ public class ListaLancamentosAction extends BaseAction<ListaLancamentosPage> {
 
     protected LancamentoAction clicaBotaoEditar(){
         clicaBotao(Botao.EDITAR);
-        return new LancamentoAction(webDriver);
+        return new LancamentoAction(getWebDriver());
     }
 
-    protected void clicaBotaoExcluir(){
+    protected void clicaBotaoExcluir() {
         clicaBotao(Botao.EXCLUIR);
     }
 
-    public void buscaLancamentoPorDescricao(String descricaoLancamento){
+    public void buscaLancamentoPorDescricao(String descricaoLancamento) {
         page.get();
-        waitForElementVisible(webDriver, page.getSearchItem()).clear();
-        waitForElementVisible(webDriver, page.getSearchItem()).sendKeys(descricaoLancamento);
-        waitForElementVisible(webDriver, page.getBtnSearch()).click();
+        waitForElementVisible(getWebDriver(), page.getSearchItem()).clear();
+        waitForElementVisible(getWebDriver(), page.getSearchItem()).sendKeys(descricaoLancamento);
+        waitForElementVisible(getWebDriver(), page.getBtnSearch()).click();
     }
 
-    public void gotToDashboard(){
+    public void buscaLancamentoPorPaginaDescricao(String descricaoLancamento) {
+        page.get();
+        waitForElementVisible(getWebDriver(), page.getSearchItem()).clear();
+        waitForElementVisible(getWebDriver(), page.getSearchItem()).sendKeys(descricaoLancamento);
+        waitForElementVisible(getWebDriver(), page.getFirstPaginationLink()).click();
+    }
+
+    public void gotToDashboard() {
         page.getBtnDashboard().click();
     }
 

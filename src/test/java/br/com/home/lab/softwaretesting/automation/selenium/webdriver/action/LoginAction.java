@@ -16,13 +16,13 @@ public class LoginAction extends BaseAction<LoginPage> {
 
     public boolean doLogin(User user) {
         page.submitUserCredentials(user);
-        homeAction = new HomeAction(webDriver);
+        homeAction = new HomeAction(getWebDriver());
         return checkIfIsLoggedIn();
     }
 
     private boolean checkIfIsLoggedIn() {
         try {
-            waitForElementVisible(webDriver, homeAction.getPage().getLogoutLink());
+            waitForElementVisible(getWebDriver(), homeAction.getPage().getLogoutLink());
             return true;
         } catch (Exception e) {
             return false;

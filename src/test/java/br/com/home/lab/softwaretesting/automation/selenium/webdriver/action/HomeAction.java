@@ -18,6 +18,6 @@ public class HomeAction extends BaseAction<HomePage> {
 
     public void doLogout() {
         page.getLogoutLink().click();
-        assertTrue(webDriver.getCurrentUrl().contains("login"));
+        assertTrue(getWebDriver().getCurrentUrl().contains("login"));
     }
 }

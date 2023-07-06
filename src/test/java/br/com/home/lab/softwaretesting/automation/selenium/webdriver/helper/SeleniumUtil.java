@@ -52,24 +52,28 @@ public class SeleniumUtil {
                 .until(dr -> String
                         .valueOf(((JavascriptExecutor) dr).executeScript(
                                 "return document.readyState")
-                                )
+                        )
                         .equals("complete"));
         driver.manage().timeouts().implicitlyWait(Duration.ofMillis(200));
     }
 
-    public static WebElement waitForPresenceOfId(WebDriver driver, String id){
+    public static WebElement waitForPresenceOfId(WebDriver driver, String id) {
         return waitForPresenceBy(driver, By.id(id));
     }
 
-    public static WebElement waitForPresenceOfXpath(WebDriver driver, String xpath){
+    public static WebElement waitForPresenceOfSelector(WebDriver driver, String selector) {
+        return waitForPresenceBy(driver, By.cssSelector(selector));
+    }
+
+    public static WebElement waitForPresenceOfXpath(WebDriver driver, String xpath) {
         return waitForPresenceBy(driver, By.xpath(xpath));
     }
 
-    public static void waitForPresentOfIdWithRetries(WebDriver driver, String id, int retries){
+    public static void waitForPresentOfIdWithRetries(WebDriver driver, String id, int retries) {
         waitForWithRetries(SeleniumUtil::waitForPresenceOfId, driver, id, retries);
     }
 
-    public void waifForPresenceOfXpathWithRetries(WebDriver driver, String xpath, int retries){
+    public void waifForPresenceOfXpathWithRetries(WebDriver driver, String xpath, int retries) {
         waitForWithRetries(SeleniumUtil::waitForPresenceOfXpath, driver, xpath, retries);
     }
 

@@ -1,17 +1,17 @@
 package br.com.home.lab.softwaretesting.automation.cucumber;
 
 
-import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class ScenarioContextData {
 
-    private final Map<String, Object> context;
+    private Map<String, Object> context;
 
-    public ScenarioContextData() {
-        context = new HashMap<>();
+    public ScenarioContextData(){
+        context = new Hashtable<>();
     }
 
     public <T> void setContext(String key, T value) {

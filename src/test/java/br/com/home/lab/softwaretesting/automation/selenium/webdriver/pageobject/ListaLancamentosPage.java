@@ -22,23 +22,29 @@ public class ListaLancamentosPage extends BasePage {
     @FindBy(css = "a[title='Gráfico']")
     private WebElement btnDashboard;
 
+    @FindBy(id = "pagina1")
+    private WebElement firstPaginationLink;
+
+    @FindBy(id = "homeLink")
+    private WebElement homeLink;
+
     private static final String COL_DESCRIPTION = "Descrição";
     private static final String COL_RELEASE_DATE = "Data Lançamento";
     private static final String COL_TYPE = "Tipo";
 
     private final static String LIST_TABLE_ID = "divTabelaLancamentos";
 
-    public ListaLancamentosPage(final WebDriver driver){
+    public ListaLancamentosPage(final WebDriver driver) {
         super(driver);
     }
 
     public GridUI getGrid(){
-        return new GridUI(webDriver).id("tabelaLancamentos");
+        return new GridUI(getWebDriver()).id("tabelaLancamentos");
     }
 
     @Override
     protected boolean isReady() {
-        return SeleniumUtil.waitForElementVisible(webDriver, btnSearch).isEnabled()
-                && getGrid().getWrappedElement().isDisplayed();
+        return SeleniumUtil.waitForElementVisible(getWebDriver(), btnSearch).isEnabled()
+                && homeLink.isDisplayed() && homeLink.isEnabled();
     }
 }
