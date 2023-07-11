@@ -5,6 +5,10 @@ import br.com.home.lab.softwaretesting.automation.modelo.TipoLancamento;
 import br.com.home.lab.softwaretesting.automation.selenium.webdriver.action.ListaLancamentosAction;
 import br.com.home.lab.softwaretesting.automation.selenium.webdriver.model.Entry;
 import br.com.home.lab.softwaretesting.automation.util.DataGen;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Issue;
+import io.qameta.allure.Step;
 import org.junit.jupiter.api.*;
 
 import java.math.BigDecimal;
@@ -18,6 +22,8 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@Epic("Regression Tests Epic")
+@Feature("CRUD entries by Selenium WebDriver")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class LancamentoTest extends BaseSeleniumTest {
 
@@ -47,21 +53,24 @@ class LancamentoTest extends BaseSeleniumTest {
     }
 
 
+    @Step("Initializing the context")
     @BeforeAll
     protected void setUp() {
         context.setContext(ENTRIES, new LinkedBlockingQueue<Entry>());
     }
 
 
+    @Step("Performing log into with credentials from configurations")
     @Test
     @Order(1)
-    public void loginLancamentos() {
+    void loginLancamentos() {
         super.login();
     }
 
+    @Step("Registering entries by dynamic data")
     @Order(2)
     @RepeatedTest(3)
-    public void criaLancamento() {
+    void criaLancamento() {
         String description = getDescription();
         BigDecimal value = getValorLancamento();
         String date = DataGen.strDateCurrentMonth();
@@ -77,9 +86,10 @@ class LancamentoTest extends BaseSeleniumTest {
         setEntryInContext(new Entry(description, date, tipoLancamento));
     }
 
+    @Step("Searching by description from the context")
     @Test
     @Order(3)
-    public void buscaPorDescricao() {
+    void buscaPorDescricao() {
         Entry entry = getEntryInContext();
         listaLancamentosAction.goHome();
         listaLancamentosAction.buscaPor(entry.description());
@@ -87,9 +97,11 @@ class LancamentoTest extends BaseSeleniumTest {
         listaLancamentosAction.checkEntryExists(entry.description(), entry.entryDate(), entry.type());
     }
 
+    @Issue("It's not searching the item to be edited. It must be fixed")
+    @Step("Editing an entry existing in the context")
     @Test
     @Order(4)
-    public void editaLancamento() {
+    void editaLancamento() {
         String sufixoEdicao = " EDITADO Selenium";
         Entry entry = getEntryInContext();
         final String newDescription = entry.description() + sufixoEdicao;
@@ -104,17 +116,19 @@ class LancamentoTest extends BaseSeleniumTest {
                 "Deveria existir o lancamento que foi editado " + (newDescription));
     }
 
+    @Step("Removing the entry by description collected from the context")
     @Test
     @Order(5)
-    public void removeLancamento() {
+    void removeLancamento() {
         Entry entry = getEntryInContext();
         listaLancamentosAction.goHome();
         listaLancamentosAction.removeLancamento(entry.description());
     }
 
+    @Step("Performing log out")
     @Test
     @Order(6)
-    public void logout() {
+    void logout() {
         super.doLogout();
     }
 

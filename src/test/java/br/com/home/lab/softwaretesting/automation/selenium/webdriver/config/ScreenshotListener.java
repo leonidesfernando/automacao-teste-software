@@ -1,5 +1,6 @@
 package br.com.home.lab.softwaretesting.automation.selenium.webdriver.config;
 
+import io.qameta.allure.Allure;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestWatcher;
 import org.openqa.selenium.OutputType;
@@ -7,6 +8,7 @@ import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -31,8 +33,13 @@ public class ScreenshotListener implements TestWatcher {
                 .add(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd_MM_yyyy_hh_mm_ss")));
 
         captureScreenshot(fileName.toString());
+        takeScreenShot(fileName.toString());
     }
 
+
+    public void takeScreenShot(String name) {
+        Allure.addAttachment(name, new ByteArrayInputStream(((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES)));
+    }
 
     public void captureScreenshot(String fileName) {
         try {

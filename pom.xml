@@ -36,6 +36,12 @@
 		<jacoco.maven.plugin.version>0.8.10</jacoco.maven.plugin.version>
 		<maven.surefire.plugin.version>3.1.2</maven.surefire.plugin.version>
 		<maven.compiler.plugin.version>3.11.0</maven.compiler.plugin.version>
+
+		<aspectj.version>1.9.19</aspectj.version>
+		<allure.version>2.23.0</allure.version>
+		<allure.cmd.download.url>
+			https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline
+		</allure.cmd.download.url>
 	</properties>
 
 	<dependencies>
@@ -196,6 +202,12 @@
 			<scope>test</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>io.qameta.allure</groupId>
+			<artifactId>allure-junit5</artifactId>
+			<version>${allure.version}</version>
+			<scope>test</scope>
+		</dependency>
 
 		<!-- end Junit deps -->
 
@@ -213,8 +225,45 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>${maven.surefire.plugin.version}</version>
 				<configuration>
-					<argLine>-Dfile.encoding=UTF-8 --add-opens java.base/java.lang=ALL-UNNAMED</argLine>
+					<properties>
+						<property>
+							<name>listener</name>
+							<value>io.qameta.allure.junit5.AllureJunit5</value>
+						</property>
+						<configurationParameters>
+							cucumber.junit-platform.naming-strategy=long
+						</configurationParameters>
+					</properties>
+					<excludes>
+						<exclude>
+							br.com.home.lab.softwaretesting.automation.AutomacaoTesteSoftwareApplicationTests
+						</exclude>
+					</excludes>
+					<argLine>
+						-Dfile.encoding=UTF-8 --add-opens java.base/java.lang=ALL-UNNAMED
+						-javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
+						-Dcucumber.options="--plugin io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm"
+					</argLine>
+					<systemProperties>
+						<property>
+							<name>junit.jupiter.extensions.autodetection.enabled</name>
+							<value>true</value>
+						</property>
+					</systemProperties>
+					<systemPropertyVariables>
+						<allure.results.directory>${project.build.directory}/allure-results</allure.results.directory>
+						<allure.report.directory>${project.build.directory}/allure-report</allure.report.directory>
+						<!-- aqui zole -->
+					</systemPropertyVariables>
+					<reportFormat>plain</reportFormat>
 				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>org.aspectj</groupId>
+						<artifactId>aspectjweaver</artifactId>
+						<version>${aspectj.version}</version>
+					</dependency>
+				</dependencies>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -252,6 +301,19 @@
 						</configuration>
 					</execution>
 				</executions>
+			</plugin>
+			<plugin>
+				<groupId>io.qameta.allure</groupId>
+				<artifactId>allure-maven</artifactId>
+				<version>2.12.0</version>
+				<configuration>
+					<reportVersion>${allure.version}</reportVersion>
+					<!-- resultsDirectory>${project.build.directory}/allure-results</resultsDirectory>
+					<reportDirectory>${project.build.directory}/allure-report</reportDirectory -->
+					<allureDownloadUrl>
+						${allure.cmd.download.url}/${allure.version}/allure-commandline-${allure.version}.zip
+					</allureDownloadUrl>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

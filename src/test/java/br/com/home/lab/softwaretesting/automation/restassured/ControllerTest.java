@@ -10,6 +10,10 @@ import br.com.home.lab.softwaretesting.automation.util.DataGen;
 import br.com.home.lab.softwaretesting.automation.util.LoadConfigurationUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.qameta.allure.Description;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Step;
 import io.restassured.RestAssured;
 import io.restassured.filter.session.SessionFilter;
 import io.restassured.path.xml.XmlPath;
@@ -26,6 +30,8 @@ import java.util.*;
 import static br.com.home.lab.softwaretesting.automation.util.Constants.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+@Epic("Regression Tests Epic")
+@Feature("RestAssured validations tests")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class ControllerTest {
 
@@ -34,6 +40,7 @@ class ControllerTest {
 
     private static final ScenarioContextData context = new ScenarioContextData();
 
+    @Step("Loading configurations(url and port) and performing log into the system")
     @BeforeAll
     protected static void before() {
         RestAssured.baseURI = LoadConfigurationUtil.getOnlyUrl();
@@ -54,6 +61,7 @@ class ControllerTest {
         return context.get(SESSION_ID);
     }
 
+    @Description("Registering new entry by dynamic data generation")
     @Test
     @Order(1)
     void salvarTest() {
@@ -81,6 +89,7 @@ class ControllerTest {
 
     //TODO: @RepeatedTest(value = 3, name = RepeatedTest.LONG_DISPLAY_NAME)
     // https://www.baeldung.com/junit-5-repeated-test
+    @Description("Searching the just registered entry by its description")
     @SneakyThrows
     @Test
     @Order(2)
@@ -99,18 +108,20 @@ class ControllerTest {
         context.setContext(ID_TO_USE, lancamentos.get(0).id());
     }
 
+    @Description("Searching by the description present in the context")
     @Test
     @Order(3)
-    public void buscandoComTextoEPaginaTest() {
+    void buscandoComTextoEPaginaTest() {
         List<Pair<String, String>> params = Arrays.asList(
                 Pair.of("p", "1"),
                 Pair.of("itemBusca", context.get(DESCRIPTION_TEST))
         );
         Response response = RestAssurredUtil.get(getSessionId(), params, "/lancamentos/{p}/{itemBusca}");
-        assertEquals(response.getStatusCode(), 200);
+        assertEquals(200, response.getStatusCode());
     }
 
     @SuppressWarnings("rawtypes")
+    @Description("Opening the entry by ID present in the context")
     @Test
     @Order(3)
     void editarTest() {
@@ -123,6 +134,7 @@ class ControllerTest {
     }
 
     @SuppressWarnings("rawtypes")
+    @Description("Removing an entry by its ID collected from the context")
     @Test
     @Order(4)
     void removeTest() {
