@@ -49,7 +49,7 @@ class ControllerTest {
     }
 
     @SneakyThrows
-    private void login(){
+    private static void login() {
         User user = LoadConfigurationUtil.getUser();
         SessionFilter sessionFilter = RestAssurredUtil.doFormLogin(user, "/login");
         assertNotNull(sessionFilter);
