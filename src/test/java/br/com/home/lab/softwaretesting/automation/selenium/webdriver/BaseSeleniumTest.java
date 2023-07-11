@@ -4,18 +4,21 @@ import br.com.home.lab.softwaretesting.automation.config.Configurations;
 import br.com.home.lab.softwaretesting.automation.cucumber.ScenarioContextData;
 import br.com.home.lab.softwaretesting.automation.selenium.webdriver.action.HomeAction;
 import br.com.home.lab.softwaretesting.automation.selenium.webdriver.action.LoginAction;
+import br.com.home.lab.softwaretesting.automation.selenium.webdriver.config.ScreenshotListener;
 import br.com.home.lab.softwaretesting.automation.selenium.webdriver.model.User;
 import br.com.home.lab.softwaretesting.automation.util.LoadConfigurationUtil;
+import io.qameta.allure.Step;
 import org.aeonbits.owner.ConfigFactory;
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeSuite;
+import org.testng.annotations.Listeners;
 import org.testng.util.Strings;
 
 import java.util.Objects;
 
-
+@Listeners({ScreenshotListener.class})
 public abstract class BaseSeleniumTest {
 
     private static final String BROWSER = "browser";
@@ -45,6 +48,7 @@ public abstract class BaseSeleniumTest {
         login(loggedUser);
     }
 
+    @Step("Performing the log in with user {user.username} and password ***")
     public void login(User user) {
         loggedUser = user;
         access();
@@ -56,16 +60,19 @@ public abstract class BaseSeleniumTest {
         loginAction.doLogin(loggedUser);
     }
 
+    @Step("Performing logout the current user")
     public void doLogout() {
         HomeAction homeAction = new HomeAction(getWebDriver());
         homeAction.doLogout();
     }
 
 
+    @Step("Asking the browser to access the URL loaded from LoadConfigurationUtil")
     protected void access() {
         getWebDriver().get(LoadConfigurationUtil.getUrl());
     }
 
+    @Step("Closing the browser")
     @AfterClass
     protected void finaliza() {
         try {
@@ -75,6 +82,7 @@ public abstract class BaseSeleniumTest {
         }
     }
 
+    @Step("Initializing browser and screenshot listener")
     @BeforeClass
     protected void init() {
         WebDriver driver = loadWebDriver();

@@ -1,6 +1,8 @@
 target/
 !.mvn/wrapper/maven-wrapper.jar
 
+### Allure
+.allure
 
 ### JMeter reports ###
 src/test/jmeter/report*

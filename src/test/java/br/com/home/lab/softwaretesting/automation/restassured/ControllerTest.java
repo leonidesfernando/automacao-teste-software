@@ -10,6 +10,10 @@ import br.com.home.lab.softwaretesting.automation.util.DataGen;
 import br.com.home.lab.softwaretesting.automation.util.LoadConfigurationUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.qameta.allure.Description;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Step;
 import io.restassured.RestAssured;
 import io.restassured.filter.session.SessionFilter;
 import io.restassured.path.xml.XmlPath;
@@ -29,6 +33,8 @@ import static br.com.home.lab.softwaretesting.automation.util.Constants.*;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
+@Epic("Regression Tests Epic")
+@Feature("RestAssured validations tests")
 public class ControllerTest {
 
     private static final String DESCRIPTION_TEST = "DESCRIPTION_TEST";
@@ -36,6 +42,7 @@ public class ControllerTest {
 
     private static final ScenarioContextData context = new ScenarioContextData();
 
+    @Step("Loading configurations(url and port) and performing log into the system")
     @BeforeTest
     public void before() {
         RestAssured.baseURI = LoadConfigurationUtil.getOnlyUrl();
@@ -56,6 +63,7 @@ public class ControllerTest {
         return context.get(SESSION_ID);
     }
 
+    @Description("Registering new entry by dynamic data generation")
     @Test
     public void salvarTest() {
         String descricao = new StringJoiner(" ")
@@ -80,6 +88,7 @@ public class ControllerTest {
         context.setContext(DESCRIPTION_TEST, descricao);
     }
 
+    @Description("Searching the just registered entry by its description")
     @SneakyThrows
     @Test(dependsOnMethods = "salvarTest")
     public void buscandoComPostTest() {
@@ -97,6 +106,7 @@ public class ControllerTest {
         context.setContext(ID_TO_USE, lancamentos.get(0).id());
     }
 
+    @Description("Searching by the description present in the context")
     @Test(dependsOnMethods = {"salvarTest"})
     public void buscandoComTextoEPaginaTest() {
         List<Pair<String, String>> params = Arrays.asList(
@@ -107,6 +117,7 @@ public class ControllerTest {
         assertEquals(response.getStatusCode(), 200);
     }
 
+    @Description("Opening the entry by ID present in the context")
     @Test(dependsOnMethods = {"salvarTest", "buscandoComPostTest"})
     public void editarTest() {
         Pair<String, String> param = new Pair<>("id", context.get(ID_TO_USE).toString());
@@ -117,6 +128,7 @@ public class ControllerTest {
         assertEquals(titulo, "Cadastro de Lançamento");
     }
 
+    @Description("Removing an entry by its ID collected from the context")
     @Test(dependsOnMethods = {"buscandoComPostTest", "salvarTest", "editarTest"})
     public void removeTest() {
         Pair<String, String> param = new Pair<>("id", context.get(ID_TO_USE).toString());

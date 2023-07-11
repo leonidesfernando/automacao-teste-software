@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.stream.Stream;
 
 @AllArgsConstructor
 public enum LancamentoDataTableValues {
@@ -31,18 +32,15 @@ public enum LancamentoDataTableValues {
         }
     };
 
-    public static LancamentoDataTableValues from(String value){
-
-        var values = LancamentoDataTableValues.values();
-        for(var val : values){
-            if(val.dataType.equals(value)){
-                return val;
-            }
-        }
-        throw new IllegalArgumentException();
-    }
+    private final String dataType;
 
     abstract public String value();
 
-    private String dataType;
+    public static LancamentoDataTableValues from(String value) {
+
+        return Stream.of(LancamentoDataTableValues.values())
+                .filter(l -> l.dataType.equals(value))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Value " + value + " does not exists."));
+    }
 }
