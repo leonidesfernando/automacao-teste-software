@@ -1,6 +1,7 @@
 package br.com.home.lab.softwaretesting.automation.selenium.webdriver.config;
 
 import br.com.home.lab.softwaretesting.automation.selenium.webdriver.BaseSeleniumTest;
+import io.qameta.allure.Allure;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
@@ -9,6 +10,7 @@ import org.testng.ITestResult;
 import org.testng.Reporter;
 import org.testng.TestListenerAdapter;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -17,6 +19,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class ScreenshotListener extends TestListenerAdapter {
+
+    private final String path = "target/surefire-reports/";
 
     @Override
     public void onTestFailure(ITestResult result) {
@@ -27,22 +31,31 @@ public class ScreenshotListener extends TestListenerAdapter {
             final var methodName = result.getName();
             try {
                 File srcFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-                String reportDirectory = new File(System.getProperty("user.dir")).getAbsolutePath() + "/target/surefire-reports";
+                String reportDirectory = new File(System.getProperty("user.dir")).getAbsolutePath() + path;
                 String className = result.getTestClass().getName();
                 className = className.substring(1 + className.lastIndexOf("."));
+                final String fileName = className + "_" + methodName + "_"
+                        + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd_MM_yyyy_hh_mm_ss")) + ".png";
+
                 File destFile = new File(reportDirectory + "/failure_screenshots/"
-                        + className + "_" + methodName + "_"
-                        + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd_MM_yyyy_hh_mm_ss")) + ".png"
+                        + fileName
                 );
                 FileUtils.copyFile(srcFile, destFile);
+
                 Reporter.log("a href='" +
                         destFile.getAbsolutePath() + "'> <img src='"
                         + destFile.getAbsolutePath() + "' height='100' width='100'/> </a>"
                 );
+
+                takeScreenToAllureShot(fileName, driver);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    public void takeScreenToAllureShot(String name, WebDriver driver) {
+        Allure.addAttachment(name, new ByteArrayInputStream(((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES)));
     }
 
     private WebDriver getWebDriver(ITestResult result) {

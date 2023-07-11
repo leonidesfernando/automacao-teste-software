@@ -5,6 +5,10 @@ import br.com.home.lab.softwaretesting.automation.modelo.TipoLancamento;
 import br.com.home.lab.softwaretesting.automation.selenium.webdriver.action.ListaLancamentosAction;
 import br.com.home.lab.softwaretesting.automation.selenium.webdriver.model.Entry;
 import br.com.home.lab.softwaretesting.automation.util.DataGen;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Issue;
+import io.qameta.allure.Step;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -19,6 +23,8 @@ import java.util.stream.Stream;
 
 import static org.testng.Assert.assertTrue;
 
+@Epic("Regression Tests Epic")
+@Feature("CRUD entries by Selenium WebDriver")
 public class LancamentoTest extends BaseSeleniumTest {
 
     private ListaLancamentosAction listaLancamentosAction;
@@ -46,17 +52,19 @@ public class LancamentoTest extends BaseSeleniumTest {
         super();
     }
 
-
+    @Step("Initializing the context")
     @BeforeClass
     protected void setUp() {
         context.setContext(ENTRIES, new LinkedBlockingQueue<Entry>());
     }
 
+    @Step("Performing log into with credentials from configurations")
     @Test
     public void loginLancamentos() {
         super.login();
     }
 
+    @Step("Registering entries by dynamic data")
     @Test(dependsOnMethods = "loginLancamentos", invocationCount = 3)
     public void criaLancamento() {
 
@@ -76,6 +84,7 @@ public class LancamentoTest extends BaseSeleniumTest {
 
     }
 
+    @Step("Searching by description from the context")
     @Test(dependsOnMethods = {"criaLancamento"})
     public void buscaPorDescricao() {
         Entry entry = getEntryInContext();
@@ -85,6 +94,8 @@ public class LancamentoTest extends BaseSeleniumTest {
         listaLancamentosAction.checkEntryExists(entry.description(), entry.entryDate(), entry.type());
     }
 
+    @Issue("It's not searching the item to be edited. It must be fixed")
+    @Step("Editing an entry existing in the context")
     @Test(dependsOnMethods = {"buscaPorDescricao"})
     public void editaLancamento() {
         String sufixoEdicao = " EDITADO Selenium";
@@ -101,6 +112,7 @@ public class LancamentoTest extends BaseSeleniumTest {
                 "Deveria existir o lancamento que foi editado " + (newDescription));
     }
 
+    @Step("Removing the entry by description collected from the context")
     @Test(dependsOnMethods = "editaLancamento")
     public void removeLancamento() {
         Entry entry = getEntryInContext();
@@ -108,6 +120,7 @@ public class LancamentoTest extends BaseSeleniumTest {
         listaLancamentosAction.removeLancamento(entry.description());
     }
 
+    @Step("Performing log out")
     @Test(dependsOnMethods = "removeLancamento")
     public void logout() {
         super.doLogout();

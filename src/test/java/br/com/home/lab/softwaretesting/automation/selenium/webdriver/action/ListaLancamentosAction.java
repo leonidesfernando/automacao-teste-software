@@ -4,6 +4,7 @@ import br.com.home.lab.softwaretesting.automation.modelo.TipoLancamento;
 import br.com.home.lab.softwaretesting.automation.selenium.webdriver.components.GridUI;
 import br.com.home.lab.softwaretesting.automation.selenium.webdriver.helper.SeleniumUtil;
 import br.com.home.lab.softwaretesting.automation.selenium.webdriver.pageobject.ListaLancamentosPage;
+import io.qameta.allure.Step;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.WebDriver;
 
@@ -26,6 +27,7 @@ public class ListaLancamentosAction extends BaseAction<ListaLancamentosPage> {
         super(webDriver, new ListaLancamentosPage(webDriver));
     }
 
+    @Step("Going to the home page")
     public ListaLancamentosAction goHome() {
         page.get();
         page.getHomeLink().click();
@@ -34,21 +36,24 @@ public class ListaLancamentosAction extends BaseAction<ListaLancamentosPage> {
         return this;
     }
 
+    @Step("Clicking on the button to create a new entry")
     public LancamentoAction novoLancamento() {
         page.get();
         page.getNewEntry().click();
         return new LancamentoAction(getWebDriver());
     }
 
+    @Step("Opening the desired entry for edition")
     public LancamentoAction abreLancamentoParaEdicao() {
         page.get();
         return clicaBotaoEditar();
     }
 
+    @Step("Searching by: ${texto}")
     public void buscaPor(String texto) {
         buscaLancamentoPorDescricao(texto);
         GridUI grid = page.getGrid();
-        assertTrue(!grid.getElements().isEmpty());
+        assertFalse(grid.getElements().isEmpty());
     }
 
     public boolean existeLancamento(final String descricaoLancamento, String date, TipoLancamento tipo) {
@@ -58,9 +63,10 @@ public class ListaLancamentosAction extends BaseAction<ListaLancamentosPage> {
         return true;
     }
 
+    @Step("Checking if the entry with description: '${descricaoLancamento}', date: '${date}' and type: '${tipo}' exists")
     public void checkEntryExists(String descricaoLancamento, String date, TipoLancamento tipo) {
         GridUI grid = page.getGrid();
-        assertEquals(grid.getElements().size(), 1);
+        assertEquals(1, grid.getElements().size());
         final var gridDescription = grid.getCellValueAt(0, COL_DESCRIPTION);
         assertTrue(gridDescription.contains(descricaoLancamento) || gridDescription.equals(descricaoLancamento));
         assertEquals(grid.getCellValueAt(0, COL_RELEASE_DATE), date);
@@ -68,6 +74,7 @@ public class ListaLancamentosAction extends BaseAction<ListaLancamentosPage> {
 
     }
 
+    @Step("Removing the entry with the description ${descricaoLancamento}")
     public void removeLancamento(final String descricaoLancamento) {
         buscaLancamentoPorDescricao(descricaoLancamento);
         clicaBotaoExcluir();
@@ -76,6 +83,7 @@ public class ListaLancamentosAction extends BaseAction<ListaLancamentosPage> {
         assertFalse(grid.areThereElements());
     }
 
+    @Step("Checking if the description '${descricaoLancamento}' exists")
     public boolean existeLancamentoPorDescricao(String descricaoLancamento){
         buscaLancamentoPorDescricao(descricaoLancamento);
         GridUI grid = page.getGrid();
@@ -88,15 +96,18 @@ public class ListaLancamentosAction extends BaseAction<ListaLancamentosPage> {
         gridUI.getButtonsAt(0, 5).get(btn.ordinal()).click();
     }
 
+    @Step("Clicking to edit the desired entry")
     protected LancamentoAction clicaBotaoEditar(){
         clicaBotao(Botao.EDITAR);
         return new LancamentoAction(getWebDriver());
     }
 
+    @Step("Clicking to remove a desired entry")
     protected void clicaBotaoExcluir() {
         clicaBotao(Botao.EXCLUIR);
     }
 
+    @Step("Searching the entry by description")
     public void buscaLancamentoPorDescricao(String descricaoLancamento) {
         page.get();
         waitForElementVisible(getWebDriver(), page.getSearchItem()).clear();
@@ -104,6 +115,7 @@ public class ListaLancamentosAction extends BaseAction<ListaLancamentosPage> {
         waitForElementVisible(getWebDriver(), page.getBtnSearch()).click();
     }
 
+    @Step("Searching entry by description with pagination (keeping the pagination of the item searched)")
     public void buscaLancamentoPorPaginaDescricao(String descricaoLancamento) {
         page.get();
         waitForElementVisible(getWebDriver(), page.getSearchItem()).clear();
@@ -111,6 +123,7 @@ public class ListaLancamentosAction extends BaseAction<ListaLancamentosPage> {
         waitForElementVisible(getWebDriver(), page.getFirstPaginationLink()).click();
     }
 
+    @Step("Accessing the Dashboard page by Listing entries page using the button")
     public void gotToDashboard() {
         page.getBtnDashboard().click();
     }
