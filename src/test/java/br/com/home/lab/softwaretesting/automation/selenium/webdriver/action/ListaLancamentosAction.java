@@ -27,6 +27,7 @@ public class ListaLancamentosAction extends BaseAction<ListaLancamentosPage> {
         super(webDriver, new ListaLancamentosPage(webDriver));
     }
 
+    @Step("Going to the home page")
     public ListaLancamentosAction goHome() {
         page.get();
         page.getHomeLink().click();
@@ -35,17 +36,20 @@ public class ListaLancamentosAction extends BaseAction<ListaLancamentosPage> {
         return this;
     }
 
+    @Step("Clicking on the button to create a new entry")
     public LancamentoAction novoLancamento() {
         page.get();
         page.getNewEntry().click();
         return new LancamentoAction(getWebDriver());
     }
 
+    @Step("Opening the desired entry for edition")
     public LancamentoAction abreLancamentoParaEdicao() {
         page.get();
         return clicaBotaoEditar();
     }
 
+    @Step("Searching by: ${texto}")
     public void buscaPor(String texto) {
         buscaLancamentoPorDescricao(texto);
         GridUI grid = page.getGrid();
@@ -59,6 +63,7 @@ public class ListaLancamentosAction extends BaseAction<ListaLancamentosPage> {
         return true;
     }
 
+    @Step("Checking if the entry with description: '${descricaoLancamento}', date: '${date}' and type: '${tipo}' exists")
     public void checkEntryExists(String descricaoLancamento, String date, TipoLancamento tipo) {
         GridUI grid = page.getGrid();
         assertEquals(1, grid.getElements().size());
@@ -69,6 +74,7 @@ public class ListaLancamentosAction extends BaseAction<ListaLancamentosPage> {
 
     }
 
+    @Step("Removing the entry with the description ${descricaoLancamento}")
     public void removeLancamento(final String descricaoLancamento) {
         buscaLancamentoPorDescricao(descricaoLancamento);
         clicaBotaoExcluir();
@@ -77,6 +83,7 @@ public class ListaLancamentosAction extends BaseAction<ListaLancamentosPage> {
         assertFalse(grid.areThereElements());
     }
 
+    @Step("Checking if the description '${descricaoLancamento}' exists")
     public boolean existeLancamentoPorDescricao(String descricaoLancamento){
         buscaLancamentoPorDescricao(descricaoLancamento);
         GridUI grid = page.getGrid();
@@ -89,6 +96,7 @@ public class ListaLancamentosAction extends BaseAction<ListaLancamentosPage> {
         gridUI.getButtonsAt(0, 5).get(btn.ordinal()).click();
     }
 
+    @Step("Clicking to edit the desired entry")
     protected LancamentoAction clicaBotaoEditar(){
         clicaBotao(Botao.EDITAR);
         return new LancamentoAction(getWebDriver());

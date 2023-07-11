@@ -23,7 +23,7 @@ public enum LancamentoDataTableValues {
             return DataGen.strDateCurrentMonth();
         }
     },
-    MONEY_VALUE("@MoneyValue") {
+    MONEY_VALUE("@MoneyValue"){
         @Override
         public String value() {
             MoneyToStringConverter converter = new MoneyToStringConverter();
@@ -38,16 +38,9 @@ public enum LancamentoDataTableValues {
 
     public static LancamentoDataTableValues from(String value) {
 
-        /*var values = LancamentoDataTableValues.values();
-        for(var val : values){
-            if(val.dataType.equals(value)){
-                return val;
-            }
-        }
-        throw new IllegalArgumentException();*/
         return Stream.of(LancamentoDataTableValues.values())
                 .filter(l -> l.dataType.equals(value))
                 .findFirst()
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(() -> new IllegalArgumentException("Value " + value + " does not exists."));
     }
 }

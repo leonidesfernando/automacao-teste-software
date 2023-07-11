@@ -49,7 +49,7 @@ class ControllerTest {
     }
 
     @SneakyThrows
-    private static void login() {
+    private void login(){
         User user = LoadConfigurationUtil.getUser();
         SessionFilter sessionFilter = RestAssurredUtil.doFormLogin(user, "/login");
         assertNotNull(sessionFilter);
@@ -87,8 +87,6 @@ class ControllerTest {
         context.setContext(DESCRIPTION_TEST, descricao);
     }
 
-    //TODO: @RepeatedTest(value = 3, name = RepeatedTest.LONG_DISPLAY_NAME)
-    // https://www.baeldung.com/junit-5-repeated-test
     @Description("Searching the just registered entry by its description")
     @SneakyThrows
     @Test

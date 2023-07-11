@@ -44,6 +44,7 @@
 		</allure.cmd.download.url>
 	</properties>
 
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
