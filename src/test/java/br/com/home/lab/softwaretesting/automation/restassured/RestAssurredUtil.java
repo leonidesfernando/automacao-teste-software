@@ -35,6 +35,12 @@ public class RestAssurredUtil {
                 .get(endPoint);
     }
 
+    public Response delete(String sessionId, String endpoint) {
+        return given()
+                .sessionId(sessionId)
+                .delete(endpoint);
+    }
+
     public Response delete(String sessionId, Pair<String, String> idParam, String endpoint) {
         return pathParam(sessionId, idParam)
                 .delete(endpoint);

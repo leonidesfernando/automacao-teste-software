@@ -32,5 +32,8 @@ Feature: Validar o CRUD de lancamentos de gastos e receitas
     And Editar o primeiro lancamento encontrado
 
   Scenario: Remover o primeiro elemento encotnrado
+    Given Registrar lancamento com dados fornecidos
+      | descricao | valor       | dataLancamento | tipoLancamento | categoria |
+      | Roupa     | @MoneyValue | @AnyDate       | DESPESA        | VESTUARIO |
     Given Buscar um lancamento por categoria "DESPESA"
     And Remover o primeiro lancamento encontrado

@@ -43,11 +43,6 @@ public class SeleniumUtil {
     }
 
     public static void waitAjaxCompleted(WebDriver driver){
-        /*fluentWait(driver)
-                .until(
-                        d -> ((JavascriptExecutor)driver)
-                                .executeScript("return document.readyState")
-                                .equals("complete"));*/
         fluentWait(driver)
                 .until(dr -> String
                         .valueOf(((JavascriptExecutor) dr).executeScript(
@@ -77,29 +72,34 @@ public class SeleniumUtil {
         waitForWithRetries(SeleniumUtil::waitForPresenceOfXpath, driver, xpath, retries);
     }
 
-    private static WebElement waitForPresenceBy(WebDriver driver, By by){
+    private static WebElement waitForPresenceBy(WebDriver driver, By by) {
         return fluentWait(driver)
                 .until(ExpectedConditions.presenceOfElementLocated(by));
     }
 
-    public static WebElement waitForElementVisible(WebDriver driver, WebElement element){
+    public static WebElement waitForElementVisible(WebDriver driver, WebElement element) {
         return fluentWait(driver)
                 .until(ExpectedConditions.visibilityOf(element));
     }
 
+    public static Boolean waitForElementInvisible(WebDriver driver, WebElement element) {
+        return fluentWait(driver)
+                .until(ExpectedConditions.invisibilityOf(element));
+    }
+
     private static <WD, T> WebElement waitForWithRetries(BiFunction<WD, T, WebElement> function,
-                                                         WD driver, T elementIdentifier, int retries){
+                                                         WD driver, T elementIdentifier, int retries) {
         var counter = 0;
-        do{
-            try{
+        do {
+            try {
                 return function.apply(driver, elementIdentifier);
-            }catch (Exception e){
+            } catch (Exception e) {
                 waitSomeTime((WebDriver) driver);
                 counter++;
                 logger.info("Error to wait for element by id: {} at {} retry",
                         elementIdentifier.toString(), counter);
             }
-        }while (counter < retries);
+        } while (counter < retries);
         String errorMessage = String.format("Was not possible wait for element by id %s after %d retries",
                 elementIdentifier, retries);
         logger.error(errorMessage);

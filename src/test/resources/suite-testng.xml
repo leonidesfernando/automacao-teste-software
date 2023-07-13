@@ -1,6 +1,10 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 <suite name="Suite-Tests por Classes" parallel="classes" thread-count="10" verbose="1" data-provider-thread-count="6">
     <test name="E2E Tests - Need the app running">
+        <listeners>
+            <listener
+                    class-name="br.com.home.lab.softwaretesting.automation.selenium.webdriver.config.ScreenshotListener"/>
+        </listeners>
         <classes>
             <class name="br.com.home.lab.softwaretesting.automation.cucumber.testrunner.TestRunnerManager"/>
             <class name="br.com.home.lab.softwaretesting.automation.selenium.webdriver.LancamentoTest"/>

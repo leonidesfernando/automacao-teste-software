@@ -10,6 +10,7 @@ import br.com.home.lab.softwaretesting.automation.util.LoadConfigurationUtil;
 import io.qameta.allure.Step;
 import org.aeonbits.owner.ConfigFactory;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ThreadGuard;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeSuite;
@@ -34,10 +35,8 @@ public abstract class BaseSeleniumTest {
         loggedUser = LoadConfigurationUtil.getUser();
     }
 
-    public WebDriver getWebDriver() {
-        WebDriver driver = webDriver.get();
-        Objects.requireNonNull(driver);
-        return driver;
+    public static WebDriver getWebDriver() {
+        return webDriver.get();
     }
 
     @BeforeSuite
@@ -77,6 +76,7 @@ public abstract class BaseSeleniumTest {
     protected void finaliza() {
         try {
             getWebDriver().quit();
+            webDriver.remove();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -87,7 +87,7 @@ public abstract class BaseSeleniumTest {
     protected void init() {
         WebDriver driver = loadWebDriver();
         Objects.requireNonNull(driver);
-        webDriver.set(driver);
+        webDriver.set(ThreadGuard.protect(driver));
     }
 
     protected WebDriver loadWebDriver(){

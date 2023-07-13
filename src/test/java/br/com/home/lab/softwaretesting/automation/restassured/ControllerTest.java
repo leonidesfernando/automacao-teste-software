@@ -10,10 +10,7 @@ import br.com.home.lab.softwaretesting.automation.util.DataGen;
 import br.com.home.lab.softwaretesting.automation.util.LoadConfigurationUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.qameta.allure.Description;
-import io.qameta.allure.Epic;
-import io.qameta.allure.Feature;
-import io.qameta.allure.Step;
+import io.qameta.allure.*;
 import io.restassured.RestAssured;
 import io.restassured.filter.session.SessionFilter;
 import io.restassured.path.xml.XmlPath;
@@ -135,5 +132,13 @@ public class ControllerTest {
         Response response = RestAssurredUtil.delete(getSessionId(), param, "/remover/{id}");
         assertEquals(response.getStatusCode(), 302);
         assertTrue(response.getHeader("Location").contains("/lancamentos/"));
+    }
+
+    @Story("Allow removing all records from the base")
+    @Description("Removing all entryies")
+    @Test(dependsOnMethods = "removeTest")
+    public void removeAllTest() {
+        Response response = RestAssurredUtil.delete(getSessionId(), "/removeAll");
+        assertEquals(302, response.statusCode());
     }
 }

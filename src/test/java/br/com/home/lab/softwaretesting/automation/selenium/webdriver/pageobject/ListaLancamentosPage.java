@@ -5,6 +5,7 @@ import br.com.home.lab.softwaretesting.automation.selenium.webdriver.helper.Sele
 import lombok.Getter;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.CacheLookup;
 import org.openqa.selenium.support.FindBy;
 
 @Getter
@@ -24,6 +25,22 @@ public class ListaLancamentosPage extends BasePage {
 
     @FindBy(id = "pagina1")
     private WebElement firstPaginationLink;
+
+    @CacheLookup
+    @FindBy(css = "button[data-bs-target='#modalRemoveAll']")
+    private WebElement btnRemoveAll;
+
+    @CacheLookup
+    @FindBy(id = "modalRemoveAll")
+    private WebElement modalRemoveAll;
+
+    @CacheLookup
+    @FindBy(id = "btnYesRemoveAll")
+    private WebElement btnYesRemoveAll;
+
+    @CacheLookup
+    @FindBy(id = "overlayRemoveAll")
+    private WebElement waitRemoveAll;
 
     @FindBy(id = "homeLink")
     private WebElement homeLink;

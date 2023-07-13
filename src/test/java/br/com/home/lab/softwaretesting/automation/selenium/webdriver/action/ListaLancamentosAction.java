@@ -8,6 +8,7 @@ import io.qameta.allure.Step;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.WebDriver;
 
+import static br.com.home.lab.softwaretesting.automation.selenium.webdriver.helper.SeleniumUtil.waitForElementInvisible;
 import static br.com.home.lab.softwaretesting.automation.selenium.webdriver.helper.SeleniumUtil.waitForElementVisible;
 import static org.testng.Assert.*;
 
@@ -126,6 +127,24 @@ public class ListaLancamentosAction extends BaseAction<ListaLancamentosPage> {
     @Step("Accessing the Dashboard page by Listing entries page using the button")
     public void gotToDashboard() {
         page.getBtnDashboard().click();
+    }
+
+
+    @Step("Removing all entries, opening the modal, confirming and managing AJAX")
+    public boolean removingAllEntries() {
+        page.get();
+        page.getBtnRemoveAll().click();
+        waitForElementVisible(getWebDriver(), page.getModalRemoveAll());
+        page.getBtnYesRemoveAll().click();
+        waitForElementInvisible(getWebDriver(), page.getModalRemoveAll());
+        return checkListingIsEmpty();
+    }
+
+    @Step("Checking if the listing is empty")
+    public boolean checkListingIsEmpty() {
+        GridUI grid = page.getGrid();
+        assertFalse(grid.areThereElements());
+        return true;
     }
 
     @Override
