@@ -1,15 +1,19 @@
 # _automacao-teste-software_
 
-Project to explorer tests e2e and load and stress with: TestNG, Mockito, REST Assured, Cucumber, Selenium Webdriver
+Project to explorer several tests such as API, e2e, integration, load and stress with: TestNG, Mockito, REST Assured,
+Cucumber, Selenium Webdriver
 , [JMeter](src/test/jmeter/README-JMETER.md) and [Postman](src/test/postman/README-POSTMAN.md).
+
+Also, it's possible generate the [Allure report](https://docs.qameta.io/allure/#_java)
+just run: `mvn allure:report` to generate and `mvn allure:serve` to open the report.
 
 All tests were built to run against a simple web application in
 the [teste-software](https://github.com/leonidesfernando/teste-software) repository.
 
 ## Requirements
+
 - Maven
 - JDK 18+
-
 
 ## Structure
 This project uses some frameworks such as Spring Boot and Lombok, in case you come to use an IDE that has plugins to them, it's recommended that you install it. 

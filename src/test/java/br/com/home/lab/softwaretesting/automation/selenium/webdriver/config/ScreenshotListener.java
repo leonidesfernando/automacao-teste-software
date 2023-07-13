@@ -1,6 +1,9 @@
 package br.com.home.lab.softwaretesting.automation.selenium.webdriver.config;
 
+import br.com.home.lab.softwaretesting.automation.selenium.webdriver.BaseSeleniumTest;
 import io.qameta.allure.Allure;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.TestWatcher;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestWatcher;
 import org.openqa.selenium.OutputType;
@@ -8,17 +11,19 @@ import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.StringJoiner;
+import java.util.StringJoiner;
 
-public class ScreenshotListener implements TestWatcher {
+public class ScreenshotListener extends TestWatcher {
 
     private final String path = "target/surefire-reports/";
+
     private WebDriver driver;
 
     public void init(WebDriver driver) {

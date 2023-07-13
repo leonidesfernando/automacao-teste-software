@@ -15,6 +15,7 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.platform.commons.util.StringUtils;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ThreadGuard;
 
 import java.util.Objects;
 
@@ -37,10 +38,8 @@ public abstract class BaseSeleniumTest {
         loggedUser = LoadConfigurationUtil.getUser();
     }
 
-    public WebDriver getWebDriver() {
-        WebDriver driver = webDriver.get();
-        Objects.requireNonNull(driver);
-        return driver;
+    public static WebDriver getWebDriver() {
+        return webDriver.get();
     }
 
     @BeforeAll
@@ -80,6 +79,7 @@ public abstract class BaseSeleniumTest {
     protected void finaliza() {
         try {
             getWebDriver().quit();
+            webDriver.remove();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -90,7 +90,7 @@ public abstract class BaseSeleniumTest {
     protected void init(){
         WebDriver driver = loadWebDriver();
         Objects.requireNonNull(driver);
-        webDriver.set(driver);
+        webDriver.set(ThreadGuard.protect(driver));
         screenshotListener.init(driver);
     }
 

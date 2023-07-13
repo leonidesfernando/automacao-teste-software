@@ -5,10 +5,7 @@ import br.com.home.lab.softwaretesting.automation.modelo.TipoLancamento;
 import br.com.home.lab.softwaretesting.automation.selenium.webdriver.action.ListaLancamentosAction;
 import br.com.home.lab.softwaretesting.automation.selenium.webdriver.model.Entry;
 import br.com.home.lab.softwaretesting.automation.util.DataGen;
-import io.qameta.allure.Epic;
-import io.qameta.allure.Feature;
-import io.qameta.allure.Issue;
-import io.qameta.allure.Step;
+import io.qameta.allure.*;
 import org.junit.jupiter.api.*;
 
 import java.math.BigDecimal;
@@ -52,13 +49,11 @@ class LancamentoTest extends BaseSeleniumTest {
         super();
     }
 
-
     @Step("Initializing the context")
     @BeforeAll
     protected void setUp() {
         context.setContext(ENTRIES, new LinkedBlockingQueue<Entry>());
     }
-
 
     @Step("Performing log into with credentials from configurations")
     @Test
@@ -125,9 +120,17 @@ class LancamentoTest extends BaseSeleniumTest {
         listaLancamentosAction.removeLancamento(entry.description());
     }
 
-    @Step("Performing log out")
     @Test
     @Order(6)
+    @Story("Allow removing all records from the base")
+    public void removeAllTest() {
+        listaLancamentosAction.goHome();
+        assertTrue(listaLancamentosAction.removingAllEntries());
+    }
+
+    @Step("Performing log out")
+    @Test
+    @Order(7)
     void logout() {
         super.doLogout();
     }
