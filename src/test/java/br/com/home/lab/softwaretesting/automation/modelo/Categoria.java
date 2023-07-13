@@ -21,10 +21,12 @@ public enum Categoria {
     EMPRESTIMO("Empréstimo"),
     @JsonProperty("Investimentos")
     INVESTIMENTOS("Investimentos"),
+    @JsonProperty("Vestuário")
+    VESTUARIO("Vestuário"),
     @JsonProperty("Outros")
     OUTROS("Outros");
 
 
     @Getter
-    private String nome;
+    private final String nome;
 }

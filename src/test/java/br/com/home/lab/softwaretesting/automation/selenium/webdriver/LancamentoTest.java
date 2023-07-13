@@ -5,10 +5,7 @@ import br.com.home.lab.softwaretesting.automation.modelo.TipoLancamento;
 import br.com.home.lab.softwaretesting.automation.selenium.webdriver.action.ListaLancamentosAction;
 import br.com.home.lab.softwaretesting.automation.selenium.webdriver.model.Entry;
 import br.com.home.lab.softwaretesting.automation.util.DataGen;
-import io.qameta.allure.Epic;
-import io.qameta.allure.Feature;
-import io.qameta.allure.Issue;
-import io.qameta.allure.Step;
+import io.qameta.allure.*;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -120,8 +117,15 @@ public class LancamentoTest extends BaseSeleniumTest {
         listaLancamentosAction.removeLancamento(entry.description());
     }
 
-    @Step("Performing log out")
     @Test(dependsOnMethods = "removeLancamento")
+    @Story("Allow removing all records from the base")
+    public void removeAllTest() {
+        listaLancamentosAction.goHome();
+        assertTrue(listaLancamentosAction.removingAllEntries());
+    }
+
+    @Step("Performing log out")
+    @Test(dependsOnMethods = "removeAllTest")
     public void logout() {
         super.doLogout();
     }
