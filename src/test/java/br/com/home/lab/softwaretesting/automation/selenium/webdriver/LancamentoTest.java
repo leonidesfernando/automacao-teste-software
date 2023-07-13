@@ -161,10 +161,7 @@ public class LancamentoTest extends BaseSeleniumTest {
 
     private <T> T getAny(List<T> list) {
         int n = list.size();
-        int index = DataGen.number(n);
-        if (index == n) {
-            index--;
-        }
+        int index = DataGen.number(n - 1);
         return list.get(index);
     }
 
