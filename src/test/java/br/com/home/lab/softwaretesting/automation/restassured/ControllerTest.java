@@ -141,8 +141,9 @@ class ControllerTest {
 
     @Story("Allow removing all records from the base")
     @Description("Removing all entryies")
-    @Test(dependsOnMethods = "removeTest")
-    public void removeAllTest() {
+    @Test
+    @Order(5)
+    void removeAllTest() {
         Response response = RestAssurredUtil.delete(getSessionId(), "/removeAll");
         assertEquals(302, response.statusCode());
     }

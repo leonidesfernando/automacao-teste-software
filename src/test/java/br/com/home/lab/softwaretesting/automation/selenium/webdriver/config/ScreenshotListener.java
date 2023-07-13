@@ -1,9 +1,5 @@
 package br.com.home.lab.softwaretesting.automation.selenium.webdriver.config;
 
-import br.com.home.lab.softwaretesting.automation.selenium.webdriver.BaseSeleniumTest;
-import io.qameta.allure.Allure;
-import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.TestWatcher;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestWatcher;
 import org.openqa.selenium.OutputType;
@@ -13,16 +9,12 @@ import org.openqa.selenium.WebDriverException;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.StringJoiner;
-import java.util.StringJoiner;
 
-public class ScreenshotListener extends TestWatcher {
-
-    private final String path = "target/surefire-reports/";
+public class ScreenshotListener implements TestWatcher {
 
     private WebDriver driver;
 
@@ -38,16 +30,12 @@ public class ScreenshotListener extends TestWatcher {
                 .add(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd_MM_yyyy_hh_mm_ss")));
 
         captureScreenshot(fileName.toString());
-        takeScreenShot(fileName.toString());
     }
 
-
-    public void takeScreenShot(String name) {
-        Allure.addAttachment(name, new ByteArrayInputStream(((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES)));
-    }
 
     public void captureScreenshot(String fileName) {
         try {
+            final String path = "target/surefire-reports/";
             new File(path).mkdirs();
             try (FileOutputStream out = new FileOutputStream(path + File.separator +
                     "screenshot-" + fileName + ".png")
