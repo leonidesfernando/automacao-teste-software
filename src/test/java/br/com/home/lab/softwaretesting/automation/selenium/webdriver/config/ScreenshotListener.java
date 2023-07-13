@@ -1,7 +1,6 @@
 package br.com.home.lab.softwaretesting.automation.selenium.webdriver.config;
 
 import br.com.home.lab.softwaretesting.automation.selenium.webdriver.BaseSeleniumTest;
-import io.qameta.allure.Allure;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
@@ -10,24 +9,20 @@ import org.testng.ITestResult;
 import org.testng.Reporter;
 import org.testng.TestListenerAdapter;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class ScreenshotListener extends TestListenerAdapter {
 
-    private final String path = "target/surefire-reports/";
 
     @Override
     public void onTestFailure(ITestResult result) {
         super.onTestFailure(result);
-
-        if (!result.isSuccess()) {
-            WebDriver driver = getWebDriver(result);
+        if (!result.isSuccess() && result.getInstance() instanceof BaseSeleniumTest) {
+            WebDriver driver = getWebDriver();
+            final String path = "/target/surefire-reports/";
             final var methodName = result.getName();
             try {
                 File srcFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
@@ -42,36 +37,17 @@ public class ScreenshotListener extends TestListenerAdapter {
                 );
                 FileUtils.copyFile(srcFile, destFile);
 
-                Reporter.log("a href='" +
+                Reporter.log("<a href='" +
                         destFile.getAbsolutePath() + "'> <img src='"
                         + destFile.getAbsolutePath() + "' height='100' width='100'/> </a>"
                 );
-
-                takeScreenToAllureShot(fileName, driver);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
     }
 
-    public void takeScreenToAllureShot(String name, WebDriver driver) {
-        Allure.addAttachment(name, new ByteArrayInputStream(((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES)));
-    }
-
-    private WebDriver getWebDriver(ITestResult result) {
-        Object[] param = {};
-        final Object instance = result.getInstance();
-        try {
-            Method method = instance.getClass().getMethod("getWebDriver", (Class<?>[]) null);
-            if (method == null) {
-                Method methodIntance = instance.getClass().getMethod("getInstance", (Class<?>[]) null);
-                BaseSeleniumTest baseSeleniumTest = (BaseSeleniumTest) methodIntance.invoke(instance, param);
-                return baseSeleniumTest.getWebDriver();
-            }
-            return (WebDriver) method.invoke(instance, param);
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
-        //return BaseSeleniumTest.getWebDriver();
+    private WebDriver getWebDriver() {
+        return BaseSeleniumTest.getWebDriver();
     }
 }
