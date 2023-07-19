@@ -56,7 +56,7 @@ public class LancamentoControllerStepDefinitions {
 
     @And("Remover o primeiro lancamento encontrado")
     public void removerOPrimeiroLancamentoEncontrado() {
-        Pair<String, String> param = Pair.of("id", getFirstEntryFromContextWithId().id());
+        Pair<String, String> param = Pair.of("id", String.valueOf(getFirstEntryFromContextWithId().id()));
         Response response = RestAssurredUtil.delete(getSessionId(), param, "/remover/{id}");
         assertEquals(302, response.getStatusCode());
         assertTrue(response.getHeader("Location").contains("/lancamentos/"));
@@ -64,12 +64,12 @@ public class LancamentoControllerStepDefinitions {
 
     @And("Editar o primeiro lancamento encontrado")
     public void editar_o_primeiro_lancamento_encontrado() {
-        Pair<String, String> param = Pair.of("id", getFirstEntryFromContextWithId().id());
+        Pair<String, String> param = Pair.of("id", String.valueOf(getFirstEntryFromContextWithId().id()));
         Response response = RestAssurredUtil.get(getSessionId(), param, "/editar/{id}");
         String html = response.body().asString();
         XmlPath xmlPath = new XmlPath(XmlPath.CompatibilityMode.HTML, html);
         String titulo = xmlPath.getString("html.body.div.div.div.h4");
-        assertEquals(titulo, "Cadastro de Lançamento", "body response: " + html);
+        assertEquals("Cadastro de Lançamento", titulo, "body response: " + html);
     }
 
     @Given("Buscar um lancamento por categoria {string}")
