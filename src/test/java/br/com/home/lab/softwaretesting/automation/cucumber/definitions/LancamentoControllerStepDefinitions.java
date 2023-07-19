@@ -22,14 +22,18 @@ import io.restassured.response.Response;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.platform.commons.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.Semaphore;
 
 import static br.com.home.lab.softwaretesting.automation.util.Constants.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class LancamentoControllerStepDefinitions {
 
+    private final Semaphore semaphore = new Semaphore(1);
     private static final ScenarioContextData context = new ScenarioContextData();
 
     private static final User user = LoadConfigurationUtil.getUser();
@@ -52,8 +56,7 @@ public class LancamentoControllerStepDefinitions {
 
     @And("Remover o primeiro lancamento encontrado")
     public void removerOPrimeiroLancamentoEncontrado() {
-        List<LancamentoRecord> lancamentos = context.get(LANCAMENTOS);
-        Pair<String, String> param = Pair.of("id", String.valueOf(lancamentos.get(0).id()));
+        Pair<String, String> param = Pair.of("id", getFirstEntryFromContextWithId().id());
         Response response = RestAssurredUtil.delete(getSessionId(), param, "/remover/{id}");
         assertEquals(302, response.getStatusCode());
         assertTrue(response.getHeader("Location").contains("/lancamentos/"));
@@ -61,13 +64,12 @@ public class LancamentoControllerStepDefinitions {
 
     @And("Editar o primeiro lancamento encontrado")
     public void editar_o_primeiro_lancamento_encontrado() {
-        List<LancamentoRecord> lancamentos = context.get(LANCAMENTOS);
-        Pair<String, String> param = Pair.of("id", String.valueOf(lancamentos.get(0).id()));
+        Pair<String, String> param = Pair.of("id", getFirstEntryFromContextWithId().id());
         Response response = RestAssurredUtil.get(getSessionId(), param, "/editar/{id}");
         String html = response.body().asString();
         XmlPath xmlPath = new XmlPath(XmlPath.CompatibilityMode.HTML, html);
         String titulo = xmlPath.getString("html.body.div.div.div.h4");
-        assertEquals("Cadastro de Lançamento", titulo);
+        assertEquals(titulo, "Cadastro de Lançamento", "body response: " + html);
     }
 
     @Given("Buscar um lancamento por categoria {string}")
@@ -119,6 +121,7 @@ public class LancamentoControllerStepDefinitions {
                     "/salvar", formParams);
             assertTrue(response.getHeader("Location").contains("/lancamentos/"));
             assertEquals(302, response.statusCode());
+            addEntryToContext(record);
         }
     }
 
@@ -128,12 +131,40 @@ public class LancamentoControllerStepDefinitions {
         String json = mapper.writeValueAsString(buscaForm);
         Response response = RestAssurredUtil.
                 post(getSessionId(), "/buscaLancamentos", json);
-        context.setContext(LANCAMENTOS, extractListFromResponse(response));
+        List<LancamentoRecord> list = extractListFromResponse(response);
+        list.forEach(this::addEntryToContext);
         return response;
+    }
+
+    private synchronized void addEntryToContext(LancamentoRecord lancamento) {
+
+        List<LancamentoRecord> lancamentos;
+        if (!context.exists(LANCAMENTOS)) {
+            context.setContext(LANCAMENTOS, new ArrayList<LancamentoRecord>());
+        }
+        lancamentos = context.get(LANCAMENTOS);
+
+        Optional<LancamentoRecord> opt = lancamentos.stream()
+                .filter(l -> l.valor().equals(lancamento.valor()))
+                .filter(l -> l.tipoLancamento().equals(lancamento.tipoLancamento()))
+                .findFirst();
+        opt.ifPresent(lancamentos::remove);
+        lancamentos.add(lancamento);
+
     }
 
     private List<LancamentoRecord> extractListFromResponse(Response response) {
         return RestAssurredUtil.extractDataFromBodyResponse(response, new TypeReference<ResultadoRecord>() {
         }).lancamentos();
+    }
+
+    private synchronized LancamentoRecord getFirstEntryFromContextWithId() {
+
+        List<LancamentoRecord> lancamentos = context.get(LANCAMENTOS);
+        Optional<LancamentoRecord> lancamentoRecordOpt = lancamentos.stream().filter(l -> l.id() != 0L).findFirst();
+        LancamentoRecord lancamentoRecord = lancamentoRecordOpt.orElseThrow(() -> new IllegalStateException("An entry should be found:"));
+        lancamentos.remove(lancamentoRecord);
+        semaphore.release();
+        return lancamentoRecord;
     }
 }

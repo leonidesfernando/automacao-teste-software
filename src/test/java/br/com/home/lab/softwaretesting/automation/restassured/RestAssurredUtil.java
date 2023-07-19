@@ -30,6 +30,12 @@ public class RestAssurredUtil {
         return specification.get(endPoint);
     }
 
+    public Response get(String sessionId, String endpoint) {
+        return given().
+                sessionId(sessionId)
+                .get(endpoint);
+    }
+
     public Response get(String sessionId, Pair<String, String> param, String endPoint) {
         return pathParam(sessionId, param)
                 .get(endPoint);

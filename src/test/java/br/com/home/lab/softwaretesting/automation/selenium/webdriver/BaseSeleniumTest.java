@@ -8,6 +8,7 @@ import br.com.home.lab.softwaretesting.automation.selenium.webdriver.config.Scre
 import br.com.home.lab.softwaretesting.automation.selenium.webdriver.model.User;
 import br.com.home.lab.softwaretesting.automation.util.LoadConfigurationUtil;
 import io.qameta.allure.Step;
+import lombok.extern.slf4j.Slf4j;
 import org.aeonbits.owner.ConfigFactory;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -18,10 +19,13 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ThreadGuard;
 
 import java.util.Objects;
+import java.util.concurrent.Semaphore;
 
-
+@Slf4j
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public abstract class BaseSeleniumTest {
+
+    private final Semaphore semaphore = new Semaphore(1);
 
     @RegisterExtension
     ScreenshotListener screenshotListener = new ScreenshotListener();
@@ -38,7 +42,7 @@ public abstract class BaseSeleniumTest {
         loggedUser = LoadConfigurationUtil.getUser();
     }
 
-    public static WebDriver getWebDriver() {
+    public synchronized static WebDriver getWebDriver() {
         return webDriver.get();
     }
 
@@ -78,8 +82,14 @@ public abstract class BaseSeleniumTest {
     @Step("Closing the browser")
     protected void finaliza() {
         try {
-            getWebDriver().quit();
+            semaphore.acquire();
+            WebDriver driver = getWebDriver();
+            if (driver != null) {
+                driver.quit();
+            }
             webDriver.remove();
+            semaphore.release();
+            log.info("Driver and browser closed.");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -87,17 +97,23 @@ public abstract class BaseSeleniumTest {
 
     @BeforeAll
     @Step("Initializing browser and screenshot listener")
-    protected void init(){
-        WebDriver driver = loadWebDriver();
-        Objects.requireNonNull(driver);
-        webDriver.set(ThreadGuard.protect(driver));
-        screenshotListener.init(driver);
+    protected void init() {
+        try {
+            semaphore.acquire();
+            WebDriver driver = loadWebDriver();
+            Objects.requireNonNull(driver);
+            webDriver.set(ThreadGuard.protect(driver));
+            screenshotListener.init(driver);
+            semaphore.release();
+        } catch (InterruptedException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     protected WebDriver loadWebDriver(){
         return getBrowser().loadBrowser();
     }
-    
+
     private Browser getBrowser(){
         String browser = System.getProperty(BROWSER);
         if (StringUtils.isNotBlank(browser)) {

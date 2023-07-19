@@ -17,6 +17,10 @@ public class ScenarioContextData {
         context.put(key, value);
     }
 
+    public boolean exists(String key) {
+        return context.containsKey(key);
+    }
+
     @SuppressWarnings("unchecked")
     public <T> T get(String key){
         T value = (T)context.get(key);

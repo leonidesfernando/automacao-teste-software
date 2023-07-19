@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.Semaphore;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -23,6 +24,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @Feature("CRUD entries by Selenium WebDriver")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class LancamentoTest extends BaseSeleniumTest {
+
+    private final Semaphore semaphore = new Semaphore(1);
 
     private ListaLancamentosAction listaLancamentosAction;
     public static final String ENTRIES = "entries";
@@ -101,6 +104,7 @@ class LancamentoTest extends BaseSeleniumTest {
         Entry entry = getEntryInContext();
         final String newDescription = entry.description() + sufixoEdicao;
         listaLancamentosAction.goHome();
+        listaLancamentosAction.buscaPor(entry.description());
         listaLancamentosAction.abreLancamentoParaEdicao()
                 .and()
                 .setDescricao(newDescription)
@@ -151,16 +155,15 @@ class LancamentoTest extends BaseSeleniumTest {
                 .setScale(2, RoundingMode.HALF_UP);
     }
 
-    private TipoLancamento getTipoLancamento(Categoria categoria){
-        for(Map.Entry<List<Categoria>, List<TipoLancamento>> entry : tiposLancamento.entrySet()){
-            if(entry.getKey().contains(categoria)){
-                return getAny(entry.getValue());
-            }
-        }
-        throw new IllegalStateException("Does not exists 'TipoLancamento' for this category " + categoria);
+    private TipoLancamento getTipoLancamento(Categoria categoria) {
+        return tiposLancamento.entrySet().stream()
+                .filter(entry -> entry.getKey().contains(categoria))
+                .map(entry -> getAny(entry.getValue()))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Does not exists 'TipoLancamento' for this category " + categoria));
     }
 
-    private Categoria getCategoria(){
+    private Categoria getCategoria() {
         return getAny(categrias);
     }
 
@@ -171,9 +174,17 @@ class LancamentoTest extends BaseSeleniumTest {
     }
 
     private Entry getEntryInContext() {
-        Entry entry = getEntries().poll();
-        Objects.requireNonNull(entry);
-        return entry;
+        try {
+            semaphore.acquire();
+            Queue<Entry> queue = getEntries();
+            Entry entry = queue.poll();
+            Objects.requireNonNull(entry);
+            semaphore.release();
+            return entry;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            throw new IllegalStateException(e);
+        }
     }
 
     private void setEntryInContext(Entry entry) {
