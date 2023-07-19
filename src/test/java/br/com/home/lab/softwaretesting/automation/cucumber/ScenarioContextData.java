@@ -12,13 +12,17 @@ public class ScenarioContextData {
     public ScenarioContextData() {
     }
 
-    public <T> void setContext(String key, T value){
+    public <T> void setContext(String key, T value) {
         context.put(key, value);
     }
 
+    public boolean exists(String key) {
+        return context.containsKey(key);
+    }
+
     @SuppressWarnings("unchecked")
-    public <T> T get(String key){
-        T value = (T)context.get(key);
+    public <T> T get(String key) {
+        T value = (T) context.get(key);
         Assert.assertNotNull(value, "O valor a ser recuperado nao pode ser nulo");
         return value;
     }
