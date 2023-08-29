@@ -4,8 +4,8 @@ Project to explorer several tests such as API, e2e, integration, load and stress
 Cucumber, Selenium Webdriver
 , [JMeter](src/test/jmeter/README-JMETER.md) and [Postman](src/test/postman/README-POSTMAN.md).
 
-Also, it's possible generate the [Allure report](https://docs.qameta.io/allure/#_java)
-just run: `mvn allure:report` to generate and `mvn allure:serve` to open the report.
+Also, it's possible generate the [Allure report](https://docs.qameta.io/allure/#_java) first run `mvn allure:install` next
+just run: `mvn allure:report` to generate and finally `mvn allure:serve` to open the report.
 
 All tests were built to run against a simple web application in
 the [teste-software](https://github.com/leonidesfernando/teste-software) repository.
