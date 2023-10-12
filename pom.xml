@@ -20,13 +20,13 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<java.version>18</java.version>
+		<java.version>17</java.version>
 		<webdrivermanager.version>5.3.3</webdrivermanager.version>
 		<selenium.version>4.10.0</selenium.version>
 		<lombok.version>1.18.28</lombok.version>
 		<cucumber.version>7.12.1</cucumber.version>
 		<argLine>-Xms256m -Xmx1524m -XX:MaxPermSize=256m -Duser.language=en</argLine>
-		<java.faker>1.0.2</java.faker>
+		<java.faker>2.0.1</java.faker>
 		<owner.version>1.0.12</owner.version>
 		<rest-assured.version>5.3.0</rest-assured.version>
 		<httpclient5.version>5.2.1</httpclient5.version>
@@ -142,8 +142,8 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.github.javafaker</groupId>
-			<artifactId>javafaker</artifactId>
+			<groupId>net.datafaker</groupId>
+			<artifactId>datafaker</artifactId>
 			<version>${java.faker}</version>
 		</dependency>
 
@@ -190,7 +190,7 @@
 						-javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
 						-Dcucumber.options="--plugin io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm"
 					</argLine>
-					<parallel>methods</parallel>
+					<parallel>classes</parallel>
 					<threadCount>8</threadCount>
 					<suiteXmlFiles>
 						<suiteXmlFile>
@@ -200,7 +200,6 @@
 					<systemPropertyVariables>
 						<allure.results.directory>${project.build.directory}/allure-results</allure.results.directory>
 						<allure.report.directory>${project.build.directory}/allure-report</allure.report.directory>
-						<!-- aqui zole -->
 					</systemPropertyVariables>
 				</configuration>
 				<dependencies>

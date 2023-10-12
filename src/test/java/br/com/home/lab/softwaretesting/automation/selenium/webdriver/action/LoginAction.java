@@ -10,6 +10,8 @@ public class LoginAction extends BaseAction<LoginPage> {
 
     private HomeAction homeAction;
 
+    private FooterAction footerAction;
+
     public LoginAction(WebDriver webDriver) {
         super(webDriver, new LoginPage(webDriver));
     }
@@ -17,12 +19,14 @@ public class LoginAction extends BaseAction<LoginPage> {
     public boolean doLogin(User user) {
         page.submitUserCredentials(user);
         homeAction = new HomeAction(getWebDriver());
+        footerAction = new FooterAction(getWebDriver());
         return checkIfIsLoggedIn();
     }
 
     private boolean checkIfIsLoggedIn() {
         try {
             waitForElementVisible(getWebDriver(), homeAction.getPage().getLogoutLink());
+            footerAction.checkTitle();
             return true;
         } catch (Exception e) {
             return false;

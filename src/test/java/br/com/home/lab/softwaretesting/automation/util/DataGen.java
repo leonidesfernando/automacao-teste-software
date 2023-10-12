@@ -1,7 +1,7 @@
 package br.com.home.lab.softwaretesting.automation.util;
 
-import com.github.javafaker.Faker;
 import lombok.experimental.UtilityClass;
+import net.datafaker.Faker;
 
 import java.time.LocalDate;
 import java.util.Date;
@@ -12,7 +12,7 @@ import java.util.Random;
 @UtilityClass
 public class DataGen {
 
-    private Faker faker = Faker.instance();
+    private Faker faker = new Faker();
 
     public String strDate(){
         int month = getMonth();
