@@ -20,13 +20,13 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<java.version>18</java.version>
+		<java.version>17</java.version>
 		<webdrivermanager.version>5.3.3</webdrivermanager.version>
 		<selenium.version>4.10.0</selenium.version>
 		<lombok.version>1.18.28</lombok.version>
 		<cucumber.version>7.12.1</cucumber.version>
 		<argLine>-Xms256m -Xmx1524m -XX:MaxPermSize=256m -Duser.language=en</argLine>
-		<java.faker>1.0.2</java.faker>
+		<java.faker>2.0.1</java.faker>
 		<owner.version>1.0.12</owner.version>
 		<junit-jupiter.version>5.9.3</junit-jupiter.version>
 		<junit.platform.version>1.9.3</junit.platform.version>
@@ -37,7 +37,10 @@
 		<maven.surefire.plugin.version>3.1.2</maven.surefire.plugin.version>
 		<maven.compiler.plugin.version>3.11.0</maven.compiler.plugin.version>
 
+
+		<extentreports-version>5.0.9</extentreports-version>
 		<aspectj.version>1.9.19</aspectj.version>
+		<ashot.version>1.5.4</ashot.version>
 		<allure.version>2.23.0</allure.version>
 		<allure.cmd.download.url>
 			https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline
@@ -129,8 +132,8 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.github.javafaker</groupId>
-			<artifactId>javafaker</artifactId>
+			<groupId>net.datafaker</groupId>
+			<artifactId>datafaker</artifactId>
 			<version>${java.faker}</version>
 		</dependency>
 
@@ -254,7 +257,6 @@
 					<systemPropertyVariables>
 						<allure.results.directory>${project.build.directory}/allure-results</allure.results.directory>
 						<allure.report.directory>${project.build.directory}/allure-report</allure.report.directory>
-						<!-- aqui zole -->
 					</systemPropertyVariables>
 					<reportFormat>plain</reportFormat>
 				</configuration>

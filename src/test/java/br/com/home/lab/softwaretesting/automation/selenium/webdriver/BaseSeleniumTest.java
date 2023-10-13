@@ -111,7 +111,13 @@ public abstract class BaseSeleniumTest {
     }
 
     protected WebDriver loadWebDriver(){
-        return getBrowser().loadBrowser();
+        WebDriver driver = getBrowser().loadBrowser();
+        closeBrowserWhenThreadEnds(driver);
+        return driver;
+    }
+
+    private void closeBrowserWhenThreadEnds(WebDriver driver){
+        Runtime.getRuntime().addShutdownHook(new Thread(driver::quit));
     }
 
     private Browser getBrowser(){
