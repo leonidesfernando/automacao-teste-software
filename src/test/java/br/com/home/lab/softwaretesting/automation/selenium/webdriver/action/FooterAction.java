@@ -3,7 +3,8 @@ package br.com.home.lab.softwaretesting.automation.selenium.webdriver.action;
 import br.com.home.lab.softwaretesting.automation.selenium.webdriver.pageobject.FooterPage;
 import org.openqa.selenium.WebDriver;
 
-import static org.testng.AssertJUnit.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 public class FooterAction extends BaseAction<FooterPage> {
 
